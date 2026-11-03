@@ -41,15 +41,19 @@ export class AutomaticDoctorAssignmentUseCase {
           data: { status: 'PROFESSIONAL_BROADCAST' }
         });
 
+        // assignedTo is a foreign key to users.id, so a broadcast is logged against an administrator.
+        // With no administrator the log is skipped rather than failing the whole escalation.
         const admin = await transactionClient.user.findFirst({ where: { role: 'ADMIN' } });
-        await transactionClient.assignmentLog.create({
-          data: {
-            visitId: updatedCase.visitId,
-            method: 'AUTO',
-            assignedTo: admin ? admin.id : 'SYSTEM', // It's broadcast
-            reason: 'Emergency case escalated to PROFESSIONAL_BROADCAST'
-          }
-        });
+        if (admin) {
+          await transactionClient.assignmentLog.create({
+            data: {
+              visitId: updatedCase.visitId,
+              method: 'AUTO',
+              assignedTo: admin.id,
+              reason: 'Emergency case escalated to PROFESSIONAL_BROADCAST'
+            }
+          });
+        }
 
         const professionalDocs = eligibleDoctors.filter((d: any) => d.isProfessional);
         
