@@ -2,6 +2,7 @@ import { AppError } from '../../../common/errors/AppError';
 import { HTTP_STATUS } from '../../../common/constants/index';
 import { ClinicalRepository } from './clinical.repository';
 import { VisitAccessPolicy, VisitActor } from '../visit/shared/policies/visit-access.policy';
+import { RiskEngine } from '../../ai/risk-engine';
 
 export class ClinicalService {
   public static async performRiskAssessment(
@@ -12,105 +13,44 @@ export class ClinicalService {
     },
     simulateTimeout = false
   ) {
-    let timedOut = false;
-
-    // Simulate timeout logic
-    if (simulateTimeout) {
-      timedOut = true;
-    }
+    // Test hook kept from the original API: marks the record as produced after a model timeout.
+    const timedOut = simulateTimeout;
 
     const vitals = data.visitId
       ? await ClinicalRepository.findLatestVitalsForVisit(data.visitId)
       : await ClinicalRepository.findLatestVitalsForPatient(data.patientId);
 
     let visitNotes = '';
+    let symptoms: Array<{ symptomName: string; severity: string }> = [];
     if (data.visitId) {
-      const visit = await ClinicalRepository.findVisitById(data.visitId);
-      visitNotes = visit?.notes || '';
+      const [visit, remark, visitSymptoms] = await Promise.all([
+        ClinicalRepository.findVisitById(data.visitId),
+        ClinicalRepository.findClinicalRemark(data.visitId),
+        ClinicalRepository.findSymptomsForVisit(data.visitId)
+      ]);
+      visitNotes = [visit?.notes, remark?.remarksText].filter(Boolean).join(' ');
+      symptoms = visitSymptoms;
     }
 
-    // Normal baseline values
-    const sys = vitals?.systolic ?? 120;
-    const dia = vitals?.diastolic ?? 80;
-    const hr = vitals?.heartRate ?? 75;
-    const temp = vitals?.temperature ?? 37.0;
-    const spo2 = vitals?.oxygenSaturation ?? 98;
+    // All scoring lives in the AI risk engine (rule-based baseline until the FYP-2 model).
+    const result = RiskEngine.assess({
+      vitals,
+      symptoms,
+      notes: visitNotes,
+      nurseConfidence: data.nurseConfidence
+    });
 
-    // Calculate vitals deviation
-    const sysDev = Math.abs(sys - 120) * 1.2;
-    const diaDev = Math.abs(dia - 80) * 1.5;
-    const hrDev = Math.abs(hr - 75) * 1.0;
-    const tempDev = Math.abs(temp - 37.0) * 25;
-    const spo2Dev = Math.max(0, 98 - spo2) * 15;
-
-    const vitalsDeviation = Math.min(100, Math.round(sysDev + diaDev + hrDev + tempDev + spo2Dev));
-
-    // Mock ML baseline score (highly correlated with deviation)
-    const mlScore = Math.min(100, Math.round(vitalsDeviation * 0.95 + 5));
-
-    // NLP sentiment/severity score of qualitative notes
-    let nlpScore = 30; // base score
-    const notesLower = visitNotes.toLowerCase();
-    const highKeywords = ['severe', 'critical', 'bleeding', 'unconscious', 'chest pain', 'worse', 'infection', 'fever', 'high'];
-    const medKeywords = ['pain', 'swelling', 'cough', 'weakness', 'elevated', 'dizzy', 'moderate'];
-    const lowKeywords = ['stable', 'normal', 'improving', 'good', 'fine', 'controlled', 'low'];
-
-    if (highKeywords.some(kw => notesLower.includes(kw))) {
-      nlpScore = 85;
-    } else if (medKeywords.some(kw => notesLower.includes(kw))) {
-      nlpScore = 60;
-    } else if (lowKeywords.some(kw => notesLower.includes(kw))) {
-      nlpScore = 15;
-    }
-
-    // Fused risk score: ML (50%), Vitals deviation (30%), Nurse confidence (20% weight, represented by nurseConfidence * 4)
-    // plus NLP score contribution
-    let fusedScore = (mlScore * 0.45) + (vitalsDeviation * 0.3) + (data.nurseConfidence * 4) + (nlpScore * 0.1);
-    fusedScore = Math.min(100, Math.round(fusedScore));
-
-    // Determine raw risk tier
-    let riskTier = 'LOW';
-    if (fusedScore >= 70) {
-      riskTier = 'HIGH';
-    } else if (fusedScore >= 40) {
-      riskTier = 'MEDIUM';
-    }
-
-    // Nurse confidence adjustment (Low confidence biases the result toward the more cautious adjacent tier)
-    if (data.nurseConfidence <= 2) {
-      if (riskTier === 'LOW' && fusedScore >= 30) {
-        riskTier = 'MEDIUM';
-      } else if (riskTier === 'MEDIUM' && fusedScore >= 60) {
-        riskTier = 'HIGH';
-      }
-    }
-
-    // Explanation details
-    const explanation = {
-      mlModelContribution: '45%',
-      vitalsDeviationContribution: '30%',
-      nurseConfidenceContribution: '20%',
-      nlpSentimentContribution: '10%',
-      calculations: {
-        rawVitalsDeviationScore: vitalsDeviation,
-        mlModelScore: mlScore,
-        nlpNotesScore: nlpScore,
-        nurseConfidenceProvided: data.nurseConfidence
-      },
-      interpretation: `Risk assessment classified as ${riskTier} based on fused clinical variables.`
-    };
-
-    // Save risk assessment record and optionally create CaseAssignment
-    const shouldCreateCase = riskTier === 'HIGH' && !!data.visitId;
+    // Every non-LOW visit assessment opens a doctor case (5 min SLA for HIGH/CRITICAL, 20 min for MEDIUM).
+    const shouldCreateCase = result.riskTier !== 'LOW' && !!data.visitId;
     const assessment = await ClinicalRepository.createRiskAssessmentAndCase(
       {
         patientId: data.patientId,
         visitId: data.visitId || null,
-        riskTier,
-        fusedScore,
-        mlScore,
+        riskTier: result.riskTier,
+        fusedScore: result.fusedScore,
+        mlScore: result.mlScore,
         nurseConfidence: data.nurseConfidence,
-        explanation: JSON.stringify(explanation),
+        explanation: JSON.stringify(result.explanation),
         timedOut,
         notes: visitNotes || 'Automated risk assessment generated.'
       },
@@ -119,7 +59,8 @@ export class ClinicalService {
     );
 
     if (shouldCreateCase) {
-      console.log(`[ALERT] High risk visit ${data.visitId} queued for doctor assignment with 5-minute SLA.`);
+      const slaMinutes = result.riskTier === 'MEDIUM' ? 20 : 5;
+      console.log(`[ALERT] ${result.riskTier} risk visit ${data.visitId} queued for doctor assignment with ${slaMinutes}-minute SLA.`);
     }
 
     return assessment;
