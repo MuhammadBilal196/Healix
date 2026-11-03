@@ -8,6 +8,7 @@ import { navigate } from '../../../utils/navigation';
 import { useAuthStore } from '../../../store/auth';
 import { useDoctorQueue, useDoctorHighRiskQueue, useStartCaseReview } from '../../../hooks/useDoctor';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../../theme';
+import { AssignedEmergencyBanner } from '../../../components/emergency/AssignedEmergencyBanner';
 
 export default function DoctorDashboard() {
   const { colors: COLORS } = useAppTheme();
@@ -32,6 +33,7 @@ export default function DoctorDashboard() {
   return <SafeAreaView style={styles.root} edges={['top']}>
     <ScrollView contentContainerStyle={styles.content} refreshControl={<RefreshControl refreshing={selected.isRefetching} onRefresh={() => void refresh()} tintColor={COLORS.primaryText} />}>
       <View style={styles.header}><Text style={styles.greeting}>Doctor dashboard</Text><Text style={styles.name}>{user?.fullName || 'Doctor'}</Text><Text style={styles.headerText}>Review assigned cases and respond to urgent broadcasts.</Text></View>
+      <AssignedEmergencyBanner />
       <View style={styles.row}><Button mode={filter === 'ALL' ? 'contained' : 'outlined'} buttonColor={filter === 'ALL' ? COLORS.navy : undefined} textColor={filter === 'ALL' ? COLORS.headerText : COLORS.primaryText} onPress={() => setFilter('ALL')}>My cases ({queue.data?.length || 0})</Button><Button mode={filter === 'HIGH' ? 'contained' : 'outlined'} buttonColor={filter === 'HIGH' ? COLORS.navy : undefined} textColor={filter === 'HIGH' ? COLORS.headerText : COLORS.primaryText} onPress={() => setFilter('HIGH')}>Urgent ({alerts.data?.length || 0})</Button></View>
       <View style={styles.row}><Button icon="ambulance" textColor={COLORS.primaryText} onPress={() => navigate('/(doctor)/emergency')}>Emergency transport</Button><Button icon="message-outline" textColor={COLORS.primaryText} onPress={() => navigate('/(doctor)/(tabs)/messages')}>Messages</Button></View>
       <Text style={styles.title}>{filter === 'ALL' ? 'Assigned cases' : 'High and critical risk cases'}</Text>
