@@ -79,7 +79,9 @@ export default function NurseVisitDetailScreen() {
       if (confirm) {
         try {
           await completeVisit.mutateAsync(visitId);
-          alert('Visit Completed successfully.');
+          // Check out straight away: the patient can only approve the visit after check-out.
+          await visitsApi.checkOutVisit(visitId).catch(() => undefined);
+          alert('Visit completed and checked out. The patient can now approve it.');
           router.replace('/(nurse)/(tabs)/visits');
         } catch (err: any) {
           alert('Error: ' + (err.message || 'Failed to complete visit.'));
@@ -93,7 +95,9 @@ export default function NurseVisitDetailScreen() {
           onPress: async () => {
             try {
               await completeVisit.mutateAsync(visitId);
-              appAlert('Completed', 'The visit has been completed successfully.');
+              // Check out straight away: the patient can only approve the visit after check-out.
+              await visitsApi.checkOutVisit(visitId).catch(() => undefined);
+              appAlert('Completed', 'Visit completed and checked out. The patient can now approve it.');
               router.replace('/(nurse)/(tabs)/visits');
             } catch (err: any) {
               appAlert('Error', err.message || 'Failed to complete visit. Ensure clinical data is recorded.');

@@ -10,6 +10,7 @@ import { AppError } from '../../../common/errors/AppError';
 import { VisitAccessPolicy } from './shared/policies/visit-access.policy';
 import { VerificationRepository } from './verification/verification.repository';
 import { OutboxRepository } from '../../../common/events/outbox.repository';
+import { recordVisitCharge } from '../../marketplace/payments/payment.charges';
 const router = Router();
 const upload = multer({storage:multer.memoryStorage(),limits:{fileSize:10*1024*1024,files:1,fields:3}}).single('file');
 const directory = path.resolve('private','visit-evidence',process.env.HEALIX_TEST_SCHEMA || 'app');
@@ -62,6 +63,8 @@ router.put('/visits/:id/completion-review', asyncHandler(async(req,res) => {
   }
 
   if (input.decision==='APPROVE') {
+   // The approved visit is now billable: record what the patient owes.
+   await recordVisitCharge(tx, visit.requestId);
    const remaining=await tx.visit.count({where:{requestId:visit.requestId,OR:[{status:{notIn:['COMPLETED','CANCELLED','DECLINED']}},{status:'COMPLETED',completionApprovedAt:null}]}});
    if (!remaining) {
     const contract=await tx.contract.findFirst({where:{careRequestId:visit.requestId,status:'ACTIVE'}});
