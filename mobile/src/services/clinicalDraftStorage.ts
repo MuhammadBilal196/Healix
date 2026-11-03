@@ -1,6 +1,13 @@
 import { AESEncryptionKey, AESSealedData, aesEncryptAsync, aesDecryptAsync, randomUUID } from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 
+function base64ToBytes(base64: string): Uint8Array {
+ const binary = atob(base64);
+ const bytes = new Uint8Array(binary.length);
+ for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+ return bytes;
+}
+
 // Immutable encrypted chunks are committed by changing one small manifest.
 export const clinicalDraftStorage = {
  async read(userId: string): Promise<string | null> {
@@ -12,7 +19,8 @@ export const clinicalDraftStorage = {
   if (!keyHex) throw new Error('Offline encryption key is unavailable. Drafts were preserved.');
   const parts = await Promise.all(Array.from({ length: chunks }, (_, i) => SecureStore.getItemAsync(`${prefix}.${revision}.${i}`)));
   if (parts.some(part => !part)) throw new Error('Offline draft storage is incomplete. Drafts were preserved.');
-  const bytes = await aesDecryptAsync(AESSealedData.fromCombined(parts.join('')), await AESEncryptionKey.import(keyHex, 'hex'));
+  // Pass raw bytes: on Android the native fromCombined rejects a base64 string ("expected an Object").
+  const bytes = await aesDecryptAsync(AESSealedData.fromCombined(base64ToBytes(parts.join(''))), await AESEncryptionKey.import(keyHex, 'hex'));
   return new TextDecoder().decode(bytes);
  },
  async write(userId: string, value: string): Promise<void> {
