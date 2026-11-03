@@ -2,6 +2,7 @@ import { MarketplaceRepository } from '../../marketplace/marketplace.repository'
 import { ContractRepository } from '../contract.repository';
 import { AppError } from '../../../../common/errors/AppError';
 import { HTTP_STATUS } from '../../../../common/constants/index';
+import { notifyContractParties } from '../contract.notifications';
 
 export class CreateContractFromOfferUseCase {
   constructor() {}
@@ -40,6 +41,9 @@ export class CreateContractFromOfferUseCase {
       actorId: 'SYSTEM',
       actorRole: 'SYSTEM'
     });
+
+    // A contract nobody is told about is never approved: alert the nurse and the patient.
+    await notifyContractParties(contract.id, 'CREATED');
 
     return contract;
   }

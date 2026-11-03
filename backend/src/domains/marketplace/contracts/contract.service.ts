@@ -3,6 +3,7 @@ import { AppError } from '../../../common/errors/AppError';
 import { HTTP_STATUS } from '../../../common/constants/index';
 import { prisma } from '../../../common/config/database';
 import { CreateContractFromOfferUseCase } from './usecases/create-contract-from-offer.usecase';
+import { notifyContractParties } from './contract.notifications';
 
 export class ContractService {
   public static async createContract(
@@ -66,7 +67,10 @@ export class ContractService {
 
     if (!role) throw new AppError('Unauthorized: You are not a party to this contract', HTTP_STATUS.FORBIDDEN);
 
-    return ContractRepository.updateApproval(contractId, role, user.id, user.role);
+    const wasApproved = role === 'PATIENT' ? contract.patientApproved : contract.nurseApproved;
+    const updated = await ContractRepository.updateApproval(contractId, role, user.id, user.role);
+    if (!wasApproved && updated) await notifyContractParties(contractId, 'APPROVED', role);
+    return updated;
   }
 
   public static async rejectContract(contractId: string, reason: string, user: any) {
@@ -82,7 +86,9 @@ export class ContractService {
 
     if (!role) throw new AppError('Unauthorized: You are not a party to this contract', HTTP_STATUS.FORBIDDEN);
 
-    return ContractRepository.rejectContract(contractId, role, reason, user.id, user.role);
+    const rejected = await ContractRepository.rejectContract(contractId, role, reason, user.id, user.role);
+    if (contract.status !== 'REJECTED') await notifyContractParties(contractId, 'REJECTED', role);
+    return rejected;
   }
 
   public static async cancelContract(contractId: string, reason: string, user: any) {

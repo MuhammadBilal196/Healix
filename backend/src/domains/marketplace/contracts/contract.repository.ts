@@ -74,7 +74,20 @@ export class ContractRepository {
         nurse: { select: { id: true, user: { select: { fullName: true } } } },
         approvals: true,
         auditLogs: { orderBy: { createdAt: 'desc' } },
-        sourceOffer: true
+        sourceOffer: true,
+        careRequest: { select: { id: true, type: true, scheduleType: true, preferredDate: true, preferredStartTime: true, preferredTimeWindow: true, durationMinutes: true, scheduledAt: true, notes: true } }
+      }
+    });
+  }
+
+  public static async findContractParties(id: string) {
+    return prisma.contract.findUnique({
+      where: { id },
+      select: {
+        status: true,
+        patient: { select: { user: { select: { id: true, fullName: true } } } },
+        nurse: { select: { user: { select: { id: true, fullName: true } } } },
+        careRequest: { select: { type: true } }
       }
     });
   }
@@ -99,7 +112,8 @@ export class ContractRepository {
     return prisma.contract.findMany({
       where: { patientId },
       include: {
-        nurse: { select: { id: true, user: { select: { fullName: true } } } }
+        nurse: { select: { id: true, user: { select: { fullName: true } } } },
+        careRequest: { select: { id: true, type: true, durationMinutes: true, preferredDate: true, scheduledAt: true } }
       },
       orderBy: { createdAt: 'desc' }
     });
@@ -109,7 +123,8 @@ export class ContractRepository {
     return prisma.contract.findMany({
       where: { nurseId },
       include: {
-        patient: { select: { id: true, user: { select: { fullName: true } } } }
+        patient: { select: { id: true, user: { select: { fullName: true } } } },
+        careRequest: { select: { id: true, type: true, durationMinutes: true, preferredDate: true, scheduledAt: true } }
       },
       orderBy: { createdAt: 'desc' }
     });

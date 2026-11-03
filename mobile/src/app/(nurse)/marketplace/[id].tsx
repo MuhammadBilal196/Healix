@@ -91,12 +91,13 @@ export default function NurseListingDetailScreen() {
               onWithdraw={handleWithdraw}
               isWithdrawing={withdrawOffer.isPending}
             />
-            <OfferForm key={existingOffer.id} initialOffer={existingOffer} onSubmit={handleSubmit} isSubmitting={updateOffer.isPending} defaultProposedStart={existingOffer.proposedStart} />
+            <OfferForm key={existingOffer.id} initialOffer={existingOffer} onSubmit={handleSubmit} isSubmitting={updateOffer.isPending} defaultProposedStart={existingOffer.proposedStart} durationMinutes={listing.careRequest.durationMinutes} />
           </>
         ) : !ownOffers.isLoading && !ownOffers.isError ? (
           <OfferForm
             onSubmit={handleSubmit}
             isSubmitting={submitOffer.isPending}
+            durationMinutes={listing.careRequest.durationMinutes}
             defaultProposedStart={listing.careRequest.scheduledAt || listing.careRequest.preferredDate || new Date().toISOString()}
           />
         ) : null}

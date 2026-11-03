@@ -16,6 +16,7 @@ import { EmptyState } from '../../../components/common/EmptyState';
 import { LoadingState } from '../../../components/common/LoadingState';
 import { ErrorState } from '../../../components/common/ErrorState';
 import { NurseQuickActions } from '../../../components/nurse/NurseQuickActions';
+import { PendingContractsBanner } from '../../../components/contracts/PendingContractsBanner';
 
 export default function NurseHomeScreen() {
   const { dark: isDarkTheme } = useAppTheme();
@@ -86,6 +87,8 @@ export default function NurseHomeScreen() {
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.emerald} colors={[COLORS.navy]} />}
       >
+        <PendingContractsBanner role="nurse" profileId={nurseId} />
+
         {/* Quick Actions */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
