@@ -9,7 +9,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { navigate } from '../../../../utils/navigation';
 import { useContract, useApproveContract, useRejectContract, useCancelContract } from '../../../../hooks/useContracts';
 import { ContractApprovalPanel } from '../../../../components/contracts/ContractApprovalPanel';
-import { ContractStatusBadge } from '../../../../components/contracts/ContractStatusBadge';
+import { ContractSummary } from '../../../../components/contracts/ContractSummary';
 import { SPACING, TYPOGRAPHY, RADIUS } from '../../../../theme';
 
 export default function PatientContractDetailScreen() {
@@ -83,31 +83,10 @@ export default function PatientContractDetailScreen() {
     );
   }
 
-  const nurseName = contract.nurse?.user?.fullName || 'Nurse';
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Contract Details</Text>
-        <ContractStatusBadge status={contract.status} />
-      </View>
+      <ContractSummary contract={contract} viewer="patient" />
 
-      <View style={styles.infoBox}>
-        <Text style={styles.infoLabel}>With:</Text>
-        <Text style={styles.infoValue}>{nurseName}</Text>
-      </View>
-
-      <View style={styles.infoBox}>
-        <Text style={styles.infoLabel}>Rate:</Text>
-        <Text style={styles.infoValue}>PKR {contract.price} / {contract.priceType}</Text>
-      </View>
-
-      <View style={styles.infoBox}>
-        <Text style={styles.infoLabel}>Scope of Work:</Text>
-        <Text style={styles.scopeText}>{contract.scopeText}</Text>
-      </View>
-
-      { ['PENDING_APPROVAL','ACTIVE'].includes(contract.status) && <TextInput mode="outlined" label="Reason for rejection or cancellation" multiline maxLength={2000} value={reason} onChangeText={setReason} textColor={COLORS.textDark} /> }
       <ContractApprovalPanel
         contract={contract}
         isPatientView={true}
@@ -117,6 +96,7 @@ export default function PatientContractDetailScreen() {
         isRejecting={rejectContract.isPending}
         style={styles.approvalPanel}
       />
+      { ['PENDING_APPROVAL','ACTIVE'].includes(contract.status) && <TextInput mode="outlined" label="Reason (only needed to reject or cancel)" multiline maxLength={2000} value={reason} onChangeText={setReason} textColor={COLORS.textDark} style={{ marginTop: SPACING.lg }} /> }
       {contract.status === 'ACTIVE' && <View style={styles.infoBox}>
         <Text style={styles.infoValue}>Both parties approved. Your visit is being prepared and should appear in My Visits shortly.</Text>
         <Button onPress={() => navigate('/(patient)/visits')}>Open my visits and QR code</Button>
