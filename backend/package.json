@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "seed:users": "tsx scripts/database/seed-users.ts",
     "seed:demo": "tsx scripts/database/seed.ts",
+    "admin:reset": "tsx scripts/database/reset-admin.ts",
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",

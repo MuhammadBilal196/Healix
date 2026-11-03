@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
@@ -8,6 +9,51 @@ async function main() {
 
   const rawPassword = 'abc123$%';
   const passwordHash = await bcrypt.hash(rawPassword, 12);
+
+  // ─────────────────────────────────────────────
+  // 0. ADMINISTRATOR (from backend/.env)
+  //    Creates the admin, or resets its password to the .env value if it already exists.
+  // ─────────────────────────────────────────────
+  const adminEmail = process.env.ADMIN_BOOTSTRAP_EMAIL?.trim().toLowerCase();
+  const adminPassword = process.env.ADMIN_BOOTSTRAP_PASSWORD;
+  if (!adminEmail || !adminPassword) {
+    console.warn('⚠️  ADMIN_BOOTSTRAP_EMAIL and ADMIN_BOOTSTRAP_PASSWORD are not set in backend/.env, so no administrator was created.');
+  } else if (adminPassword.length < 12) {
+    console.warn('⚠️  ADMIN_BOOTSTRAP_PASSWORD must be at least 12 characters, so no administrator was created.');
+  } else {
+    const adminHash = await bcrypt.hash(adminPassword, 12);
+    const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
+    if (existingAdmin && existingAdmin.role !== 'ADMIN') {
+      console.warn(`⚠️  ${adminEmail} already belongs to a ${existingAdmin.role} account. Choose a different ADMIN_BOOTSTRAP_EMAIL.`);
+    } else if (existingAdmin) {
+      await prisma.user.update({
+        where: { id: existingAdmin.id },
+        data: {
+          passwordHash: adminHash,
+          status: 'ACTIVE',
+          deletedAt: null,
+          mfaEnabled: false,
+          emailVerificationRequired: false,
+          admin: { upsert: { create: {}, update: {} } },
+        },
+      });
+      console.log(`✅ Administrator password reset from .env: ${adminEmail}`);
+    } else {
+      await prisma.user.create({
+        data: {
+          email: adminEmail,
+          // Avoid a crash if another account already uses the default admin phone number.
+          phone: (await prisma.user.findUnique({ where: { phone: '+923000000000' } })) ? `+92300000${Date.now().toString().slice(-4)}` : '+923000000000',
+          fullName: 'Healix System Administrator',
+          passwordHash: adminHash,
+          role: 'ADMIN',
+          status: 'ACTIVE',
+          admin: { create: {} },
+        },
+      });
+      console.log(`✅ Created Administrator: ${adminEmail}`);
+    }
+  }
 
   // ─────────────────────────────────────────────
   // 1. SEED 3 PATIENTS
@@ -355,7 +401,7 @@ async function main() {
 
   console.log('\n🎉 DEMO DATA SEEDED: 3 patients, 3 nurses, 3 doctors, 2 paramedics, 4 hospitals, 3 ambulances.');
   console.log('🔑 Common Password for ALL seeded users: abc123$%');
-  console.log('ℹ️  The administrator is created on server start from ADMIN_BOOTSTRAP_EMAIL / ADMIN_BOOTSTRAP_PASSWORD in .env.');
+  console.log('🔑 Administrator: the email and password set in ADMIN_BOOTSTRAP_EMAIL / ADMIN_BOOTSTRAP_PASSWORD (backend/.env).');
 }
 
 main()
