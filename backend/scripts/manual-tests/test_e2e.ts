@@ -167,7 +167,7 @@ async function runTest() {
 
     res = await axios.post(`${BASE_URL}/visits/${visitId}/clinical-remarks`, {
       remarksText: 'Patient is very unstable.',
-      confidenceLevel: 5 // 5 -> HIGH risk in stub
+      confidenceLevel: 5 // risk engine scores these vitals + notes as CRITICAL
     }, { headers: { Authorization: `Bearer ${nurseToken}` }});
     console.log(' Clinical Remarks submitted. Risk engine triggered.');
 
