@@ -10,10 +10,17 @@ export default function Dashboard({ onSelectCase }: { onSelectCase: (caseId: str
   const [error, setError] = useState('');
   const [pending, setPending] = useState<string | null>(null);
   const [confirmCase, setConfirmCase] = useState<any>(null);
+  const [emergency, setEmergency] = useState({ awaiting: 0, trips: 0 });
   const refresh = useCallback(async () => {
     try {
       const [assigned, alerts] = await Promise.all([api('GET', '/doctors/queue'), api('GET', '/doctors/queue/high-risk')]);
       setQueue(assigned); setUrgent(alerts); setError('');
+      // Emergencies assigned by an administrator do not appear in the case queue, so surface them here.
+      const [events, trips] = await Promise.all([api('GET', '/emergency/events').catch(() => []), api('GET', '/dispatch').catch(() => [])]);
+      setEmergency({
+        awaiting: (events as any[]).filter(e => !e.dispatches?.length).length,
+        trips: (trips as any[]).filter(d => ['PENDING', 'DISPATCHED', 'EN_ROUTE', 'ARRIVED'].includes(d.status)).length,
+      });
     } catch (e: any) { setError(e.message || 'Unable to load cases'); }
     finally { setLoading(false); }
   }, []);
@@ -29,6 +36,7 @@ export default function Dashboard({ onSelectCase }: { onSelectCase: (caseId: str
   const activeQueue = filter === 'ALL' ? queue : urgent;
   return <div className="page">
     <div className="page-header"><h2 className="page-title">Doctor Dashboard</h2><p className="page-subtitle">Review assigned cases, respond to urgent broadcasts, and record clinical decisions.</p><button className="btn btn-ghost" disabled={!!pending} onClick={() => void refresh()}>Refresh cases</button></div>
+    {(emergency.awaiting > 0 || emergency.trips > 0) && <div className="card" role="alert" style={{ borderColor: 'var(--red)', color: 'var(--red)' }}><strong>Emergency assigned to you</strong><p>{[emergency.awaiting ? `${emergency.awaiting} emergency case(s) need your transport decision` : '', emergency.trips ? `${emergency.trips} ambulance trip(s) in progress` : ''].filter(Boolean).join(' · ')}. Open <strong>Dispatches &amp; Admissions</strong> in the sidebar.</p></div>}
     <div className="tab-bar"><button className={`tab-btn ${filter === 'ALL' ? 'active' : ''}`} onClick={() => setFilter('ALL')}>My cases ({queue.length})</button><button className={`tab-btn ${filter === 'HIGH' ? 'active' : ''}`} onClick={() => setFilter('HIGH')}>High & critical risk ({urgent.length})</button></div>
     {error && <div className="card" role="alert" style={{ color: 'var(--red)' }}>{error}<button className="btn btn-ghost" onClick={() => void refresh()}>Retry</button></div>}
     {loading ? <div className="loading-page"><div className="spinner" /><p>Loading clinical cases…</p></div> : <div className="card"><div className="table-container"><table><thead><tr><th>Patient</th><th>Risk</th><th>Response deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody>{activeQueue.map(item => {
