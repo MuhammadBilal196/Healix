@@ -29,17 +29,27 @@ export class SlaTimeoutWorker {
             data: { status: 'GENERAL_BROADCAST' }
           });
 
-          await tx.assignmentLog.create({
-            data: {
-              visitId: caseData.visitId,
-              method: 'AUTO',
-              assignedTo: 'SYSTEM',
-              reason: 'SLA_TIMEOUT: Case escalated to GENERAL_BROADCAST (Professional 5min limit reached)'
-            }
-          });
+          // AssignmentLog.assignedTo must reference a real user (foreign key to users.id).
+          // A broadcast has no assignee yet, so the escalation is recorded against an administrator
+          // (the same convention as AutomaticDoctorAssignmentUseCase). Without an administrator the
+          // log is skipped so the escalation itself still succeeds.
+          const admins = await tx.administrator.findMany({ include: { user: true } });
+          const logOwner = admins[0]?.userId
+            ?? (await tx.user.findFirst({ where: { role: 'ADMIN' }, select: { id: true } }))?.id;
+          if (logOwner) {
+            await tx.assignmentLog.create({
+              data: {
+                visitId: caseData.visitId,
+                method: 'AUTO',
+                assignedTo: logOwner,
+                reason: 'SLA_TIMEOUT: Case escalated to GENERAL_BROADCAST (Professional 5min limit reached)'
+              }
+            });
+          } else {
+            console.warn(`[SLA TIMEOUT] No administrator account exists; escalation of ${caseData.id} was not written to the assignment log.`);
+          }
 
           // Generate admin alert
-          const admins = await tx.administrator.findMany({ include: { user: true } });
           
           const io = getIo();
           
