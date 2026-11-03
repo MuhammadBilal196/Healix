@@ -71,6 +71,11 @@ export class DispatchController {
         return;
       }
       const updated = await DispatchService.updateDispatchStatus(id, status, notes, (req as any).user);
+      // A finished or cancelled trip frees a paramedic and vehicle: give them to any dispatch still waiting.
+      if (['COMPLETED', 'CANCELLED'].includes(status)) {
+        const { DispatchAssignmentWorker } = require('../workers/dispatch-assignment.worker');
+        DispatchAssignmentWorker.assignWaiting().catch(() => undefined);
+      }
       ok(res, updated, `Dispatch status updated to ${status}`);
     } catch (e: any) {
       fail(res, e);
