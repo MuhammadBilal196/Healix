@@ -23,6 +23,13 @@ export class ClinicalRepository {
     });
   }
 
+  static async findSymptomsForVisit(visitId: string) {
+    return prisma.visitSymptom.findMany({
+      where: { visitId },
+      select: { symptomName: true, severity: true }
+    });
+  }
+
   static async findPendingCaseIds(cursor?: string) {
     return prisma.caseAssignment.findMany({ where: { status: { in: ['PENDING', 'UNASSIGNED'] } }, select: { id: true }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }], take: 20, ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}) });
   }
@@ -39,12 +46,15 @@ export class ClinicalRepository {
         });
 
         if (!existingCase) {
-          const slaDeadline = new Date(Date.now() + 5 * 60 * 1000);
+          // Same SLA as nurse-submitted remarks: 5 minutes for HIGH/CRITICAL, 20 minutes for MEDIUM.
+          const riskTier: string = assessmentData.riskTier;
+          const slaMinutes = riskTier === 'HIGH' || riskTier === 'CRITICAL' ? 5 : 20;
+          const slaDeadline = new Date(Date.now() + slaMinutes * 60 * 1000);
 
           const newCase = await tx.caseAssignment.create({
             data: {
               visitId,
-              riskTier: 'HIGH',
+              riskTier,
               slaDeadline,
               status: 'PENDING'
             }
@@ -138,7 +148,8 @@ export class ClinicalRepository {
     riskTier: string,
     fusedScore: number,
     remarksText: string,
-    confidenceLevel: number
+    confidenceLevel: number,
+    details: { mlScore?: number; explanation?: string } = {}
   ) {
       return prisma.$transaction(async (tx) => {
         const risk = await tx.riskAssessment.create({
@@ -147,6 +158,9 @@ export class ClinicalRepository {
             visitId,
             riskTier,
             fusedScore,
+            nurseConfidence: confidenceLevel,
+            ...(details.mlScore !== undefined ? { mlScore: details.mlScore } : {}),
+            ...(details.explanation !== undefined ? { explanation: details.explanation } : {}),
             notes: `Nurse qualitative remarks: "${remarksText}" (Confidence: ${confidenceLevel}/5)`
           }
         });
