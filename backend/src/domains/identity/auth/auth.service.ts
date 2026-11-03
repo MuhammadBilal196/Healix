@@ -320,7 +320,8 @@ export class AuthService {
     OtpAttempts.reset(user.id, 'PASSWORD_RESET');
     await OtpDelivery.send(user.email, code, 'PASSWORD_RESET');
 
-    return { success: true };
+    // Same response as the unknown-account branch, so the reply never reveals whether an account exists.
+    return { success: true, message: 'If an account exists, password reset instructions have been sent.' };
   }
 
   /**
@@ -330,7 +331,8 @@ export class AuthService {
     emailOrPhone = emailOrPhone.toLowerCase();
     const user = await AuthRepository.findUserByEmailOrPhone(emailOrPhone);
     if (!user) {
-      throw new AppError('User not found', 404);
+      // Same error as a wrong code, so this endpoint cannot be used to discover registered accounts.
+      throw new AppError('Invalid or expired password reset verification code', 400);
     }
 
     OtpAttempts.check(user.id, 'PASSWORD_RESET');
