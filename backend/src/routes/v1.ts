@@ -17,6 +17,7 @@ import escalationRouter from '../domains/care/emergency/escalation/escalation.ro
 import dispatchRouter from '../domains/care/emergency/dispatch/dispatch.routes';
 import admissionRouter from '../domains/care/emergency/admission/admission.routes';
 import verificationRouter from '../domains/care/visit/verification/verification.routes';
+import paymentRouter from '../domains/marketplace/payments/payment.routes';
 
 const router = Router();
 
@@ -39,5 +40,6 @@ router.use('/', escalationRouter);   // Mount escalation responses routes
 router.use('/', dispatchRouter);     // Mount dispatch response routes
 router.use('/', admissionRouter);    // Mount admission tracking routes
 router.use('/', verificationRouter); // Mount visit verification routes (Module 11)
+router.use('/', paymentRouter); // Cash payment confirmation
 
 export default router;
