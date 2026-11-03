@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding 3 Patients, 3 Nurses, and 3 Doctors...');
+  console.log('🌱 Seeding demo patients, nurses, doctors, paramedics, hospitals and ambulances...');
 
   const rawPassword = 'abc123$%';
   const passwordHash = await bcrypt.hash(rawPassword, 12);
@@ -277,8 +277,85 @@ async function main() {
     console.log(`✅ Created Doctor: ${d.email}`);
   }
 
-  console.log('\n🎉 ALL 9 ACCOUNTS SEEDED SUCCESSFULLY!');
-  console.log('🔑 Common Password for ALL users: abc123$%');
+  // ─────────────────────────────────────────────
+  // 4. SEED 2 PARAMEDICS
+  // ─────────────────────────────────────────────
+  const paramedicData = [
+    { email: 'paramedic1@gmail.com', phone: '+923031111111', fullName: 'Usman Ali', cnic: '35202-1212121-1', certificationNumber: 'EMT-L-4417' },
+    { email: 'paramedic2@gmail.com', phone: '+923032222222', fullName: 'Hamza Riaz', cnic: '35202-2323232-2', certificationNumber: 'EMT-L-5520' },
+  ];
+
+  for (const m of paramedicData) {
+    const existingUser = await prisma.user.findUnique({ where: { email: m.email } });
+    if (existingUser) {
+      console.log(`ℹ️  Updating existing paramedic: ${m.email}`);
+      await prisma.user.update({ where: { email: m.email }, data: { passwordHash, status: 'ACTIVE' } });
+      continue;
+    }
+
+    await prisma.user.create({
+      data: {
+        email: m.email,
+        phone: m.phone,
+        fullName: m.fullName,
+        passwordHash,
+        role: 'PARAMEDIC',
+        status: 'ACTIVE',
+        paramedic: {
+          create: {
+            cnic: m.cnic,
+            certificationNumber: m.certificationNumber,
+            verificationStatus: 'VERIFIED',
+          },
+        },
+      },
+    });
+    console.log(`✅ Created Paramedic: ${m.email}`);
+  }
+
+  // ─────────────────────────────────────────────
+  // 5. SEED 4 DEMO HOSPITALS (fictional names, Lahore coordinates)
+  // ─────────────────────────────────────────────
+  const hospitalData = [
+    { name: 'Gulberg General Hospital (Demo)', latitude: 31.515, longitude: 74.345, capacityStatus: 'AVAILABLE', affordabilityTier: 'MEDIUM', isCharity: false },
+    { name: 'Model Town Medical Centre (Demo)', latitude: 31.484, longitude: 74.326, capacityStatus: 'LIMITED', affordabilityTier: 'HIGH', isCharity: false },
+    { name: 'DHA Care Hospital (Demo)', latitude: 31.474, longitude: 74.391, capacityStatus: 'AVAILABLE', affordabilityTier: 'HIGH', isCharity: false },
+    { name: 'Mozang Charity Hospital (Demo)', latitude: 31.553, longitude: 74.313, capacityStatus: 'AVAILABLE', affordabilityTier: 'LOW', isCharity: true },
+  ];
+
+  for (const h of hospitalData) {
+    const existing = await prisma.hospital.findFirst({ where: { name: h.name } });
+    if (existing) {
+      await prisma.hospital.update({ where: { id: existing.id }, data: { ...h, capacityUpdatedAt: new Date() } });
+      console.log(`ℹ️  Updated hospital: ${h.name}`);
+    } else {
+      await prisma.hospital.create({ data: h });
+      console.log(`✅ Created Hospital: ${h.name}`);
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // 6. SEED 3 HEALIX FLEET AMBULANCES
+  // ─────────────────────────────────────────────
+  const ambulanceData = [
+    { vehicleNumber: 'HX-01', plateNumber: 'LEA-1101', type: 'BASIC', contactNumber: '+923041111111' },
+    { vehicleNumber: 'HX-02', plateNumber: 'LEA-1102', type: 'ADVANCED', contactNumber: '+923042222222' },
+    { vehicleNumber: 'HX-03', plateNumber: 'LEA-1103', type: 'ICU', contactNumber: '+923043333333' },
+  ];
+
+  for (const a of ambulanceData) {
+    // Existing vehicles keep their current status so an active dispatch is never reset.
+    await prisma.ambulance.upsert({
+      where: { vehicleNumber: a.vehicleNumber },
+      update: { plateNumber: a.plateNumber, type: a.type, contactNumber: a.contactNumber },
+      create: { ...a, provider: 'Healix Fleet', status: 'AVAILABLE' },
+    });
+    console.log(`✅ Ambulance ready: ${a.vehicleNumber}`);
+  }
+
+  console.log('\n🎉 DEMO DATA SEEDED: 3 patients, 3 nurses, 3 doctors, 2 paramedics, 4 hospitals, 3 ambulances.');
+  console.log('🔑 Common Password for ALL seeded users: abc123$%');
+  console.log('ℹ️  The administrator is created on server start from ADMIN_BOOTSTRAP_EMAIL / ADMIN_BOOTSTRAP_PASSWORD in .env.');
 }
 
 main()
