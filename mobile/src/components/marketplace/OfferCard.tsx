@@ -6,6 +6,7 @@ import { Card, Text, Button } from 'react-native-paper';
 import { NurseOffer } from '../../types/marketplace';
 import { OfferStatusBadge } from './OfferStatusBadge';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../theme';
+import { durationLabel, estimateExplanation, pkr, rateLabel } from '../../utils/pricing';
 
 interface Props {
   offer: NurseOffer;
@@ -56,8 +57,13 @@ export const OfferCard: React.FC<Props> = ({
           <Text style={styles.value}>Experience: {offer.nurse.experience == null ? 'Not recorded' : `${offer.nurse.experience} years`}</Text>
           <Text style={styles.value}>Recorded performance: {offer.nurse.score ? `${Math.round(offer.nurse.score.compositeScore)} / 100` : 'Not assessed'}</Text>
           <Text style={styles.value}>Certified specialties: {offer.nurse.specializations?.filter(s => s.certified).map(s => s.specialization.replace(/_/g, ' ')).join(', ') || 'None recorded'}</Text>
-          <Text style={styles.value}>Estimated service: PKR {offer.estimatedServiceCost ?? 'Unavailable'} for {offer.priceDurationMinutes ?? '—'} minutes{offer.priceDurationAssumed?' (comparison assumption)':''}</Text>
-          <Text style={styles.value}>Platform fee ({offer.feePercentage ?? '—'}%): PKR {offer.estimatedPlatformFee ?? 'Unavailable'} · Total estimate: PKR {offer.estimatedTotal ?? 'Unavailable'}</Text>
+          <View style={styles.costBox}>
+            <View style={styles.costRow}><Text style={styles.label}>Nurse's rate</Text><Text style={styles.costValue}>PKR {pkr(offer.price)} {rateLabel(offer.priceType)}</Text></View>
+            <View style={styles.costRow}><Text style={styles.label}>Service for {durationLabel(offer.priceDurationMinutes ?? 60)}{offer.priceDurationAssumed ? ' (assumed)' : ''}</Text><Text style={styles.costValue}>PKR {pkr(offer.estimatedServiceCost)}</Text></View>
+            <View style={styles.costRow}><Text style={styles.label}>Platform fee ({offer.feePercentage ?? '—'}%)</Text><Text style={styles.costValue}>PKR {pkr(offer.estimatedPlatformFee)}</Text></View>
+            <View style={[styles.costRow, styles.costTotal]}><Text style={styles.costTotalLabel}>Total per visit</Text><Text style={styles.costTotalValue}>PKR {pkr(offer.estimatedTotal)}</Text></View>
+            <Text style={styles.costHint}>{estimateExplanation(offer.price, offer.priceType, offer.priceDurationMinutes ?? 60)} = PKR {pkr(offer.estimatedServiceCost)}</Text>
+          </View>
           {offer.matchBasis && <Text style={styles.label}>{offer.matchBasis}</Text>}
           {onFavorite && <Button disabled={busy} onPress={() => onFavorite(offer.nurseId)}>{isFavorite ? 'Remove favorite' : 'Save nurse'}</Button>}
         </View>}
@@ -66,7 +72,7 @@ export const OfferCard: React.FC<Props> = ({
           <View style={styles.detailRow}>
             <Text style={styles.label}>Proposed Rate:</Text>
             <Text style={styles.price}>
-              PKR {offer.price} <Text style={styles.priceType}>/ {offer.priceType}</Text>
+              PKR {pkr(offer.price)} <Text style={styles.priceType}>{rateLabel(offer.priceType)}</Text>
             </Text>
           </View>
           <View style={styles.detailRow}>
@@ -202,4 +208,11 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderColor: COLORS.red,
     width: '100%',
   },
+  costBox: { backgroundColor: COLORS.bg, borderRadius: RADIUS.md, padding: SPACING.md, gap: SPACING.xs, marginVertical: SPACING.sm },
+  costRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: SPACING.md },
+  costValue: { ...TYPOGRAPHY.bodyMedium, color: COLORS.textPrimary, fontWeight: '600' },
+  costTotal: { borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: SPACING.xs, marginTop: SPACING.xs },
+  costTotalLabel: { ...TYPOGRAPHY.bodyMedium, color: COLORS.textPrimary, fontWeight: '700' },
+  costTotalValue: { ...TYPOGRAPHY.bodyMedium, fontSize: 18, color: COLORS.textPrimary, fontWeight: '800' },
+  costHint: { ...TYPOGRAPHY.bodySmall, color: COLORS.textSecondary },
 }));
