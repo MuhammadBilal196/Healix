@@ -1,5 +1,6 @@
 import { useAppTheme, useThemeValue } from '../../theme/ThemeProvider';
 import type { ThemeColors } from '../../theme';
+import { durationLabel, estimateExplanation, pkr, serviceEstimate } from '../../utils/pricing';
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button, SegmentedButtons, Text } from 'react-native-paper';
@@ -20,9 +21,11 @@ interface Props {
   isSubmitting: boolean;
   defaultProposedStart: string;
   initialOffer?: NurseOffer;
+  /** Requested visit length, used to preview what the patient will see. */
+  durationMinutes?: number;
 }
 
-export const OfferForm: React.FC<Props> = ({ onSubmit, isSubmitting, defaultProposedStart, initialOffer }) => {
+export const OfferForm: React.FC<Props> = ({ onSubmit, isSubmitting, defaultProposedStart, initialOffer, durationMinutes }) => {
   const { colors: COLORS } = useAppTheme();
   const styles = useThemeValue(createStyles);
 
@@ -93,6 +96,11 @@ export const OfferForm: React.FC<Props> = ({ onSubmit, isSubmitting, defaultProp
           activeOutlineColor={COLORS.navy}
           textColor={COLORS.textDark}
         />
+        {Number(priceStr) > 0 && durationMinutes ? (
+          <Text style={styles.previewText}>
+            The patient will see: {estimateExplanation(Number(priceStr), priceType, durationMinutes)} = PKR {pkr(serviceEstimate(Number(priceStr), priceType, durationMinutes))} for this {durationLabel(durationMinutes)} visit, plus the platform fee.
+          </Text>
+        ) : null}
       </View>
 
       <View style={styles.field}>
@@ -164,4 +172,5 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginTop: SPACING.sm,
     borderRadius: RADIUS.sm,
   },
+  previewText: { ...TYPOGRAPHY.bodySmall, color: COLORS.textSecondary, marginTop: SPACING.xs },
 }));
