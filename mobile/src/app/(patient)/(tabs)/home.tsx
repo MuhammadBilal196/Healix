@@ -5,6 +5,8 @@ import { StyleSheet, View, ScrollView, SafeAreaView, StatusBar, RefreshControl }
 import { navigate } from '../../../utils/navigation';
 import { useAuthStore } from '../../../store/auth';
 import { useDashboardSummary } from '../../../hooks/useDashboard';
+import { PendingContractsBanner } from '../../../components/contracts/PendingContractsBanner';
+import { VisitReviewBanner } from '../../../components/visits/VisitReviewBanner';
 import { usePrescriptions } from '../../../hooks/useHealth';
 import { SPACING } from '../../../theme';
 import { Button, Text } from 'react-native-paper';
@@ -75,6 +77,8 @@ export default function PatientHomeScreen() {
       >
         {loadingDash && <Text style={{ color: COLORS.headerText }}>Loading your care summary...</Text>}
         {dashboardError && <><Text style={{ color: COLORS.red }}>{dashboardError.message}</Text><Button onPress={() => void refetchDashboard()}>Retry dashboard</Button></>}
+        <PendingContractsBanner role="patient" profileId={patientId} />
+        <VisitReviewBanner />
         {/* Scenic Header */}
         <Button textColor={COLORS.headerText} onPress={() => navigate('/(patient)/emergency')}>Track Emergency Transport & Admission</Button>
         <DashboardHeader
