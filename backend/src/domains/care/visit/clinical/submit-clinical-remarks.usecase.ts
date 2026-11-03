@@ -2,7 +2,7 @@ import { VisitRepository } from '../visit.repository';
 import { AppError } from '../../../../common/errors/AppError';
 import { HTTP_STATUS } from '../../../../common/constants/index';
 import { ClinicalRepository } from '../../clinical/clinical.repository';
-import { RiskClassificationPolicy } from '../shared/policies/risk-classification.policy';
+import { RiskEngine } from '../../../ai/risk-engine';
 import { AutomaticDoctorAssignmentUseCase } from '../../clinical/usecases/assignment/automatic-doctor-assignment.usecase';
 
 export class SubmitClinicalRemarksUseCase {
@@ -30,21 +30,32 @@ export class SubmitClinicalRemarksUseCase {
 
     const remark = await this.clinicalRepository.createClinicalRemark(input.visitId, input.remarksText, input.confidenceLevel);
 
-    const riskTier = RiskClassificationPolicy.calculateRiskTier(input.confidenceLevel);
-    const fusedScore = RiskClassificationPolicy.calculateFusedScore(input.confidenceLevel);
+    // Risk uses everything recorded at this visit, not the nurse's confidence alone.
+    const [vitals, symptoms] = await Promise.all([
+      this.clinicalRepository.findLatestVitalsForVisit(input.visitId),
+      this.clinicalRepository.findSymptomsForVisit(input.visitId)
+    ]);
+    const assessment = RiskEngine.assess({
+      vitals,
+      symptoms,
+      notes: input.remarksText,
+      nurseConfidence: input.confidenceLevel
+    });
 
     // Save RiskAssessment record and escalate if necessary
     const { caseId } = await this.clinicalRepository.createRiskAssessmentAndEscalate(
-      input.visitId, 
-      visit.request.patientId, 
-      riskTier, 
-      fusedScore, 
-      input.remarksText, 
-      input.confidenceLevel
+      input.visitId,
+      visit.request.patientId,
+      assessment.riskTier,
+      assessment.fusedScore,
+      input.remarksText,
+      input.confidenceLevel,
+      { mlScore: assessment.mlScore, explanation: JSON.stringify(assessment.explanation) }
     );
 
     if (caseId) {
-      console.log(`[ESCALATION] Case ${caseId} created for Visit ${input.visitId}. Risk Tier: ${riskTier}, SLA: 20 mins.`);
+      const slaMinutes = assessment.riskTier === 'HIGH' || assessment.riskTier === 'CRITICAL' ? 5 : 20;
+      console.log(`[ESCALATION] Case ${caseId} created for Visit ${input.visitId}. Risk Tier: ${assessment.riskTier}, SLA: ${slaMinutes} mins.`);
       
       try {
         const assignmentUseCase = new AutomaticDoctorAssignmentUseCase();
