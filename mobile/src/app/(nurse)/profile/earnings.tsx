@@ -1,12 +1,15 @@
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
-import React from 'react';
+import React, { useState } from 'react';
+import { apiClient } from '../../../api/client';
+import { appAlert } from '../../../components/common/AppDialogs';
 import {
   View,
   Text,
   ScrollView,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import { useAuthStore } from '../../../store/auth';
 import { useNurseEarnings } from '../../../hooks/useNurse';
@@ -31,6 +34,13 @@ export default function NurseEarningsScreen() {
   const { user } = useAuthStore();
   const nurseId = user?.nurseId || user?.id || '';
   const { data: earnings, isLoading, error, refetch } = useNurseEarnings(nurseId);
+  const [confirming, setConfirming] = useState<string | null>(null);
+  const confirmCash = async (paymentId: string) => {
+    setConfirming(paymentId);
+    try { await apiClient.put(`/payments/${paymentId}/confirm-cash`, {}); await refetch(); }
+    catch (e: any) { appAlert('Could not confirm payment', e.message || 'Please try again.'); }
+    finally { setConfirming(null); }
+  };
 
   if (error) {
     return <ErrorState error={error.message} onRetry={() => void refetch()} />;
@@ -93,6 +103,11 @@ export default function NurseEarningsScreen() {
             <View style={styles.paymentInfo}>
               <Text style={styles.paymentAmount}>{formatCurrency(payment.amount)}</Text>
               <Text style={styles.paymentDate}>{formatDate(payment.createdAt)}</Text>
+              {payment.status === 'PENDING' && (
+                <TouchableOpacity accessibilityRole="button" disabled={confirming === payment.id} onPress={() => void confirmCash(payment.id)} style={styles.confirmBtn}>
+                  <Text style={styles.confirmText}>{confirming === payment.id ? 'Saving…' : 'Confirm cash received'}</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <View style={[styles.paymentBadge, {
               backgroundColor: payment.status === 'PAID' ? COLORS.emerald :
@@ -149,7 +164,9 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   paymentAmount: { color: COLORS.textDark, fontSize: 16, fontWeight: '700' },
   paymentDate: { color: COLORS.textMuted, fontSize: 12, marginTop: 3 },
   paymentBadge: { borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 },
-  paymentBadgeText: { fontSize: 11, fontWeight: '700' }
+  paymentBadgeText: { fontSize: 11, fontWeight: '700' },
+  confirmBtn: { marginTop: 6, alignSelf: 'flex-start', paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: COLORS.teal },
+  confirmText: { color: COLORS.teal, fontSize: 12, fontWeight: '700' },
 }));
 
 
