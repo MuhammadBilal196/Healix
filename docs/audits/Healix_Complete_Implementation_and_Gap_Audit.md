@@ -1,3 +1,5 @@
+> **Status note (2026-11-03):** this audit is out of date. Since it was written: the paramedic login loop is fixed and `/(paramedic)` exists; the web doctor-decision form sends the correct `{ decision, justification }` payload; the ambulance fleet screen exists in the mobile admin; demo seed data now includes paramedics, hospitals and ambulances; the SLA worker `'SYSTEM'` foreign-key defect is fixed; and risk scoring now lives in `backend/src/domains/ai/risk-engine` as a rule-based baseline (there is no trained ML model yet). For current status see `qa-tests/reports/FINAL-QA-REPORT.md` and `docs/maintenance/module-completion-tracker-2026-10-05.md`.
+
 # HEALIX HEALTHCARE PLATFORM
 ## Complete Module & Feature Implementation & Gap Audit Report
 **Authoritative Architectural & Codebase Inspection**
