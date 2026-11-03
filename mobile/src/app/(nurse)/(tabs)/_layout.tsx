@@ -3,10 +3,13 @@ import type { ThemeColors } from '../../../theme';
 import { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Tabs } from 'expo-router';
+import { SwipeTabs } from '../../../components/navigation/SwipeTabs';
 import { Text } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { navigate } from '../../../utils/navigation';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../../theme';
+
+const TAB_ORDER = ['home', 'visits', 'marketplace', 'messages', 'profile'];
 
 export default function NurseTabsLayout() {
   const { colors: COLORS } = useAppTheme();
@@ -21,9 +24,11 @@ export default function NurseTabsLayout() {
 
   return (
     <>
+      <SwipeTabs base="/(nurse)/(tabs)" tabs={TAB_ORDER}>
       <Tabs
         screenOptions={{
           headerShown: false,
+          animation: 'shift',
           tabBarStyle: {
             backgroundColor: COLORS.surfaceCard,
             borderTopWidth: 1,
@@ -89,6 +94,7 @@ export default function NurseTabsLayout() {
           }}
         />
       </Tabs>
+      </SwipeTabs>
 
       {/* More Menu Bottom Sheet / Modal */}
       <Modal

@@ -3,16 +3,21 @@ import { useAppTheme } from '../../../theme/ThemeProvider';
 import React from 'react';
 import { Platform } from 'react-native';
 import { Tabs } from 'expo-router';
+import { SwipeTabs } from '../../../components/navigation/SwipeTabs';
 import { Ionicons } from '@expo/vector-icons';
 
+
+const TAB_ORDER = ['home', 'requests', 'records', 'messages', 'profile'];
 
 export default function PatientTabsLayout() {
   const { colors: COLORS } = useAppTheme();
 
   return (
-    <Tabs
+    <SwipeTabs base="/(patient)/(tabs)" tabs={TAB_ORDER}>
+      <Tabs
       screenOptions={{
         headerShown: false,
+        animation: 'shift',
         tabBarStyle: {
           backgroundColor: COLORS.surfaceCard,
           borderTopWidth: 1,
@@ -87,5 +92,6 @@ export default function PatientTabsLayout() {
         }}
       />
     </Tabs>
+      </SwipeTabs>
   );
 }

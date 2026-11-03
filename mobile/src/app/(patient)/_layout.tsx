@@ -8,7 +8,6 @@ import { Text, Avatar, PaperProvider } from 'react-native-paper';
 import { useAuthStore } from '../../store/auth';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../theme';
 import { Ionicons } from '@expo/vector-icons';
-import { RoleDetailNavigation } from '../../components/common/RoleDetailNavigation';
 
 function PatientRootLayout() {
   const { colors: COLORS } = useAppTheme();
@@ -96,7 +95,7 @@ function PatientRootLayout() {
       <Stack.Screen name="marketplace" />
       <Stack.Screen name="notifications" />
       <Stack.Screen name="visits" />
-    </Stack><RoleDetailNavigation role="patient" /></View>
+    </Stack></View>
   );
 }
 

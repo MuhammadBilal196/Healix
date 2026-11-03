@@ -4,7 +4,9 @@ import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useAuthStore } from '../store/auth';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ImmersiveMode } from '../components/navigation/ImmersiveMode';
+import { BackBar } from '../components/navigation/BackBar';
 import * as SystemUI from 'expo-system-ui';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../lib/queryClient';
@@ -16,7 +18,7 @@ export default function RootLayout() {
 }
 
 function ThemedRootLayout() {
-  const { colors: COLORS, dark, ready } = useAppTheme();
+  const { colors: COLORS, ready } = useAppTheme();
   const paperTheme = usePaperTheme();
 
   const { user, isInitializing, loadUser } = useAuthStore();
@@ -27,10 +29,14 @@ function ThemedRootLayout() {
   useEffect(() => { void SystemUI.setBackgroundColorAsync(COLORS.bg).catch(() => {}); }, [COLORS.bg]);
   useEffect(() => { if (redirect) router.replace(redirect as any); }, [redirect, router]);
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <QueryClientProvider client={queryClient}>
       <PaperProvider theme={paperTheme}>
-        <StatusBar style={dark ? 'light' : 'dark'} />
-        <Slot />
+        <ImmersiveMode />
+        <View style={{ flex: 1, backgroundColor: COLORS.bg }}>
+          {!redirect && <BackBar />}
+          <View style={{ flex: 1 }}><Slot /></View>
+        </View>
         <AppDialogs />
         {(!ready || isInitializing || redirect) && (
           <View pointerEvents="auto" style={{ position: 'absolute', inset: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.bg }}>
@@ -39,5 +45,6 @@ function ThemedRootLayout() {
         )}
       </PaperProvider>
     </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }
