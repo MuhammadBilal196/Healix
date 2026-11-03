@@ -1,21 +1,24 @@
 # Paramedic Module QA Report
 
-## Overview
-A complete end-to-end functional audit was conducted for the Paramedic Module of the Healix application. 
+*Updated: 2026-11-03. An earlier version said the whole module was NOT_IMPLEMENTED; that is no longer accurate.*
 
-## Findings
-The entire Paramedic Module is currently **NOT_IMPLEMENTED**.
+## What exists now
 
-- Frontend screens in `mobile/src/app/(paramedic)/` are missing.
-- Backend domain for emergency handling `backend/src/domains/emergency/` is missing.
-- Backend identity logic for paramedics `backend/src/domains/identity/paramedic/` is missing.
-- Only a basic `Paramedic` model exists in the `backend/prisma/schema.prisma`.
+**Backend**
+- `Paramedic` model and paramedic registration (public, invited and admin-created) with a paramedic profile row.
+- Workload-balanced paramedic selection and ambulance dispatch (`backend/src/domains/care/emergency/`).
+- Dispatch status updates restricted to the assigned paramedic or an administrator (`DISPATCHED → EN_ROUTE → ARRIVED → COMPLETED`, or `CANCELLED`).
+- Automatic patient–paramedic and nurse–paramedic chat threads when a paramedic is assigned.
 
-## Bug Fixes Applied
-No bug fixes were applied because the entire feature set is non-existent. Per instructions, no fake functionality was created.
+**Mobile**
+- Paramedic login routes to `/(paramedic)` (the earlier redirect loop to the patient portal is fixed in `mobile/src/utils/authRouting.ts`).
+- `/(paramedic)` renders the shared `EmergencyWorkspace`: list of the paramedic's dispatches, status buttons, location sharing and admission requests.
 
-## Database Verification
-Not applicable as the endpoints and frontend to test persistence do not exist.
+**Demo data**
+- `pnpm --filter healix-backend seed:demo` creates `paramedic1@gmail.com` and `paramedic2@gmail.com` (verified), 4 demo hospitals and 3 ambulances.
 
-## Conclusion
-The Paramedic Module requires full implementation from scratch.
+## Still missing
+- A dedicated paramedic dashboard design (currently one shared operations screen).
+- A paramedic messages screen (threads are created, but there is no paramedic chat route).
+- Paramedic profile, settings and notification screens.
+- Physical device testing of location sharing.
