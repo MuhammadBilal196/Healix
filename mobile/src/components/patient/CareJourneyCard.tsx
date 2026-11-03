@@ -27,7 +27,15 @@ export const CareJourneyCard: React.FC<CareJourneyCardProps> = ({
   const styles = useThemeValue(createStyles);
 
   const reqData = request as any;
-  const visit = reqData?.visit || (reqData?.visits && reqData.visits.length > 0 ? reqData.visits[0] : null);
+  // Pick the visit that matters now. visits[0] used to be the first-ever visit, so a completed
+  // visit kept showing as "Scheduled" with its old date.
+  const allVisits: any[] = reqData?.visits?.length ? reqData.visits : reqData?.visit ? [reqData.visit] : [];
+  const startOf = (v: any) => Date.parse(v?.agreedStartTime || v?.scheduledAt || v?.createdAt || 0) || 0;
+  const awaitingReview = allVisits.filter(v => v.status === 'COMPLETED' && !v.completionApprovedAt).sort((a, b) => startOf(b) - startOf(a));
+  const upcoming = allVisits.filter(v => ['SCHEDULED', 'ACCEPTED', 'IN_PROGRESS'].includes(v.status)).sort((a, b) => startOf(a) - startOf(b));
+  const finished = allVisits.filter(v => v.status === 'COMPLETED').sort((a, b) => startOf(b) - startOf(a));
+  const visit = awaitingReview[0] || upcoming[0] || finished[0] || allVisits[0] || null;
+  const completedCount = finished.length;
   const nurse = visit?.nurse?.user || reqData?.nurse?.user;
   const nurseName = nurse?.fullName || (request.type === 'NURSE_VISIT' ? 'Assigned Nurse' : 'Assigned Doctor');
   const serviceTitle = request.requirements || (request.type === 'NURSE_VISIT' ? 'Home Nurse Care' : 'Doctor Consultation');
@@ -43,7 +51,7 @@ export const CareJourneyCard: React.FC<CareJourneyCardProps> = ({
         .toUpperCase()
     : 'RN';
 
-  const scheduledDate = request.scheduledAt || visit?.scheduledAt || request.preferredDate;
+  const scheduledDate = visit?.agreedStartTime || visit?.scheduledAt || request.scheduledAt || request.preferredDate;
   const formattedDate = scheduledDate
     ? new Date(scheduledDate).toLocaleDateString(undefined, {
         month: 'short',
@@ -61,9 +69,14 @@ export const CareJourneyCard: React.FC<CareJourneyCardProps> = ({
   // 1. UPCOMING WITH ASSIGNED VISIT
   // ─────────────────────────────────────────────────────────────
   if (request.status === 'ASSIGNED' || request.status === 'IN_PROGRESS' || (visit && request.status !== 'COMPLETED' && request.status !== 'CANCELLED')) {
-    const visitTimingText = isToday
-      ? `Visit today${formattedTime ? ` · ${formattedTime}` : ''}`
-      : `Scheduled ${formattedDate}${formattedTime ? ` · ${formattedTime}` : ''}`;
+    const recurringNote = request.scheduleType === 'RECURRING' && completedCount > 0 ? ` · visit ${completedCount + (visit?.status === 'COMPLETED' ? 0 : 1)} of series` : '';
+    const visitTimingText = visit?.status === 'COMPLETED' && !visit?.completionApprovedAt
+      ? 'Visit completed · tap to review and approve'
+      : visit?.status === 'IN_PROGRESS'
+        ? 'Visit in progress now'
+        : (isToday
+          ? `Visit today${formattedTime ? ` · ${formattedTime}` : ''}`
+          : `Scheduled ${formattedDate}${formattedTime ? ` · ${formattedTime}` : ''}`) + recurringNote;
 
     return (
       <TouchableOpacity style={styles.card} activeOpacity={0.88} onPress={onCardPress}>
