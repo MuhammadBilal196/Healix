@@ -16,12 +16,14 @@ import { SlaTimeoutWorker } from './domains/care/clinical/workers/sla-timeout.wo
 import { registerEmergencyListeners } from './domains/care/emergency/emergency.listeners';
 import { registerClinicalListeners } from './domains/care/clinical/clinical.listeners';
 import { CaseAssignmentWorker } from './domains/care/clinical/workers/case-assignment.worker';
+import { DispatchAssignmentWorker } from './domains/care/emergency/workers/dispatch-assignment.worker';
 
 const maintenance = new MaintenanceWorker([
   { name: 'contracts', run: () => ContractService.sweepExpiredContracts() },
   { name: 'offers', run: () => MarketplaceRepository.expireExpiredOffers() },
   { name: 'case assignments', run: () => CaseAssignmentWorker.processPendingCases() },
-  { name: 'clinical SLA', run: () => SlaTimeoutWorker.processTimeouts() }
+  { name: 'clinical SLA', run: () => SlaTimeoutWorker.processTimeouts() },
+  { name: 'dispatch assignment', run: () => DispatchAssignmentWorker.assignWaiting() }
 ]);
 
 // Initialize HTTP port listener
