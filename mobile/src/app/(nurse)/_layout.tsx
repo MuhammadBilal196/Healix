@@ -8,7 +8,6 @@ import { Text, Avatar, PaperProvider } from 'react-native-paper';
 import { useAuthStore } from '../../store/auth';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../theme';
 import { Ionicons } from '@expo/vector-icons';
-import { RoleDetailNavigation } from '../../components/common/RoleDetailNavigation';
 
 function NurseRootLayout() {
   const { colors: COLORS } = useAppTheme();
@@ -90,7 +89,7 @@ function NurseRootLayout() {
       <Stack.Screen name="schedule" />
       <Stack.Screen name="sync" />
       <Stack.Screen name="ai" />
-    </Stack><RoleDetailNavigation role="nurse" /></View>
+    </Stack></View>
   );
 }
 
