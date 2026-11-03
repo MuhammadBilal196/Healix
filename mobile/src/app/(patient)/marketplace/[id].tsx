@@ -1,6 +1,7 @@
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
 import { appAlert, confirmAction } from '../../../components/common/AppDialogs';
+import { estimateExplanation, pkr } from '../../../utils/pricing';
 import React from 'react';
 import { View, StyleSheet, ActivityIndicator, ScrollView, Alert } from 'react-native';
 import { Text } from 'react-native-paper';
@@ -46,7 +47,8 @@ export default function ListingOffersScreen() {
       const offer = offers?.find(item => item.id === offerId);
       if (!offer) return;
       const preview = await marketplaceApi.getCostPreview({price:offer.price,priceType:offer.priceType,durationHours:(offer.priceDurationMinutes || 60)/60});
-      if (!await confirmAction('Select this offer?', `Estimated total: PKR ${preview.total} (service ${preview.serviceCost}, platform fee ${preview.platformFee}). This creates a draft contract for both parties to review and approve. ${preview.disclaimer}`)) return;
+      const minutes = offer.priceDurationMinutes || 60;
+      if (!await confirmAction('Select this offer?', `${estimateExplanation(offer.price, offer.priceType, minutes)} = PKR ${pkr(preview.serviceCost)}\nPlatform fee (${preview.feePercentage}%): PKR ${pkr(preview.platformFee)}\nTotal per visit: PKR ${pkr(preview.total)}\n\nThis creates a contract that you and the nurse both need to approve.`)) return;
       const res: any = await selectOffer.mutateAsync({ listingId, offerId });
       const contractId = res?.contractId || res?.data?.contractId;
       if (contractId) {
