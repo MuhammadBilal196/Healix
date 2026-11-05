@@ -26,8 +26,8 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      if (mfaRequired) await verifyMfa(email, code);
-      else { const challenge = await login(email, password); setMfaRequired(challenge); if (challenge) setPassword(''); }
+      if (mfaRequired) await verifyMfa(email.trim(), code.trim());
+      else { const challenge = await login(email.trim(), password); setMfaRequired(challenge); if (challenge) setPassword(''); }
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check credentials.');
     } finally {
