@@ -39,7 +39,9 @@ export default function AdminConfig() {
   };
 
   const defaultConfigs = [
-    { key: 'PLATFORM_COMMISSION_FEE', description: 'Marketplace platform transaction fee (%)' },
+    { key: 'platform_fee_pct', description: 'Marketplace platform transaction fee (%)' },
+    { key: 'escalation_sla_max_minutes', description: 'Doctor escalation response SLA limit (5 - 20 Mins)' },
+    { key: 'PLATFORM_COMMISSION_FEE', description: 'Legacy marketplace platform transaction fee (%)' },
     { key: 'SLA_RESPONSE_TIMEOUT_MINS', description: 'Doctor escalation response SLA limit (Mins)' },
     { key: 'GEOFENCE_RADIUS_METERS', description: 'Nurse GPS check-in proximity radius (Meters)' },
     { key: 'HIPAA_ENCRYPTION_MODE', description: 'Real-time message payload encryption' },
@@ -55,6 +57,14 @@ export default function AdminConfig() {
           </TouchableOpacity>
           <Text style={styles.title}>System Parameters</Text>
           <Text style={styles.subtitle}>Configure SLA parameters and platform settings</Text>
+          <Button
+            mode="outlined"
+            textColor={COLORS.emerald}
+            style={{ borderColor: COLORS.emerald, marginTop: 12, borderRadius: RADIUS.md, alignSelf: 'flex-start' }}
+            onPress={() => navigate('/admin/audit')}
+          >
+            View System Audit Logs ›
+          </Button>
         </View>
 
         <Text style={styles.sectionLabel}>Active System Parameters</Text>
