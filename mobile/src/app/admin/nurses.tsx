@@ -3,7 +3,7 @@ import { useAppTheme, useThemeValue } from '../../theme/ThemeProvider';
 import type { ThemeColors } from '../../theme';
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, SafeAreaView, StatusBar, FlatList } from 'react-native';
-import { Card, Button, Chip, Divider } from 'react-native-paper';
+import { Card, Button, Chip, Divider, Portal, Dialog, TextInput as PaperTextInput } from 'react-native-paper';
 import { navigate } from '../../utils/navigation';
 import { useAdminNurses, useAdminPendingNurses, useApproveNurse, useRejectNurse, useRevokeNurse } from '../../hooks/useAdmin';
 import { SPACING, RADIUS } from '../../theme';
@@ -25,6 +25,8 @@ export default function AdminNurses() {
   
   const isLoading = isLoadingPending || isLoadingNurses;
   const [tab, setTab] = useState<'PENDING' | 'ALL'>('PENDING');
+  const [rejectTargetId, setRejectTargetId] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   const handleApprove = async (id: string) => {
     try {
@@ -35,7 +37,7 @@ export default function AdminNurses() {
     }
   };
 
-  const handleReject = async (id: string) => {
+  const handleReject = (id: string) => { setRejectReason(''); setRejectTargetId(id); return;
     Alert.prompt(
       'Reject PNC Verification',
       'Reason for rejecting nurse application (min 5 chars):',
@@ -60,6 +62,20 @@ export default function AdminNurses() {
     );
   };
 
+  const confirmRejectNurse = async () => {
+    if (!rejectTargetId || rejectReason.trim().length < 5) {
+      Alert.alert('Error', 'A clear justification reason (min 5 chars) is required.');
+      return;
+    }
+    try {
+      await rejectNurse({ nurseId: rejectTargetId, reason: rejectReason.trim() });
+      setRejectTargetId(null);
+      setRejectReason('');
+      Alert.alert('Nurse Rejected', 'Verification application rejected.');
+    } catch (err: any) {
+      Alert.alert('Error', err.message || 'Action failed');
+    }
+  };
   const activeList = tab === 'PENDING' ? pendingNurses : nurses;
 
   const renderItem = ({ item: nurse }: any) => (
@@ -170,6 +186,23 @@ export default function AdminNurses() {
           />
         )}
       </View>
+      <Portal>
+        <Dialog visible={!!rejectTargetId} onDismiss={() => setRejectTargetId(null)} style={{ backgroundColor: COLORS.surfaceCard }}>
+          <Dialog.Title style={{ color: COLORS.textDark }}>Reject PNC Verification</Dialog.Title>
+          <Dialog.Content>
+            <PaperTextInput
+              label="Rejection Reason (min 5 chars)"
+              value={rejectReason}
+              onChangeText={setRejectReason}
+              style={{ marginBottom: 10 }}
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setRejectTargetId(null)}>Cancel</Button>
+            <Button textColor={COLORS.red} onPress={() => void confirmRejectNurse()}>Reject</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </SafeAreaView>
   );
 }
