@@ -16,7 +16,8 @@ export default function Dashboard() {
   const loadEscalatedCases = async () => {
     try {
       const allCases: any = await fetchClinicalCases();
-      const alerts = (allCases.data || []).filter((c: any) => 
+      const caseList = Array.isArray(allCases) ? allCases : (allCases?.data || []);
+      const alerts = caseList.filter((c: any) => 
         c.status === 'ADMIN_ESCALATED' || 
         (c.status === 'PROFESSIONAL_BROADCAST' && c.slaDeadline && new Date(c.slaDeadline) < new Date()) ||
         c.status === 'UNASSIGNED'
