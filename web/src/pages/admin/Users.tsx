@@ -121,6 +121,7 @@ export default function Users() {
           <option value="PATIENT">Patients</option>
           <option value="NURSE">Nurses</option>
           <option value="DOCTOR">Doctors</option>
+          <option value="PARAMEDIC">Paramedics</option>
           <option value="ADMIN">Administrators</option>
         </select>
 
