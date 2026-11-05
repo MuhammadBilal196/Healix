@@ -152,12 +152,12 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   },
 
   fetchConfigs: async () => {
-    const configs = await api('GET', '/admin/platform/config');
+    const configs = await api('GET', '/admin/config');
     set({ configs });
   },
 
   updateConfig: async (key, value, changeReason) => {
-    await api('PUT', '/admin/platform/config', { key, value, changeReason });
+    await api('PUT', `/admin/config/${encodeURIComponent(key)}`, { value, changeReason });
     await get().fetchConfigs();
   },
 
