@@ -66,10 +66,11 @@ export default function AdminClinicalOperations() {
             <Chip textStyle={{ fontSize: 10 }}>{c.status}</Chip>
           </View>
           <Text style={styles.cardSub}>Patient ID: {c.visit?.request?.patientId?.slice(0, 8) || 'N/A'}</Text>
-          <Text style={styles.cardSub}>Symptoms: {c.symptoms || 'N/A'}</Text>
+          <Text style={styles.cardSub}>Patient: {c.visit?.request?.patient?.user?.fullName || c.visit?.request?.patientId?.slice(0, 8) || 'N/A'}</Text>
+          <Text style={styles.cardSub}>Risk Tier: {c.riskTier || 'N/A'}</Text>
           
           {c.doctorId && (
-            <Text style={styles.cardSub}>Assigned Dr: {c.doctorId.slice(0, 8)}</Text>
+            <Text style={styles.cardSub}>Assigned Dr: {c.doctor?.user?.fullName || c.doctorId.slice(0, 8)}</Text>
           )}
 
           {activeTab === 'UNASSIGNED' && (
