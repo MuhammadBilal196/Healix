@@ -51,7 +51,7 @@ jest.mock('../../../../common/config/database', () => ({
       update: jest.fn(),
     },
     emergencyEvent: {
-      findFirst: jest.fn().mockResolvedValue(null),
+      findFirst: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       findUnique: jest.fn(),
@@ -87,6 +87,7 @@ jest.mock('../../../communication/notification/notification.service', () => ({
 describe('Healix SLA & Emergency Ambulance Workflow Test Suite', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (prisma.user as any).findFirst = jest.fn().mockResolvedValue(null);
   });
 
   // ─────────────────────────────────────────────────────────────────────────────
