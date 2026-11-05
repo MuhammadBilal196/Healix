@@ -66,7 +66,7 @@ export default function AdminUsers() {
         <Divider style={styles.divider} />
 
         <View style={styles.actionsRow}>
-          <Button
+          {u.role !== 'ADMIN' && <Button
             mode="outlined"
             textColor={u.status === 'ACTIVE' ? COLORS.red : COLORS.emerald}
             onPress={() => handleToggleStatus(u.id, u.status)}
@@ -74,7 +74,7 @@ export default function AdminUsers() {
             labelStyle={{ fontWeight: '700' }}
           >
             {u.status === 'ACTIVE' ? 'Suspend Account' : 'Reactivate Account'}
-          </Button>
+          </Button>}
         </View>
       </Card.Content>
     </Card>
@@ -103,7 +103,7 @@ export default function AdminUsers() {
 
         {/* Filter Pills */}
         <View style={styles.filterRow}>
-          {(['', 'PATIENT', 'NURSE', 'DOCTOR', 'ADMIN'] as const).map((r) => (
+          {(['', 'PATIENT', 'NURSE', 'DOCTOR', 'PARAMEDIC', 'ADMIN'] as const).map((r) => (
             <TouchableOpacity
               key={r}
               style={[styles.filterChip, role === r && styles.filterChipActive]}
