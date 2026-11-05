@@ -23,7 +23,7 @@ export class MfaLoginService {
   }
 
   static async verifyMfaLogin(emailOrPhone: string, code: string, deviceInfo: string, ipAddress: string) {
-    emailOrPhone = emailOrPhone.toLowerCase();
+    emailOrPhone = emailOrPhone.trim().toLowerCase();
     const user = await AuthRepository.findUserByEmailOrPhone(emailOrPhone);
     if (!user) throw new AppError('User not found', 404);
 
@@ -59,7 +59,7 @@ export class MfaLoginService {
         id: user.id, email: user.email, phone: user.phone, fullName: user.fullName,
         role: user.role, status: user.status, createdAt: user.createdAt,
         patientId: user.patient?.id, nurseId: user.nurse?.id, doctorId: user.doctor?.id,
-        paramedicId: user.paramedic?.id
+        paramedicId: user.paramedic?.id, adminId: user.admin?.id
       }
     };
   }
