@@ -14,7 +14,8 @@ export default function AdminAuditLogs() {
   const { colors: COLORS } = useAppTheme();
   const styles = useThemeValue(createStyles);
 
-  const { data: auditLogs = [], isLoading } = useAdminAuditLogs();
+  const { data: auditLogsRaw, isLoading } = useAdminAuditLogs();
+  const auditLogs = Array.isArray(auditLogsRaw) ? auditLogsRaw : (auditLogsRaw as any)?.logs || [];
 
   const renderItem = ({ item: log }: any) => (
     <Card style={styles.card}>
@@ -23,8 +24,10 @@ export default function AdminAuditLogs() {
           <Text style={styles.logAction}>{log.action}</Text>
           <Text style={styles.logTime}>{new Date(log.createdAt).toLocaleString()}</Text>
         </View>
-        <Text style={styles.logDesc}>{log.details || 'System operation executed'}</Text>
-        {log.userId && <Text style={styles.logUser}>User ID: {log.userId}</Text>}
+        <Text style={styles.logDesc}>{log.reason || log.details || `${log.entityType || 'System'} operation executed`}</Text>
+        {(log.admin?.fullName || log.adminId) && <Text style={styles.logUser}>Admin: {log.admin?.fullName || log.adminId}</Text>}
+        {(log.targetUser?.fullName || log.targetUserId || log.userId) && <Text style={styles.logUser}>Target: {log.targetUser?.fullName || log.targetUserId || log.userId}</Text>}
+
       </Card.Content>
     </Card>
   );
