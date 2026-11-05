@@ -88,7 +88,8 @@ export const getMeController = asyncHandler(async (req: Request, res: Response) 
     nurseId: user.nurse?.id,
     doctorId: user.doctor?.id,
     doctor: user.doctor ? { pmdcNumber: user.doctor.pmdcNumber, verificationStatus: user.doctor.verificationStatus, bio: user.doctor.bio, emergencyAvailable: user.doctor.emergencyAvailable, isProfessional: user.doctor.isProfessional } : undefined,
-    paramedicId: user.paramedic?.id
+    paramedicId: user.paramedic?.id,
+    adminId: user.admin?.id
   }, 200);
 });
 
