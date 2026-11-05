@@ -18,8 +18,8 @@ async function main() {
   const adminPassword = process.env.ADMIN_BOOTSTRAP_PASSWORD;
   if (!adminEmail || !adminPassword) {
     console.warn('⚠️  ADMIN_BOOTSTRAP_EMAIL and ADMIN_BOOTSTRAP_PASSWORD are not set in backend/.env, so no administrator was created.');
-  } else if (adminPassword.length < 12) {
-    console.warn('⚠️  ADMIN_BOOTSTRAP_PASSWORD must be at least 12 characters, so no administrator was created.');
+  } else if (adminPassword.length < 8) {
+    console.warn('⚠️  ADMIN_BOOTSTRAP_PASSWORD must be at least 8 characters, so no administrator was created.');
   } else {
     const adminHash = await bcrypt.hash(adminPassword, 12);
     const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
@@ -56,6 +56,39 @@ async function main() {
   }
 
   // ─────────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  const demoAdminEmail = 'admin1@gmail.com';
+  const existingDemoAdmin = await prisma.user.findUnique({ where: { email: demoAdminEmail } });
+  if (!existingDemoAdmin) {
+    const demoPhoneTaken = await prisma.user.findUnique({ where: { phone: '+923000000001' } });
+    await prisma.user.create({
+      data: {
+        email: demoAdminEmail,
+        phone: demoPhoneTaken ? `+92300001${Date.now().toString().slice(-4)}` : '+923000000001',
+        fullName: 'Admin One (Healix Demo)',
+        passwordHash,
+        role: 'ADMIN',
+        status: 'ACTIVE',
+        emailVerificationRequired: false,
+        admin: { create: {} },
+      },
+    });
+    console.log(`✅ Created Demo Administrator: ${demoAdminEmail}`);
+  } else if (existingDemoAdmin.role === 'ADMIN') {
+    await prisma.user.update({
+      where: { id: existingDemoAdmin.id },
+      data: {
+        passwordHash,
+        status: 'ACTIVE',
+        deletedAt: null,
+        mfaEnabled: false,
+        emailVerificationRequired: false,
+        admin: { upsert: { create: {}, update: {} } },
+      },
+    });
+    console.log(`✅ Demo Administrator ready: ${demoAdminEmail}`);
+  }
+
   // 1. SEED 3 PATIENTS
   // ─────────────────────────────────────────────
   const patientData = [
