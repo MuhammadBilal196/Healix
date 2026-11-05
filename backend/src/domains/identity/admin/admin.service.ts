@@ -354,10 +354,10 @@ export class AdminService {
 
   // ─── Clinical Operations ──────────────────────────────────────────────────────
   static async getUnassignedCases() {
-    return AdminRepository.getClinicalCasesByStatus('PENDING'); 
+    return AdminRepository.getClinicalCasesByStatus(['PENDING', 'UNASSIGNED', 'PROFESSIONAL_BROADCAST', 'GENERAL_BROADCAST', 'ADMIN_ESCALATED']); 
   }
   static async getAssignedCases() {
-    return AdminRepository.getClinicalCasesByStatus('ACCEPTED'); 
+    return AdminRepository.getClinicalCasesByStatus(['ACCEPTED', 'ASSIGNED', 'IN_REVIEW']); 
   }
   static async getHighRiskCases() {
     return AdminRepository.getHighRiskCases();
