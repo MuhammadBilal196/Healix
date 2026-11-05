@@ -19,7 +19,7 @@ export class AdminRepository {
       prisma.visit.count(),
       prisma.visit.count({ where: { status: 'COMPLETED' } }),
       prisma.contract.count({ where: { status: 'ACTIVE' } }),
-      prisma.caseAssignment.count({ where: { status: 'PENDING', riskTier: 'HIGH' } }),
+      prisma.caseAssignment.count({ where: { status: { not: 'RESOLVED' }, riskTier: { in: ['HIGH', 'CRITICAL'] } } }),
       prisma.nurse.count(),
       prisma.doctor.count(),
       prisma.patient.count(),
@@ -189,7 +189,7 @@ export class AdminRepository {
   static async revokeDoctor(doctorId: string, reason: string) {
     // Flag active case assignments for re-escalation
     await prisma.caseAssignment.updateMany({
-      where: { doctorId, status: 'ACCEPTED' },
+      where: { doctorId, status: { in: ['ACCEPTED', 'ASSIGNED', 'IN_REVIEW'] } },
       data: { status: 'PENDING', doctorId: null },
     });
     return prisma.doctor.update({
@@ -304,7 +304,7 @@ export class AdminRepository {
   }
   static async getVisits(_query?: any) {
     return prisma.visit.findMany({
-      // orderBy removed because Visit lacks createdAt
+      orderBy: { agreedStartTime: 'desc' },
       include: {
         nurse: { include: { user: { select: { fullName: true } } } },
         doctor: { include: { user: { select: { fullName: true } } } },
@@ -314,16 +314,16 @@ export class AdminRepository {
   }
 
   // ─── Clinical Operations ──────────────────────────────────────────────────────
-  static async getClinicalCasesByStatus(status: string) {
+  static async getClinicalCasesByStatus(status: string | string[]) {
     return prisma.caseAssignment.findMany({
-      where: { status },
+      where: { status: Array.isArray(status) ? { in: status } : status },
       orderBy: { createdAt: 'desc' },
       include: { doctor: { include: { user: { select: { fullName: true } } } }, visit: { include: { request: { include: { patient: { include: { user: { select: { fullName: true } } } } } } } } }
     });
   }
   static async getHighRiskCases() {
     return prisma.caseAssignment.findMany({
-      where: { riskTier: 'HIGH' },
+      where: { riskTier: { in: ['HIGH', 'CRITICAL'] } },
       orderBy: { createdAt: 'desc' },
       include: { doctor: { include: { user: { select: { fullName: true } } } }, visit: { include: { request: { include: { patient: { include: { user: { select: { fullName: true } } } } } } } } }
     });
