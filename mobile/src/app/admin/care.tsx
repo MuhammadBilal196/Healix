@@ -73,7 +73,7 @@ export default function AdminCareOperations() {
               <Chip textStyle={{ fontSize: 10 }}>{req.status}</Chip>
             </View>
             <Text style={styles.cardSub}>Service: {req.serviceType}</Text>
-            <Text style={styles.cardSub}>Patient ID: {req?.patientId?.slice(0, 8) || 'N/A'}</Text>
+            <Text style={styles.cardSub}>Patient: {(req as any)?.patient?.user?.fullName || req?.patientId?.slice(0, 8) || 'N/A'}</Text>
             <Text style={styles.cardSub}>Date: {new Date(req.createdAt).toLocaleDateString()}</Text>
           </Card.Content>
         </Card>
@@ -90,8 +90,8 @@ export default function AdminCareOperations() {
               <Text style={styles.cardTitle}>Offer: {off?.id?.slice(0, 8) || 'N/A'}</Text>
               <Chip textStyle={{ fontSize: 10 }}>{off.status}</Chip>
             </View>
-            <Text style={styles.cardSub}>Provider ID: {off?.providerId?.slice(0, 8) || 'N/A'}</Text>
-            <Text style={styles.cardSub}>Amount: Rs {off.amount}</Text>
+            <Text style={styles.cardSub}>Nurse: {(off as any)?.nurse?.user?.fullName || (off as any)?.nurseId?.slice(0, 8) || off?.providerId?.slice(0, 8) || 'N/A'}</Text>
+            <Text style={styles.cardSub}>Price: Rs {(off as any).price ?? off.amount ?? 'N/A'}{(off as any).priceType ? ` (${(off as any).priceType})` : ''}</Text>
           </Card.Content>
         </Card>
       ));
@@ -107,8 +107,9 @@ export default function AdminCareOperations() {
               <Text style={styles.cardTitle}>Contract: {con?.id?.slice(0, 8)}</Text>
               <Chip textStyle={{ fontSize: 10 }}>{con.status}</Chip>
             </View>
-            <Text style={styles.cardSub}>Provider ID: {con?.providerId?.slice(0, 8) || 'N/A'}</Text>
-            <Text style={styles.cardSub}>Patient ID: {con?.patientId?.slice(0, 8) || 'N/A'}</Text>
+            <Text style={styles.cardSub}>Nurse: {(con as any)?.nurse?.user?.fullName || (con as any)?.nurseId?.slice(0, 8) || con?.providerId?.slice(0, 8) || 'N/A'}</Text>
+            <Text style={styles.cardSub}>Patient: {(con as any)?.patient?.user?.fullName || con?.patientId?.slice(0, 8) || 'N/A'}</Text>
+
           </Card.Content>
         </Card>
       ));
@@ -125,7 +126,8 @@ export default function AdminCareOperations() {
               <Chip textStyle={{ fontSize: 10 }}>{vis.status}</Chip>
             </View>
             <Text style={styles.cardSub}>Contract ID: {vis?.contractId?.slice(0, 8) || 'N/A'}</Text>
-            <Text style={styles.cardSub}>Scheduled: {new Date(vis.scheduledTime).toLocaleString()}</Text>
+            <Text style={styles.cardSub}>Patient: {(vis as any)?.request?.patient?.user?.fullName || 'N/A'} · Nurse: {(vis as any)?.nurse?.user?.fullName || 'N/A'}</Text>
+            <Text style={styles.cardSub}>Scheduled: {((vis as any).agreedStartTime || (vis as any).startedAt || (vis as any).acceptedAt || vis.scheduledTime) ? new Date((vis as any).agreedStartTime || (vis as any).startedAt || (vis as any).acceptedAt || vis.scheduledTime).toLocaleString() : 'N/A'}</Text>
           </Card.Content>
         </Card>
       ));
