@@ -67,16 +67,16 @@ export const registerInvitedSchema = z.object({
 export const mfaCodeSchema = z.object({ code: z.string().regex(/^\d{6}$/) });
 
 export const verifyOtpSchema = z.object({
-  emailOrPhone: z.string().min(1, 'Email or phone number is required'),
+  emailOrPhone: z.string().trim().min(1, 'Email or phone number is required'),
   code: z.string().regex(/^\d{6}$/, 'OTP code must be exactly 6 digits')
 });
 
 export const resendOtpSchema = z.object({
-  emailOrPhone: z.string().min(1, 'Email or phone number is required')
+  emailOrPhone: z.string().trim().min(1, 'Email or phone number is required')
 });
 
 export const loginSchema = z.object({
-  emailOrPhone: z.string().min(1, 'Email or phone number is required'),
+  emailOrPhone: z.string().trim().min(1, 'Email or phone number is required'),
   password: z.string().min(1, 'Password is required')
 });
 
@@ -87,11 +87,11 @@ export const refreshTokenSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  emailOrPhone: z.string().min(1, 'Email or phone number is required')
+  emailOrPhone: z.string().trim().min(1, 'Email or phone number is required')
 });
 
 export const resetPasswordSchema = z.object({
-  emailOrPhone: z.string().min(1, 'Email or phone number is required'),
+  emailOrPhone: z.string().trim().min(1, 'Email or phone number is required'),
   code: z.string().length(6, 'OTP code must be exactly 6 characters'),
   password: z.string().regex(passwordRegex, 'Password must be 8+ characters with at least one number and one special character')
 });

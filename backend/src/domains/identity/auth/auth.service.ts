@@ -95,7 +95,7 @@ export class AuthService {
    * Validates an OTP code and activates Patient status, or maintains Nurse/Doctor status pending admin review.
    */
   public static async verifyOtp(emailOrPhone: string, code: string) {
-    emailOrPhone = emailOrPhone.toLowerCase();
+    emailOrPhone = emailOrPhone.trim().toLowerCase();
     const user = await AuthRepository.findUserByEmailOrPhone(emailOrPhone);
     if (!user) {
       throw new AppError('User not found', 404);
@@ -137,7 +137,7 @@ export class AuthService {
    * Re-issues a new OTP code, subject to rate limits.
    */
   public static async resendOtp(emailOrPhone: string) {
-    emailOrPhone = emailOrPhone.toLowerCase();
+    emailOrPhone = emailOrPhone.trim().toLowerCase();
     const user = await AuthRepository.findUserByEmailOrPhone(emailOrPhone);
     if (!user) {
       throw new AppError('User not found', 404);
@@ -165,7 +165,7 @@ export class AuthService {
    * Authenticates user, issues access and refresh tokens, and registers the session.
    */
   public static async login(payload: LoginPayload): Promise<any> {
-    payload.emailOrPhone = payload.emailOrPhone.toLowerCase();
+    payload.emailOrPhone = payload.emailOrPhone.trim().toLowerCase();
     const user = await AuthRepository.findUserByEmailOrPhone(payload.emailOrPhone);
     if (!user) {
       throw new AppError('Invalid credentials', 401);
@@ -250,7 +250,8 @@ export class AuthService {
         patientId: user.patient?.id,
         nurseId: user.nurse?.id,
         doctorId: user.doctor?.id,
-        paramedicId: user.paramedic?.id
+        paramedicId: user.paramedic?.id,
+        adminId: user.admin?.id
       }
     };
   }
@@ -306,7 +307,7 @@ export class AuthService {
    * Initiates password reset by sending a verification OTP code.
    */
   public static async forgotPassword(emailOrPhone: string) {
-    emailOrPhone = emailOrPhone.toLowerCase();
+    emailOrPhone = emailOrPhone.trim().toLowerCase();
     const user = await AuthRepository.findUserByEmailOrPhone(emailOrPhone);
     if (!user) {
       logger.info(`Password reset requested for unknown user: ${emailOrPhone}`);
@@ -328,7 +329,7 @@ export class AuthService {
    * Resets password using valid verification OTP.
    */
   public static async resetPassword(emailOrPhone: string, code: string, newPassword: string) {
-    emailOrPhone = emailOrPhone.toLowerCase();
+    emailOrPhone = emailOrPhone.trim().toLowerCase();
     const user = await AuthRepository.findUserByEmailOrPhone(emailOrPhone);
     if (!user) {
       // Same error as a wrong code, so this endpoint cannot be used to discover registered accounts.
