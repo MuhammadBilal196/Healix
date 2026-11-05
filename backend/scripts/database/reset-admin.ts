@@ -29,7 +29,7 @@ async function main() {
   if (!email || !password) {
     throw new Error("Give an email and password: pnpm --filter healix-backend admin:reset 'admin@healix.pk' 'YourStrongPassword123!' (or set ADMIN_BOOTSTRAP_EMAIL and ADMIN_BOOTSTRAP_PASSWORD in backend/.env).");
   }
-  if (password.length < 12) throw new Error('The administrator password must be at least 12 characters.');
+  if (password.length < 8) throw new Error('The administrator password must be at least 8 characters.');
 
   const passwordHash = await bcrypt.hash(password, 12);
   const existing = await prisma.user.findUnique({ where: { email } });
