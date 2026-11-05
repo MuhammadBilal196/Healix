@@ -3,7 +3,8 @@ import { useAppTheme, useThemeValue } from '../../theme/ThemeProvider';
 import type { ThemeColors } from '../../theme';
 
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, SafeAreaView, StatusBar, FlatList } from 'react-native';
-import { Card, Button, Chip, Divider } from 'react-native-paper';
+import { useState } from 'react';
+import { Card, Button, Chip, Divider, Portal, Dialog, TextInput as PaperTextInput } from 'react-native-paper';
 import { navigate } from '../../utils/navigation';
 import { useAdminPendingNurses, useAdminPendingDoctors, useApproveNurse, useRejectNurse, useApproveDoctor, useRejectDoctor } from '../../hooks/useAdmin';
 import { SPACING, RADIUS } from '../../theme';
@@ -25,6 +26,8 @@ export default function AdminVerification() {
   const { mutateAsync: rejectDoctor } = useRejectDoctor();
   
   const isLoading = isLoadingNurses || isLoadingDoctors;
+  const [rejectTarget, setRejectTarget] = useState<any | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   const pendingList = [
     ...pendingNurses.map((n: any) => ({ ...n, type: 'NURSE' })),
@@ -45,7 +48,7 @@ export default function AdminVerification() {
     }
   };
 
-  const handleReject = async (item: any) => {
+  const handleReject = (item: any) => { setRejectReason(''); setRejectTarget(item); return;
     Alert.prompt(
       `Reject ${item.type} Verification`,
       `Reason for rejecting application (min 5 chars):`,
@@ -74,6 +77,24 @@ export default function AdminVerification() {
     );
   };
 
+  const confirmRejectItem = async () => {
+    if (!rejectTarget || rejectReason.trim().length < 5) {
+      Alert.alert('Error', 'A clear justification reason (min 5 chars) is required.');
+      return;
+    }
+    try {
+      if (rejectTarget.type === 'NURSE') {
+        await rejectNurse({ nurseId: rejectTarget.id, reason: rejectReason.trim() });
+      } else {
+        await rejectDoctor({ doctorId: rejectTarget.id, reason: rejectReason.trim() });
+      }
+      setRejectTarget(null);
+      setRejectReason('');
+      Alert.alert('Rejected', 'Verification application rejected.');
+    } catch (err: any) {
+      Alert.alert('Error', err.message || 'Action failed');
+    }
+  };
   const renderItem = ({ item }: any) => (
     <Card style={styles.card}>
       <Card.Content>
@@ -159,6 +180,23 @@ export default function AdminVerification() {
           />
         )}
       </View>
+      <Portal>
+        <Dialog visible={!!rejectTarget} onDismiss={() => setRejectTarget(null)} style={{ backgroundColor: COLORS.surfaceCard }}>
+          <Dialog.Title style={{ color: COLORS.textDark }}>Reject Verification</Dialog.Title>
+          <Dialog.Content>
+            <PaperTextInput
+              label="Rejection Reason (min 5 chars)"
+              value={rejectReason}
+              onChangeText={setRejectReason}
+              style={{ marginBottom: 10 }}
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setRejectTarget(null)}>Cancel</Button>
+            <Button textColor={COLORS.red} onPress={() => void confirmRejectItem()}>Reject</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </SafeAreaView>
   );
 }
