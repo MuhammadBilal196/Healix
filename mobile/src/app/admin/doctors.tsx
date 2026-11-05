@@ -34,6 +34,8 @@ export default function AdminDoctors() {
   const [pmdc, setPmdc] = useState('');
   const [cnic, setCnic] = useState('');
   const [password, setPassword] = useState('');
+  const [rejectTargetId, setRejectTargetId] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
   
   const createDoctor = useCreateDoctor();
   const inviteUser = useInviteUser();
@@ -67,7 +69,7 @@ export default function AdminDoctors() {
     }
   };
 
-  const handleReject = async (id: string) => {
+  const handleReject = (id: string) => { setRejectReason(''); setRejectTargetId(id); return;
     Alert.prompt(
       'Reject PMDC Verification',
       'Reason for rejecting doctor application (min 5 chars):',
@@ -92,6 +94,20 @@ export default function AdminDoctors() {
     );
   };
 
+  const confirmRejectDoctor = async () => {
+    if (!rejectTargetId || rejectReason.trim().length < 5) {
+      Alert.alert('Error', 'A clear justification reason (min 5 chars) is required.');
+      return;
+    }
+    try {
+      await rejectDoctor({ doctorId: rejectTargetId, reason: rejectReason.trim() });
+      setRejectTargetId(null);
+      setRejectReason('');
+      Alert.alert('Doctor Rejected', 'Verification application rejected.');
+    } catch (err: any) {
+      Alert.alert('Error', err.message || 'Action failed');
+    }
+  };
   const activeList = tab === 'PENDING' ? pendingDoctors : doctors;
 
   const renderItem = ({ item: doc }: any) => (
@@ -230,6 +246,21 @@ export default function AdminDoctors() {
             <Dialog.Actions>
               <Button onPress={() => setShowAddModal(false)}>Cancel</Button>
               <Button onPress={handleAddSubmit} loading={createDoctor.isPending || inviteUser.isPending}>Submit</Button>
+            </Dialog.Actions>
+          </Dialog>
+          <Dialog visible={!!rejectTargetId} onDismiss={() => setRejectTargetId(null)} style={{ backgroundColor: COLORS.surfaceCard }}>
+            <Dialog.Title style={{ color: COLORS.textDark }}>Reject PMDC Verification</Dialog.Title>
+            <Dialog.Content>
+              <PaperTextInput
+                label="Rejection Reason (min 5 chars)"
+                value={rejectReason}
+                onChangeText={setRejectReason}
+                style={{ marginBottom: 10 }}
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => setRejectTargetId(null)}>Cancel</Button>
+              <Button textColor={COLORS.red} onPress={() => void confirmRejectDoctor()}>Reject</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
