@@ -44,7 +44,7 @@ export function VisitCompletionPanel({visit,onChanged}:{visit:Visit;onChanged:()
   {!!visit.completionDisputeReason && <Text style={s.body}>Patient concern: {visit.completionDisputeReason}</Text>}
   {role==='PATIENT' && visit.status==='COMPLETED' && !visit.completionApprovedAt && <View>
    {!records.data?.attendance?.checkOutAt && <Text style={s.body}>Completion review becomes available after nurse check-out.</Text>}
-   <TextInput label="Completion concern (at least 10 characters)" value={reason} onChangeText={setReason} maxLength={2000} multiline style={s.input}/>
+   <TextInput mode="outlined" outlineColor={COLORS.inputBorder} activeOutlineColor={COLORS.navy} textColor={COLORS.textDark} label="Completion concern (at least 10 characters)" value={reason} onChangeText={setReason} maxLength={2000} multiline style={s.input}/>
    <Button disabled={busy || !records.data?.attendance?.checkOutAt} onPress={()=>void run(()=>review('APPROVE'))}>Approve completed visit</Button>
    <Button disabled={busy || reason.trim().length<10 || !records.data?.attendance?.checkOutAt} onPress={()=>void run(()=>review('DISPUTE'))}>Report completion concern</Button>
   </View>}
