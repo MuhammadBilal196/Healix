@@ -124,7 +124,7 @@ export default function MessagesScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.container}>
         
         {/* Header */}
@@ -206,7 +206,7 @@ export default function MessagesScreen() {
           onPress={() => setIsModalVisible(true)}
           activeOpacity={0.8}
         >
-          <Ionicons name="add" size={28} color={COLORS.textDark} />
+          <Ionicons name="add" size={28} color={COLORS.onAccent} />
         </TouchableOpacity>
 
       </View>
@@ -258,7 +258,7 @@ export default function MessagesScreen() {
                 disabled={searchUserMutation.isPending || !phoneSearchQuery.trim()}
               >
                 {searchUserMutation.isPending ? (
-                  <ActivityIndicator color={COLORS.textMuted} size="small" />
+                  <ActivityIndicator color={COLORS.onAccent} size="small" />
                 ) : (
                   <Text style={styles.searchBtnText}>Search</Text>
                 )}
@@ -285,7 +285,7 @@ export default function MessagesScreen() {
                     disabled={createThreadMutation.isPending}
                   >
                     {createThreadMutation.isPending ? (
-                       <ActivityIndicator color={COLORS.textDark} size="small" />
+                       <ActivityIndicator color={COLORS.onAccent} size="small" />
                     ) : (
                       <Text style={styles.startChatBtnText}>Message</Text>
                     )}
@@ -322,20 +322,20 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.md,
     paddingHorizontal: SPACING.md,
     paddingVertical: 8,
     marginBottom: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   searchIcon: {
     fontSize: 14,
@@ -351,18 +351,18 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     gap: SPACING.md,
   },
   conversationCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   avatarBg: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceMuted,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   chatInfo: {
     marginLeft: SPACING.md,
@@ -412,7 +412,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     alignItems: 'center',
   },
   unreadBadgeText: {
-    color: COLORS.textDark,
+    color: COLORS.onAccent,
     fontSize: 10,
     fontWeight: '800',
   },
@@ -455,17 +455,17 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.modalBackdrop,
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderTopLeftRadius: RADIUS.lg,
     borderTopRightRadius: RADIUS.lg,
     padding: SPACING.lg,
     paddingBottom: 40,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -490,9 +490,9 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   },
   phoneInput: {
     flex: 1,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     borderRadius: RADIUS.sm,
     color: COLORS.textDark,
     paddingHorizontal: SPACING.md,
@@ -513,11 +513,11 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   foundUserCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     padding: SPACING.md,
     borderRadius: RADIUS.md,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   foundUserInfo: {
     flex: 1,
