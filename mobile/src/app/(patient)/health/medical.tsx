@@ -89,7 +89,7 @@ export default function MedicalHistoryScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.headerRow}>
@@ -237,16 +237,18 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '300',
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
   tabRow: {
     flexDirection: 'row',
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.md,
     padding: 4,
     marginBottom: SPACING.lg,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
   },
   tabPill: {
     flex: 1,
@@ -263,7 +265,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '600',
   },
   tabTextActive: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontWeight: '700',
   },
   scrollContent: {
