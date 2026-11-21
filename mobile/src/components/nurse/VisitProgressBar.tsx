@@ -65,13 +65,13 @@ export const VisitProgressBar: React.FC<VisitProgressBarProps> = ({ steps }) => 
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   container: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.md,
     paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.md,
     marginBottom: SPACING.md,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   scrollContent: {
     alignItems: 'center',
