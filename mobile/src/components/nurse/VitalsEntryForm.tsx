@@ -162,7 +162,7 @@ export const VitalsEntryForm: React.FC<VitalsEntryFormProps> = ({ onSubmit, isLo
         onPress={handleSubmit}
         disabled={isLoading}
       >
-        {isLoading ? <ActivityIndicator size="small" color={COLORS.textMuted} /> : <Text style={styles.submitBtnText}>Save & Log Vitals</Text>}
+        {isLoading ? <ActivityIndicator size="small" color={COLORS.onAccent} /> : <Text style={styles.submitBtnText}>Save & Log Vitals</Text>}
       </TouchableOpacity>
     </View>
   );
@@ -170,12 +170,12 @@ export const VitalsEntryForm: React.FC<VitalsEntryFormProps> = ({ onSubmit, isLo
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     marginBottom: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   title: {
     color: COLORS.textDark,
@@ -199,13 +199,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: 4,
   },
   input: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     color: COLORS.textDark,
     fontSize: 12,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   inputError: {
     borderColor: COLORS.red,
