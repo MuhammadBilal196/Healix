@@ -121,7 +121,7 @@ export default function NurseVisitDetailScreen() {
   if (isLoading && !visit) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={COLORS.emerald} />
           <Text style={styles.loadingText}>Loading visit details...</Text>
@@ -133,7 +133,7 @@ export default function NurseVisitDetailScreen() {
   if (error || !visit) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
         <View style={styles.centered}>
           <Text style={styles.errorText}>{error ? (error as Error).message : 'Visit not found'}</Text>
           <Button mode="text" textColor={COLORS.emerald} onPress={() => refetch()}>Retry</Button>
@@ -146,7 +146,7 @@ export default function NurseVisitDetailScreen() {
   if (activePanel === 'qr') {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
         <QrScanner visitId={visitId} onSuccess={handleVerificationSuccess} onCancel={() => setActivePanel('verify')} />
       </SafeAreaView>
     );
@@ -155,7 +155,7 @@ export default function NurseVisitDetailScreen() {
   // â”€â”€â”€ Main Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
 
       {/* Header */}
       <View style={styles.headerRow}>
@@ -182,7 +182,7 @@ export default function NurseVisitDetailScreen() {
             <Button
               mode="contained"
               buttonColor={COLORS.emeraldFill}
-              textColor={COLORS.textMuted}
+              textColor={COLORS.onAccent}
               onPress={() => setActivePanel('qr')}
               style={styles.verifyBtn}
               labelStyle={{ fontWeight: '700' }}
@@ -259,7 +259,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: SPACING.lg },
   backBtn: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
   backIcon: { color: COLORS.textDark, fontSize: 28 },
-  headerTitle: { color: COLORS.onAccent, fontSize: 17, fontWeight: '700' },
+  headerTitle: { color: COLORS.textDark, fontSize: 17, fontWeight: '700' },
   scroll: { flex: 1 },
   content: { padding: SPACING.lg, paddingBottom: 40 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
@@ -269,9 +269,9 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   panelTitle: { color: COLORS.textDark, fontSize: 18, fontWeight: '800', marginBottom: 8 },
   panelSub: { color: COLORS.textBody, fontSize: 13, marginBottom: 16 },
   verifyBtn: { borderRadius: RADIUS.md, marginBottom: SPACING.md },
-  notesCard: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, padding: SPACING.lg, marginBottom: SPACING.lg },
+  notesCard: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, padding: SPACING.lg, marginBottom: SPACING.lg },
   notesTitle: { color: COLORS.textDark, fontSize: 15, fontWeight: '700', marginBottom: 12 },
-  notesInput: { backgroundColor: COLORS.bg, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.emeraldLight, padding: 12, borderRadius: RADIUS.md, fontSize: 13, minHeight: 100 },
+  notesInput: { backgroundColor: COLORS.surface, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.inputBorder, padding: 12, borderRadius: RADIUS.md, fontSize: 13, minHeight: 100 },
   saveNotesBtn: { borderColor: COLORS.emerald, marginTop: 10 },
 }));
 
