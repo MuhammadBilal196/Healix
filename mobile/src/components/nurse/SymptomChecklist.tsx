@@ -126,7 +126,7 @@ export const SymptomChecklist: React.FC<SymptomChecklistProps> = ({ onSubmit, is
         disabled={selectedCount === 0 || isLoading}
       >
         {isLoading ? (
-          <ActivityIndicator size="small" color={COLORS.textMuted} />
+          <ActivityIndicator size="small" color={COLORS.onAccent} />
         ) : (
           <Text style={styles.submitBtnText}>
             Submit Symptoms ({selectedCount} Selected)
@@ -139,12 +139,12 @@ export const SymptomChecklist: React.FC<SymptomChecklistProps> = ({ onSubmit, is
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     marginBottom: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   title: {
     color: COLORS.textDark,
@@ -167,7 +167,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: SPACING.sm,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.glassBorder,
+    borderBottomColor: COLORS.dividerLight,
   },
   checkboxGroup: {
     flexDirection: 'row',
@@ -179,7 +179,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     height: 20,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     marginRight: SPACING.md,
     justifyContent: 'center',
     alignItems: 'center',
@@ -189,7 +189,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderColor: COLORS.emerald,
   },
   checkMark: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontSize: 12,
     fontWeight: '800',
   },
@@ -210,14 +210,15 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   sevChipActive: {
     backgroundColor: COLORS.emerald,
+    borderColor: COLORS.emerald,
   },
   sevText: {
     color: COLORS.textBody,
@@ -225,7 +226,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '700',
   },
   sevTextActive: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
   },
   submitBtn: {
     backgroundColor: COLORS.emeraldFill,
