@@ -129,7 +129,7 @@ export const SymptomsForm: React.FC<SymptomsFormProps> = ({ visitId, onSuccess, 
         <Button
           mode="contained"
           buttonColor={COLORS.emeraldFill}
-          textColor={COLORS.textDark}
+          textColor={COLORS.onAccent}
           onPress={handleSubmit}
           loading={submitSymptoms.isPending}
           disabled={submitSymptoms.isPending}
@@ -144,14 +144,14 @@ export const SymptomsForm: React.FC<SymptomsFormProps> = ({ visitId, onSuccess, 
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: SPACING.lg },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: SPACING.lg },
   title: { color: COLORS.textDark, fontSize: 16, fontWeight: '700' },
-  divider: { backgroundColor: COLORS.emeraldLight, marginVertical: 12 },
-  symptomBlock: { marginBottom: 16, padding: 12, backgroundColor: COLORS.bg, borderRadius: RADIUS.md, borderWidth: 1, borderColor: COLORS.emeraldLight },
+  divider: { backgroundColor: COLORS.dividerLight, marginVertical: 12 },
+  symptomBlock: { marginBottom: 16, padding: 12, backgroundColor: COLORS.surface, borderRadius: RADIUS.md, borderWidth: 1, borderColor: COLORS.inputBorder },
   symptomHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   symptomLabel: { color: COLORS.emerald, fontSize: 12, fontWeight: '700' },
   removeBtn: { color: COLORS.red, fontSize: 12, fontWeight: '600' },
-  input: { backgroundColor: COLORS.bg, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.emeraldLight, padding: 10, borderRadius: RADIUS.sm, fontSize: 13, marginBottom: 8 },
+  input: { backgroundColor: COLORS.surfaceCard, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.inputBorder, padding: 10, borderRadius: RADIUS.sm, fontSize: 13, marginBottom: 8 },
   severityRow: { flexDirection: 'row', gap: 8, marginBottom: 8 },
   severityBtn: { flex: 1, paddingVertical: 6, borderRadius: RADIUS.sm, borderWidth: 1, borderColor: COLORS.inputBorder, alignItems: 'center' },
   severityText: { fontSize: 11, fontWeight: '700', color: COLORS.textBody },
