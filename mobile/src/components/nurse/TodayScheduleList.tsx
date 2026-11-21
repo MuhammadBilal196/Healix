@@ -89,13 +89,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     gap: SPACING.sm,
   },
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   timeCol: {
     width: 70,
@@ -108,7 +108,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   divider: {
     width: 1,
     height: '80%',
-    backgroundColor: COLORS.glassSurface,
+    backgroundColor: COLORS.dividerLight,
     marginHorizontal: SPACING.sm,
   },
   infoCol: {
@@ -136,12 +136,12 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '700',
   },
   emptyCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   emptyText: {
     color: COLORS.textBody,
