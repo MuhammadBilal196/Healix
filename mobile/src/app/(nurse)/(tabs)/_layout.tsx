@@ -1,11 +1,12 @@
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
 import { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Platform } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Tabs } from 'expo-router';
 import { SwipeTabs } from '../../../components/navigation/SwipeTabs';
 import { Text } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { navigate } from '../../../utils/navigation';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../../theme';
 
@@ -14,6 +15,8 @@ const TAB_ORDER = ['home', 'visits', 'marketplace', 'messages', 'profile'];
 export default function NurseTabsLayout() {
   const { colors: COLORS } = useAppTheme();
   const styles = useThemeValue(createStyles);
+  const insets = useSafeAreaInsets();
+  const bottomPad = Math.max(insets.bottom, 16) + 6;
 
   const [moreVisible, setMoreVisible] = useState(false);
 
@@ -33,15 +36,20 @@ export default function NurseTabsLayout() {
             backgroundColor: COLORS.surfaceCard,
             borderTopWidth: 1,
             borderTopColor: COLORS.inputBorder,
-            height: 65,
-            paddingBottom: 8,
-            paddingTop: 6,
+            height: 60 + bottomPad,
+            paddingBottom: bottomPad,
+            paddingTop: 8,
+            elevation: 10,
+            shadowColor: COLORS.shadow,
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
           },
           tabBarActiveTintColor: COLORS.primaryText,
           tabBarInactiveTintColor: COLORS.textMuted,
           tabBarLabelStyle: {
-            fontSize: 10,
-            fontWeight: '600',
+            fontSize: 10.5,
+            fontWeight: '700',
           },
         }}
       >
@@ -49,35 +57,35 @@ export default function NurseTabsLayout() {
           name="home"
           options={{
             title: 'Home',
-            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />,
+            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="visits"
           options={{
             title: 'Visits',
-            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'medkit' : 'medkit-outline'} size={24} color={color} />,
+            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'medkit' : 'medkit-outline'} size={24} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="marketplace"
           options={{
             title: 'Marketplace',
-            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'briefcase' : 'briefcase-outline'} size={24} color={color} />,
+            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'briefcase' : 'briefcase-outline'} size={24} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="messages"
           options={{
             title: 'Messages',
-            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} size={24} color={color} />,
+            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} size={24} color={color as string} />,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
             title: 'Profile',
-            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color} />,
+            tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color as string} />,
           }}
         />
         <Tabs.Screen
@@ -90,7 +98,7 @@ export default function NurseTabsLayout() {
           }}
           options={{
             title: 'More',
-            tabBarIcon: ({ color }) => <Ionicons name="ellipsis-horizontal-circle-outline" size={24} color={color} />,
+            tabBarIcon: ({ color }) => <Ionicons name="ellipsis-horizontal-circle-outline" size={24} color={color as string} />,
           }}
         />
       </Tabs>
@@ -106,7 +114,7 @@ export default function NurseTabsLayout() {
         <TouchableWithoutFeedback onPress={() => setMoreVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
-              <View style={styles.menuContainer}>
+              <View style={[styles.menuContainer, { paddingBottom: Math.max(insets.bottom, 20) + 12 }]}>
                 <View style={styles.menuHeader}>
                   <Text style={styles.menuTitle}>Nurse Options</Text>
                   <TouchableOpacity onPress={() => setMoreVisible(false)} style={styles.closeBtn}>
@@ -158,6 +166,17 @@ export default function NurseTabsLayout() {
                   <Ionicons name="chevron-forward" size={20} color={COLORS.textBody} />
                 </TouchableOpacity>
 
+                <TouchableOpacity style={styles.menuItem} onPress={() => handleMoreItemPress('/(nurse)/(tabs)/profile')}>
+                  <View style={[styles.iconBox, { backgroundColor: COLORS.blueLight }]}>
+                    <Ionicons name="settings-outline" size={22} color={COLORS.navy} />
+                  </View>
+                  <View style={styles.menuItemText}>
+                    <Text style={styles.menuItemTitle}>Settings &amp; Dark Mode</Text>
+                    <Text style={styles.menuItemSub}>Appearance, credentials &amp; security</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={COLORS.textBody} />
+                </TouchableOpacity>
+
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -170,17 +189,17 @@ export default function NurseTabsLayout() {
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.modalBackdrop,
     justifyContent: 'flex-end',
   },
   menuContainer: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderTopLeftRadius: RADIUS.xl,
     borderTopRightRadius: RADIUS.xl,
     padding: SPACING.lg,
-    paddingBottom: Platform.OS === 'ios' ? 40 : SPACING.xl,
+    paddingBottom: SPACING.xxl,
     borderTopWidth: 1,
-    borderTopColor: COLORS.emeraldLight,
+    borderTopColor: COLORS.inputBorder,
   },
   menuHeader: {
     flexDirection: 'row',
