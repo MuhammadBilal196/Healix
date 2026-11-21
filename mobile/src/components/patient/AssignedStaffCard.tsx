@@ -53,11 +53,11 @@ export const AssignedStaffCard: React.FC<AssignedStaffCardProps> = ({
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   header: {
     flexDirection: 'row',
