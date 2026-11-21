@@ -27,11 +27,11 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({ name, diagnosedDat
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   name: {
     color: COLORS.textDark,
