@@ -109,7 +109,7 @@ export default function RequestsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.surface} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
 
       <ScrollView
         style={styles.scrollView}
@@ -161,7 +161,7 @@ export default function RequestsScreen() {
             <Button
               mode="contained"
               buttonColor={COLORS.navy}
-              textColor={COLORS.textDark}
+              textColor={COLORS.onAccent}
               style={styles.retryBtn}
               onPress={() => refetchRequests()}
             >
@@ -199,7 +199,7 @@ export default function RequestsScreen() {
               <Button
                 mode="contained"
                 buttonColor={COLORS.navy}
-                textColor={COLORS.textDark}
+                textColor={COLORS.onAccent}
                 style={styles.requestCareBtn}
                 onPress={() => navigate('/(patient)/requests/new')}
               >
