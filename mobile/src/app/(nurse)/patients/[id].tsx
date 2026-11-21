@@ -23,7 +23,7 @@ export default function PatientDetailScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigate('/(nurse)/patients')} style={{ marginRight: 12 }}>
             <Text style={{ color: COLORS.textDark, fontSize: 24 }}>‹</Text>
@@ -40,7 +40,7 @@ export default function PatientDetailScreen() {
   if (error || !patientProfile) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigate('/(nurse)/patients')} style={{ marginRight: 12 }}>
             <Text style={{ color: COLORS.textDark, fontSize: 24 }}>‹</Text>
@@ -63,7 +63,7 @@ export default function PatientDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigate('/(nurse)/patients')} style={{ marginRight: 12 }}>
           <Text style={{ color: COLORS.textDark, fontSize: 24 }}>‹</Text>
