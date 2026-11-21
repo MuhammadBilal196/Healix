@@ -1,13 +1,11 @@
-
 import { useAppTheme, useThemeValue } from '../../theme/ThemeProvider';
 import type { ThemeColors } from '../../theme';
 import { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Platform, StatusBar } from 'react-native';
 import { TextInput, Button, Card } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useChangePassword } from '../../hooks/useAuth';
-
-
+import { SPACING, RADIUS } from '../../theme';
 
 export default function ChangePasswordScreen() {
   const { colors: COLORS } = useAppTheme();
@@ -21,17 +19,22 @@ export default function ChangePasswordScreen() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const notify = (title: string, msg: string) => {
+    if (Platform.OS === 'web') alert(`${title}: ${msg}`);
+    else Alert.alert(title, msg);
+  };
+
   const handleSubmit = async () => {
     if (oldPassword.trim().length === 0) {
-      Alert.alert('Validation Error', 'Please enter your current password.');
+      notify('Validation Error', 'Please enter your current password.');
       return;
     }
     if (newPassword.length < 8) {
-      Alert.alert('Validation Error', 'New password must be at least 8 characters long.');
+      notify('Validation Error', 'New password must be at least 8 characters long.');
       return;
     }
     if (newPassword !== confirmPassword) {
-      Alert.alert('Validation Error', 'Passwords do not match.');
+      notify('Validation Error', 'Passwords do not match.');
       return;
     }
 
@@ -39,30 +42,28 @@ export default function ChangePasswordScreen() {
       { oldPassword, newPassword },
       {
         onSuccess: () => {
-          Alert.alert(
-            'Password Changed Successfully',
-            'Your password has been updated. Please sign in again.',
-            [
-              {
-                text: 'OK',
-                onPress: () => {
-                  router.replace('/auth/login');
-                }
-              }
-            ]
-          );
+          if (Platform.OS === 'web') {
+            alert('Your password has been updated. Please sign in again.');
+            router.replace('/auth/login');
+          } else {
+            Alert.alert(
+              'Password Changed Successfully',
+              'Your password has been updated. Please sign in again.',
+              [{ text: 'OK', onPress: () => router.replace('/auth/login') }]
+            );
+          }
         },
-        onError: (err: any) => {
-          Alert.alert('Change Password Failed', err.message);
-        }
+        onError: (err: any) => notify('Change Password Failed', err.message),
       }
     );
   };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={styles.title}>🔑 Change Password</Text>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.hero}>
+        <Text style={styles.eyebrow}>ACCOUNT SECURITY</Text>
+        <Text style={styles.title}>Change Password</Text>
         <Text style={styles.subtitle}>Update your account security credentials</Text>
       </View>
 
@@ -74,7 +75,8 @@ export default function ChangePasswordScreen() {
             onChangeText={setOldPassword}
             secureTextEntry
             mode="outlined"
-            activeOutlineColor={COLORS.teal}
+            outlineColor={COLORS.inputBorder}
+            activeOutlineColor={COLORS.navy}
             style={styles.input}
           />
 
@@ -85,7 +87,8 @@ export default function ChangePasswordScreen() {
             secureTextEntry
             placeholder="Min 8 chars, 1 number, 1 symbol"
             mode="outlined"
-            activeOutlineColor={COLORS.teal}
+            outlineColor={COLORS.inputBorder}
+            activeOutlineColor={COLORS.navy}
             style={styles.input}
           />
 
@@ -95,13 +98,15 @@ export default function ChangePasswordScreen() {
             onChangeText={setConfirmPassword}
             secureTextEntry
             mode="outlined"
-            activeOutlineColor={COLORS.teal}
+            outlineColor={COLORS.inputBorder}
+            activeOutlineColor={COLORS.navy}
             style={styles.input}
           />
 
           <Button
             mode="contained"
-            buttonColor={COLORS.emeraldFill} textColor={COLORS.onAccent}
+            buttonColor={COLORS.navy}
+            textColor={COLORS.onAccent}
             loading={isLoading}
             disabled={isLoading || oldPassword.trim().length === 0 || newPassword.length === 0}
             onPress={handleSubmit}
@@ -112,11 +117,11 @@ export default function ChangePasswordScreen() {
 
           <Button
             mode="outlined"
-            textColor={COLORS.textSecondary}
-            style={{ borderColor: COLORS.border, marginTop: 12 }}
+            textColor={COLORS.textBody}
+            style={{ borderColor: COLORS.inputBorder, borderRadius: RADIUS.md, marginTop: 12 }}
             onPress={() => router.back()}
           >
-            ➔ Cancel
+            Cancel
           </Button>
         </Card.Content>
       </Card>
@@ -124,13 +129,29 @@ export default function ChangePasswordScreen() {
   );
 }
 
-const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg },
-  content: { padding: 20, justifyContent: 'center', minHeight: '80%' },
-  header: { marginBottom: 24, alignItems: 'center' },
-  title: { color: COLORS.textPrimary, fontSize: 24, fontWeight: '800' },
-  subtitle: { color: COLORS.textSecondary, fontSize: 13, marginTop: 6, textAlign: 'center', lineHeight: 18 },
-  card: { backgroundColor: COLORS.card, borderRadius: 16, borderWidth: 1, borderColor: COLORS.border },
-  input: { backgroundColor: COLORS.card, color: COLORS.textPrimary, marginBottom: 16 },
-  btn: { borderRadius: 8, paddingVertical: 4 }
-}));
+const createStyles = (COLORS: ThemeColors) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.surface },
+  content: { flexGrow: 1, backgroundColor: COLORS.surface, paddingBottom: 32 },
+  hero: {
+    backgroundColor: COLORS.navyDark,
+    paddingTop: 48,
+    paddingBottom: 48,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    borderBottomLeftRadius: RADIUS.xl,
+    borderBottomRightRadius: RADIUS.xl,
+  },
+  eyebrow: { color: COLORS.accentBlue, fontSize: 11, fontWeight: '800', letterSpacing: 1 },
+  title: { color: COLORS.headerText, fontSize: 26, fontWeight: '800', marginTop: 4 },
+  subtitle: { color: COLORS.inverseMuted, fontSize: 13.5, marginTop: 6, textAlign: 'center' },
+  card: {
+    marginHorizontal: SPACING.lg,
+    marginTop: -24,
+    backgroundColor: COLORS.surfaceCard,
+    borderRadius: RADIUS.xl,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
+  },
+  input: { backgroundColor: COLORS.surfaceCard, marginBottom: 14 },
+  btn: { borderRadius: RADIUS.md, paddingVertical: 4 },
+});
