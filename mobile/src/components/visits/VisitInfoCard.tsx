@@ -70,10 +70,10 @@ export const VisitInfoCard: React.FC<VisitInfoCardProps> = ({ visit }) => {
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: SPACING.lg },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: SPACING.lg },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   sectionHeader: { color: COLORS.textDark, fontSize: 15, fontWeight: '700' },
-  divider: { backgroundColor: COLORS.emeraldLight, marginVertical: 12 },
+  divider: { backgroundColor: COLORS.dividerLight, marginVertical: 12 },
   detailRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
   detailLabel: { color: COLORS.textBody, fontSize: 13 },
   detailValue: { color: COLORS.textDark, fontSize: 13, fontWeight: '600', flexShrink: 1, textAlign: 'right', maxWidth: '55%' },
