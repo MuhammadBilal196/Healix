@@ -73,11 +73,11 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     padding: SPACING.lg,
   },
   modalContent: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.xl,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   title: {
     color: COLORS.textDark,
@@ -91,13 +91,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.md,
   },
   input: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     color: COLORS.textDark,
     fontSize: 12,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     marginBottom: SPACING.lg,
   },
   btnRow: {
