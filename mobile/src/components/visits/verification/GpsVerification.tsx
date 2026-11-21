@@ -82,7 +82,7 @@ export const GpsVerification: React.FC<GpsVerificationProps> = ({ visitId, onSuc
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: SPACING.md },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: SPACING.md },
   title: { color: COLORS.textDark, fontSize: 16, fontWeight: '700', marginBottom: 6 },
   description: { color: COLORS.textBody, fontSize: 12, marginBottom: 16 },
   btn: { borderColor: COLORS.emerald, borderRadius: RADIUS.md },
