@@ -160,11 +160,11 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   modalCard: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   header: {
     flexDirection: 'row',
@@ -176,7 +176,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -195,7 +195,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.emeraldLight,
+    borderBottomColor: COLORS.dividerLight,
     paddingBottom: 8,
   },
   weekDayText: {
@@ -233,7 +233,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '600',
   },
   dayTextSelected: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontWeight: '800',
   },
   dayTextDisabled: {
