@@ -1,15 +1,18 @@
 import { useAppTheme } from '../../../theme/ThemeProvider';
 
-import { SPACING, TYPOGRAPHY } from '../../../theme';
+import { TYPOGRAPHY } from '../../../theme';
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { SwipeTabs } from '../../../components/navigation/SwipeTabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TAB_ORDER = ['home', 'messages', 'profile'];
 
 export default function DoctorTabsLayout() {
   const { colors: COLORS } = useAppTheme();
+  const insets = useSafeAreaInsets();
+  const bottomPad = Math.max(insets.bottom, 16) + 6;
 
   return (
     <SwipeTabs base="/(doctor)/(tabs)" tabs={TAB_ORDER}>
@@ -21,15 +24,20 @@ export default function DoctorTabsLayout() {
           backgroundColor: COLORS.surfaceCard,
           borderTopWidth: 1,
           borderTopColor: COLORS.inputBorder,
-          height: 65,
-          paddingBottom: SPACING.sm,
-          paddingTop: SPACING.sm,
+          height: 60 + bottomPad,
+          paddingBottom: bottomPad,
+          paddingTop: 8,
+          elevation: 10,
+          shadowColor: COLORS.shadow,
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
         },
         tabBarActiveTintColor: COLORS.primaryText,
         tabBarInactiveTintColor: COLORS.textMuted,
         tabBarLabelStyle: {
           fontSize: TYPOGRAPHY.sizes.xs,
-          fontWeight: '600',
+          fontWeight: '700',
         },
       }}
     >
@@ -38,7 +46,7 @@ export default function DoctorTabsLayout() {
         options={{
           title: 'Case Queue',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'medkit' : 'medkit-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'medkit' : 'medkit-outline'} size={24} color={color as string} />
           ),
         }}
       />
@@ -47,7 +55,7 @@ export default function DoctorTabsLayout() {
         options={{
           title: 'Messages',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} size={24} color={color as string} />
           ),
         }}
       />
@@ -56,7 +64,7 @@ export default function DoctorTabsLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color} />
+            <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color as string} />
           ),
         }}
       />
