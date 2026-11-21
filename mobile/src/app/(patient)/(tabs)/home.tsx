@@ -1,14 +1,14 @@
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ScrollView, SafeAreaView, StatusBar, RefreshControl } from 'react-native';
+import { StyleSheet, View, ScrollView, SafeAreaView, StatusBar, RefreshControl, TouchableOpacity } from 'react-native';
 import { navigate } from '../../../utils/navigation';
 import { useAuthStore } from '../../../store/auth';
 import { useDashboardSummary } from '../../../hooks/useDashboard';
 import { PendingContractsBanner } from '../../../components/contracts/PendingContractsBanner';
 import { VisitReviewBanner } from '../../../components/visits/VisitReviewBanner';
 import { usePrescriptions } from '../../../hooks/useHealth';
-import { SPACING } from '../../../theme';
+import { RADIUS, SPACING, TYPOGRAPHY } from '../../../theme';
 import { Button, Text } from 'react-native-paper';
 
 import { DashboardHeader } from '../../../components/patient/DashboardHeader';
@@ -62,7 +62,7 @@ export default function PatientHomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.navyDark} translucent />
+      <StatusBar barStyle="light-content" />
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -79,8 +79,16 @@ export default function PatientHomeScreen() {
         {dashboardError && <><Text style={{ color: COLORS.red }}>{dashboardError.message}</Text><Button onPress={() => void refetchDashboard()}>Retry dashboard</Button></>}
         <PendingContractsBanner role="patient" profileId={patientId} />
         <VisitReviewBanner />
-        {/* Scenic Header */}
-        <Button textColor={COLORS.headerText} onPress={() => navigate('/(patient)/emergency')}>Track Emergency Transport & Admission</Button>
+        {/* Emergency Alert Strip */}
+        <TouchableOpacity
+          style={styles.emergencyBanner}
+          activeOpacity={0.85}
+          onPress={() => navigate('/(patient)/emergency')}
+        >
+          <View style={styles.emergencyDot} />
+          <Text style={styles.emergencyBannerText}>Track Emergency Transport & Admission</Text>
+          <Text style={styles.emergencyBannerChevron}>›</Text>
+        </TouchableOpacity>
         <DashboardHeader
           userName={userName}
           greeting={greeting}
@@ -99,9 +107,64 @@ export default function PatientHomeScreen() {
           />
         </View>
 
-        {/* White background content area */}
+        {/* Light clinical surface content area */}
         <View style={styles.whiteSection}>
-          <View style={{gap:SPACING.sm}}><Button onPress={() => navigate('/(patient)/(tabs)/requests')}>Active care requests: {dashData?.activeRequestsCount ?? 0}</Button><Button onPress={() => navigate('/(patient)/marketplace/contracts')}>Active contracts: {dashData?.activeContractsCount ?? 0}</Button>{!!dashData?.severeAllergiesCount && <Button textColor={COLORS.red} onPress={() => navigate('/(patient)/health/medical')}>{dashData.severeAllergiesCount} severe allergy record(s) — review with your care team</Button>}{dashData?.latestRisk && <Button onPress={() => navigate('/(patient)/records/risk-history')}>Latest recorded risk: {dashData.latestRisk.riskTier || dashData.latestRisk.riskLevel || 'View assessment'}</Button>}<Text style={{color:COLORS.textBody}}>Recorded pending payments: PKR {Number(dashData?.pendingPaymentsSum ?? 0).toLocaleString()}</Text></View>
+          {/* Clinical Status & Metrics Strip */}
+          <View style={styles.metricsRow}>
+            <TouchableOpacity
+              style={styles.metricPillCard}
+              activeOpacity={0.8}
+              onPress={() => navigate('/(patient)/(tabs)/requests')}
+            >
+              <Text style={styles.metricNumber}>{dashData?.activeRequestsCount ?? 0}</Text>
+              <Text style={styles.metricLabel}>Active Requests</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.metricPillCard}
+              activeOpacity={0.8}
+              onPress={() => navigate('/(patient)/marketplace/contracts')}
+            >
+              <Text style={styles.metricNumber}>{dashData?.activeContractsCount ?? 0}</Text>
+              <Text style={styles.metricLabel}>Active Contracts</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.metricPillCard}
+              activeOpacity={0.8}
+              onPress={() => navigate('/(patient)/health/payments')}
+            >
+              <Text style={[styles.metricNumber, (dashData?.pendingPaymentsSum ?? 0) > 0 && { color: COLORS.amber }]}>
+                {dashData?.pendingPaymentsCount ?? 0}
+              </Text>
+              <Text style={styles.metricLabel}>
+                PKR {Number(dashData?.pendingPaymentsSum ?? 0).toLocaleString()} Due
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {!!dashData?.severeAllergiesCount && (
+            <TouchableOpacity
+              style={styles.alertCardDanger}
+              activeOpacity={0.85}
+              onPress={() => navigate('/(patient)/health/medical')}
+            >
+              <Text style={styles.alertCardDangerText}>
+                {dashData.severeAllergiesCount} severe allergy record(s) — review with your care team ›
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {dashData?.latestRisk && (
+            <TouchableOpacity
+              style={styles.alertCardInfo}
+              activeOpacity={0.85}
+              onPress={() => navigate('/(patient)/records/risk-history')}
+            >
+              <Text style={styles.alertCardInfoText}>
+                Latest recorded risk: {dashData.latestRisk.riskTier || dashData.latestRisk.riskLevel || 'View assessment'} ›
+              </Text>
+            </TouchableOpacity>
+          )}
+
           {/* Quick Actions Grid */}
           <QuickActionsGrid
             onRequestPress={() => navigate('/(patient)/requests/new')}
@@ -110,8 +173,27 @@ export default function PatientHomeScreen() {
             onHealthPress={() => navigate('/(patient)/health')}
           />
 
-          <Button onPress={() => navigate('/(patient)/health/home-visits')}>Request / track a doctor home visit</Button>
-          <Button onPress={() => navigate('/(patient)/health/payments')}>Payment history · {dashData?.pendingPaymentsCount ?? 0} pending</Button>
+          <View style={styles.secondaryActions}>
+            <TouchableOpacity
+              style={styles.secondaryActionCard}
+              activeOpacity={0.82}
+              onPress={() => navigate('/(patient)/health/home-visits')}
+            >
+              <Text style={styles.secondaryActionTitle}>Doctor Home Visits</Text>
+              <Text style={styles.secondaryActionSub}>Request or track a physician appointment ›</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.secondaryActionCard}
+              activeOpacity={0.82}
+              onPress={() => navigate('/(patient)/health/payments')}
+            >
+              <Text style={styles.secondaryActionTitle}>Payment History</Text>
+              <Text style={styles.secondaryActionSub}>
+                {dashData?.pendingPaymentsCount ?? 0} pending invoice(s) ›
+              </Text>
+            </TouchableOpacity>
+          </View>
           {/* Today's Reminders */}
           <TodaysReminders
             reminders={reminders}
@@ -131,6 +213,37 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   container: {
     paddingBottom: 30,
   },
+  emergencyBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.navy,
+    marginHorizontal: SPACING.lg,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.xs,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm + 2,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    borderColor: COLORS.accentBlue,
+    gap: SPACING.sm,
+  },
+  emergencyDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: COLORS.red,
+  },
+  emergencyBannerText: {
+    flex: 1,
+    color: COLORS.onAccent,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.bold,
+  },
+  emergencyBannerChevron: {
+    color: COLORS.inverseMuted,
+    fontSize: 18,
+    fontWeight: '700',
+  },
   visitCardSection: {
     paddingHorizontal: SPACING.lg,
     zIndex: 10,
@@ -142,5 +255,79 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     minHeight: 400,
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    marginBottom: SPACING.md,
+  },
+  metricPillCard: {
+    flex: 1,
+    backgroundColor: COLORS.surfaceCard,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.sm,
+    alignItems: 'center',
+  },
+  metricNumber: {
+    color: COLORS.primaryText,
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.extrabold,
+  },
+  metricLabel: {
+    color: COLORS.textBody,
+    fontSize: 11,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  alertCardDanger: {
+    backgroundColor: COLORS.redLight,
+    borderWidth: 1,
+    borderColor: COLORS.red,
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    marginBottom: SPACING.sm,
+  },
+  alertCardDangerText: {
+    color: COLORS.red,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.bold,
+  },
+  alertCardInfo: {
+    backgroundColor: COLORS.blueLight,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+  },
+  alertCardInfoText: {
+    color: COLORS.primaryText,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  secondaryActions: {
+    gap: SPACING.sm,
+    marginBottom: SPACING.lg,
+  },
+  secondaryActionCard: {
+    backgroundColor: COLORS.surfaceCard,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
+    padding: SPACING.md,
+  },
+  secondaryActionTitle: {
+    color: COLORS.textDark,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.bold,
+  },
+  secondaryActionSub: {
+    color: COLORS.textBody,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: 2,
   },
 }));
