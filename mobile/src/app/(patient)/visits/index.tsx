@@ -42,7 +42,7 @@ export default function PatientVisitsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.headerBox}>
         <Text style={styles.headerTitle}>My Visits</Text>
         <Text style={styles.headerSub}>Track your care visits</Text>
@@ -109,7 +109,7 @@ export default function PatientVisitsScreen() {
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
   headerBox: { padding: 20, paddingBottom: 24 },
-  headerTitle: { color: COLORS.onAccent, fontSize: 24, fontWeight: '800' },
+  headerTitle: { color: COLORS.textDark, fontSize: 24, fontWeight: '800' },
   headerSub: { color: COLORS.emerald, fontSize: 14, marginTop: 6, fontWeight: '600' },
   scroll: { flex: 1, backgroundColor: COLORS.surfaceCard, borderTopLeftRadius: 30, borderTopRightRadius: 30, overflow: 'hidden' },
   scrollContent: { padding: 20, paddingBottom: 40, paddingTop: 24 },
@@ -132,7 +132,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   cardInfo: { flex: 1 },
-  cardType: { color: COLORS.textMuted, fontSize: 15, fontWeight: '700' },
+  cardType: { color: COLORS.textDark, fontSize: 15, fontWeight: '700' },
   cardDate: { color: COLORS.textBody, fontSize: 12, marginTop: 4 },
   cardNotes: { color: COLORS.textBody, fontSize: 12, marginTop: 8 },
 }));
