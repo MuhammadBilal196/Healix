@@ -27,7 +27,7 @@ export default function CaregiversScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         
         {/* Header */}
@@ -44,7 +44,7 @@ export default function CaregiversScreen() {
             subtitle="Delegated clinical access settings"
             subtitleStyle={styles.cardSub}
             left={(props) => (
-              <Avatar.Icon {...props} icon="account-group" color={COLORS.textDark} style={{ backgroundColor: COLORS.amber }} />
+              <Avatar.Icon {...props} icon="account-group" color={COLORS.onAccent} style={{ backgroundColor: COLORS.amber }} />
             )}
           />
           <Card.Content>
@@ -92,7 +92,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: 4,
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
@@ -102,10 +102,10 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   cardTitle: {
     color: COLORS.textDark,
@@ -124,7 +124,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   },
   linkItem: {
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.emeraldLight,
+    borderBottomColor: COLORS.inputBorder,
     paddingVertical: 14,
   },
   linkHeader: {
