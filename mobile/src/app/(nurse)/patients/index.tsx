@@ -46,7 +46,7 @@ export default function PatientsListScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
         <Text style={styles.title}>Assigned Patients Directory</Text>
         <Text style={styles.subtitle}>Patients registered for your home care visits</Text>
