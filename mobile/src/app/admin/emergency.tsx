@@ -85,14 +85,14 @@ export default function AdminEmergencyCenter() {
             <Text style={styles.dispatchTitle}>Ambulance Dispatch</Text>
           </View>
           <Chip
-            textStyle={{ fontSize: 11, fontWeight: '700', color: COLORS.textDark }}
+            textStyle={{ fontSize: 11, fontWeight: '700', color: COLORS.onAccent }}
             style={{
               backgroundColor:
                 dispatch.status === 'COMPLETED'
-                  ? COLORS.careEmerald
+                  ? COLORS.emeraldFill
                   : dispatch.status === 'ARRIVED'
-                  ? COLORS.blue
-                  : COLORS.amber
+                  ? COLORS.navy
+                  : COLORS.amberFill
             }}
           >
             {dispatch.status}
@@ -211,14 +211,14 @@ export default function AdminEmergencyCenter() {
               </View>
               <View style={{ flexDirection: 'row', gap: 6 }}>
                 <Chip
-                  textStyle={{ fontSize: 10, fontWeight: '700', color: COLORS.textDark }}
-                  style={{ backgroundColor: isCritical ? COLORS.red : COLORS.amber }}
+                  textStyle={{ fontSize: 10, fontWeight: '700', color: COLORS.onAccent }}
+                  style={{ backgroundColor: isCritical ? COLORS.redFill : COLORS.amberFill }}
                 >
                   {em.severity || 'CRITICAL'}
                 </Chip>
                 <Chip
-                  textStyle={{ fontSize: 10, fontWeight: '700', color: COLORS.textDark }}
-                  style={{ backgroundColor: em.status === 'RESOLVED' ? COLORS.careEmerald : COLORS.navy }}
+                  textStyle={{ fontSize: 10, fontWeight: '700', color: COLORS.onAccent }}
+                  style={{ backgroundColor: em.status === 'RESOLVED' ? COLORS.emeraldFill : COLORS.navy }}
                 >
                   {em.status}
                 </Chip>
@@ -274,7 +274,7 @@ export default function AdminEmergencyCenter() {
                 <Button
                   mode="contained"
                   buttonColor={COLORS.navy}
-                  textColor={COLORS.textDark}
+                  textColor={COLORS.onAccent}
                   icon="doctor"
                   onPress={() => setSelectedEmergencyId(em.id)}
                   style={styles.actionBtn}
@@ -288,7 +288,7 @@ export default function AdminEmergencyCenter() {
                 <Button
                   mode="contained"
                   buttonColor={COLORS.blueFill}
-                  textColor={COLORS.textDark}
+                  textColor={COLORS.onAccent}
                   icon="account-plus"
                   onPress={() => setSelectedDispatchId(em.activeDispatch?.id || null)}
                   style={styles.actionBtn}
@@ -333,10 +333,10 @@ export default function AdminEmergencyCenter() {
   return (
     <SafeAreaView style={styles.container}>
       <Appbar.Header style={{ backgroundColor: COLORS.navyDark }}>
-        <Appbar.BackAction onPress={() => router.back()} color={COLORS.textDark} />
+        <Appbar.BackAction onPress={() => router.back()} color={COLORS.headerText} />
         <Appbar.Action icon="ambulance" color={COLORS.headerText} onPress={() => navigate('/admin/ambulances')} />
-        <Appbar.Content title="Emergency Center" titleStyle={{ color: COLORS.textDark, fontWeight: 'bold' }} />
-        <Appbar.Action icon="refresh" color={COLORS.textDark} onPress={() => refetch()} />
+        <Appbar.Content title="Emergency Center" titleStyle={{ color: COLORS.headerText, fontWeight: 'bold' }} />
+        <Appbar.Action icon="refresh" color={COLORS.headerText} onPress={() => refetch()} />
       </Appbar.Header>
 
       <View style={styles.liveIndicator}>
@@ -624,11 +624,11 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   infoValue: { color: COLORS.textDark, fontSize: 13, fontWeight: '500' },
   dispatchSection: {
     marginTop: 10,
-    backgroundColor: COLORS.headerOverlayMid,
+    backgroundColor: COLORS.surfaceMuted,
     padding: 10,
     borderRadius: RADIUS.sm,
     borderWidth: 1,
-    borderColor: COLORS.headerOverlayMid
+    borderColor: COLORS.inputBorder
   },
   dispatchHeader: {
     flexDirection: 'row',
@@ -689,7 +689,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderBottomColor: COLORS.dividerLight,
   },
   dropdownItemSelected: {
-    backgroundColor: COLORS.headerOverlayMid,
+    backgroundColor: COLORS.blueLight,
   },
   doctorItemName: {
     color: COLORS.textDark,
