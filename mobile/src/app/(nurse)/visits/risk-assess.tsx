@@ -60,7 +60,7 @@ export default function NurseRiskAssessScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>🧠 6.1 AI Risk Assessment & Care Plan</Text>
@@ -91,7 +91,7 @@ export default function NurseRiskAssessScreen() {
                 theme={{
                   colors: {
                     secondaryContainer: COLORS.emerald,
-                    onSecondaryContainer: COLORS.textMuted
+                    onSecondaryContainer: COLORS.onAccent
                   }
                 }}
                 style={{ marginBottom: 20 }}
@@ -100,7 +100,7 @@ export default function NurseRiskAssessScreen() {
               <Button
                 mode="contained"
                 buttonColor={COLORS.emeraldFill}
-                textColor={COLORS.textMuted}
+                textColor={COLORS.onAccent}
                 style={styles.actionBtn}
                 onPress={handlePerformAssessment}
                 disabled={isLoading}
@@ -165,7 +165,7 @@ export default function NurseRiskAssessScreen() {
                 <Button
                   mode="contained"
                   buttonColor={COLORS.emeraldFill}
-                  textColor={COLORS.textMuted}
+                  textColor={COLORS.onAccent}
                   style={[styles.actionBtn, { marginTop: 14 }]}
                   onPress={() => router.replace({ pathname: '/(nurse)/visits/[id]', params: { id: visitId as string } } as any)}
                   labelStyle={{ fontWeight: '800' }}
@@ -196,28 +196,28 @@ export default function NurseRiskAssessScreen() {
 }
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg },
+  container: { flex: 1, backgroundColor: COLORS.surface },
   content: { padding: SPACING.lg, paddingBottom: 40 },
   header: { marginBottom: 16 },
   title: { color: COLORS.textDark, fontSize: 20, fontWeight: '800' },
   subtitle: { color: COLORS.textBody, fontSize: 12, marginTop: 4, lineHeight: 16 },
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: 16 },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: 16 },
   sectionHeader: { color: COLORS.textDark, fontSize: 15, fontWeight: '700', marginBottom: 6 },
   explanationText: { color: COLORS.textBody, fontSize: 12, lineHeight: 16 },
-  divider: { backgroundColor: COLORS.emeraldLight, marginVertical: 10 },
+  divider: { backgroundColor: COLORS.dividerLight, marginVertical: 10 },
   confidenceLabel: { color: COLORS.textDark, fontSize: 13, fontWeight: '700', marginBottom: 8 },
   actionBtn: { borderRadius: RADIUS.md, paddingVertical: 4 },
   resultTitle: { color: COLORS.textBody, fontSize: 13, fontWeight: '700', marginBottom: 10 },
   badgeContainer: { paddingHorizontal: 20, paddingVertical: 8, borderRadius: RADIUS.round, marginBottom: 16 },
-  badgeText: { color: COLORS.textMuted, fontSize: 16, fontWeight: '900', letterSpacing: 1 },
-  gaugeCircle: { width: 90, height: 90, borderRadius: 45, borderWidth: 3, borderColor: COLORS.emerald, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.bg, marginVertical: 10 },
+  badgeText: { color: COLORS.onAccent, fontSize: 16, fontWeight: '900', letterSpacing: 1 },
+  gaugeCircle: { width: 90, height: 90, borderRadius: 45, borderWidth: 3, borderColor: COLORS.emerald, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.surfaceCard, marginVertical: 10 },
   gaugeVal: { color: COLORS.textDark, fontSize: 28, fontWeight: '800' },
   gaugeMax: { color: COLORS.textBody, fontSize: 10 },
   timedOutText: { color: COLORS.textBody, fontSize: 11, marginTop: 6 },
   factorsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   factorChip: { backgroundColor: COLORS.emeraldLight },
   planItem: { color: COLORS.textDark, fontSize: 13, fontWeight: '600', marginBottom: 8 },
-  escalationBox: { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: COLORS.bg, padding: 10, borderRadius: RADIUS.md, marginTop: 10, borderWidth: 1, borderColor: COLORS.emeraldLight },
+  escalationBox: { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: COLORS.surfaceCard, padding: 10, borderRadius: RADIUS.md, marginTop: 10, borderWidth: 1, borderColor: COLORS.inputBorder },
   escalationLabel: { color: COLORS.textBody, fontSize: 12 },
   escalationVal: { color: COLORS.emerald, fontSize: 12, fontWeight: '800' },
   loadingOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' }
