@@ -73,11 +73,11 @@ export const RequestTrackingStepper: React.FC<RequestTrackingStepperProps> = ({ 
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   item: {
     flexDirection: 'row',
@@ -115,7 +115,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderColor: COLORS.inputBorder,
   },
   checkIcon: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontSize: 12,
     fontWeight: '800',
   },
