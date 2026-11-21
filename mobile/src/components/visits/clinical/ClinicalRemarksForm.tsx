@@ -93,7 +93,7 @@ export const ClinicalRemarksForm: React.FC<ClinicalRemarksFormProps> = ({ visitI
         <Button
           mode="contained"
           buttonColor={COLORS.purpleFill}
-          textColor={COLORS.textDark}
+          textColor={COLORS.onAccent}
           onPress={handleSubmit}
           loading={submitRemarks.isPending}
           disabled={submitRemarks.isPending}
@@ -108,11 +108,11 @@ export const ClinicalRemarksForm: React.FC<ClinicalRemarksFormProps> = ({ visitI
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: SPACING.lg },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: SPACING.lg },
   title: { color: COLORS.textDark, fontSize: 16, fontWeight: '700' },
-  divider: { backgroundColor: COLORS.emeraldLight, marginVertical: 12 },
+  divider: { backgroundColor: COLORS.dividerLight, marginVertical: 12 },
   label: { color: COLORS.textDark, fontSize: 13, fontWeight: '600', marginBottom: 6 },
-  textArea: { backgroundColor: COLORS.bg, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.emeraldLight, padding: 12, borderRadius: RADIUS.md, fontSize: 13, minHeight: 120 },
+  textArea: { backgroundColor: COLORS.surface, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.inputBorder, padding: 12, borderRadius: RADIUS.md, fontSize: 13, minHeight: 120 },
   inputError: { borderColor: COLORS.red },
   errorText: { color: COLORS.red, fontSize: 11, marginTop: 4 },
   confidenceRow: { flexDirection: 'row', gap: 8 },
