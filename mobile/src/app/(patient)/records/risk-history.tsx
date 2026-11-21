@@ -30,7 +30,7 @@ export default function RiskHistoryScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.headerRow}>
@@ -94,7 +94,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '300',
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
