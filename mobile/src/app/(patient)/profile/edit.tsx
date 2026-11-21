@@ -94,7 +94,7 @@ export default function ProfileEditScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.headerRow}>
@@ -218,7 +218,7 @@ export default function ProfileEditScreen() {
             disabled={isUpdating || !isFormValid()}
             style={styles.saveBtn}
             buttonColor={COLORS.emeraldFill}
-            textColor={COLORS.textMuted}
+            textColor={COLORS.onAccent}
           >
             Save Profile
           </Button>
@@ -238,17 +238,17 @@ export default function ProfileEditScreen() {
 }
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.bg },
+  safeArea: { flex: 1, backgroundColor: COLORS.surface },
   container: { flexGrow: 1, padding: SPACING.lg, paddingBottom: 60, maxWidth: 800, width: '100%', alignSelf: 'center' },
   headerRow: { marginTop: SPACING.md, marginBottom: SPACING.xs },
-  headerTitle: { color: COLORS.onAccent, fontSize: 28, fontWeight: '800' },
+  headerTitle: { color: COLORS.textDark, fontSize: 28, fontWeight: '800' },
   subtitle: { color: COLORS.textBody, fontSize: 14, marginBottom: SPACING.xl },
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.emeraldLight },
-  input: { marginBottom: 4, marginTop: 8, backgroundColor: COLORS.bg },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.inputBorder },
+  input: { marginBottom: 4, marginTop: 8, backgroundColor: COLORS.surfaceCard },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   errorHelper: { color: COLORS.red, fontSize: 12, marginBottom: 8 },
   saveBtn: { marginTop: SPACING.xl, paddingVertical: 6, borderRadius: RADIUS.md },
-  cancelBtn: { marginTop: SPACING.sm, paddingVertical: 6, borderRadius: RADIUS.md, borderColor: COLORS.emeraldLight },
+  cancelBtn: { marginTop: SPACING.sm, paddingVertical: 6, borderRadius: RADIUS.md, borderColor: COLORS.inputBorder },
 }));
 
 
