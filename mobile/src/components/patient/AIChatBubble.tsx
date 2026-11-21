@@ -220,7 +220,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderColor: COLORS.emerald,
   },
   avatarInitials: {
-    color: COLORS.textDark,
+    color: COLORS.onAccent,
     fontSize: 11,
     fontWeight: '800',
   },
@@ -235,7 +235,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderBottomRightRadius: 4,
   },
   bubbleAI: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderWidth: 1,
     borderColor: COLORS.teal,
     borderBottomLeftRadius: 4,
@@ -269,7 +269,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     lineHeight: 20,
   },
   messageUser: {
-    color: COLORS.textDark,
+    color: COLORS.onAccent,
     fontWeight: '500',
   },
   messageAI: {
