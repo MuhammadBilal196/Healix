@@ -197,12 +197,12 @@ export const PatientMedicalSummaryCard: React.FC<PatientMedicalSummaryCardProps>
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     marginBottom: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   headerRow: {
     flexDirection: 'row',
@@ -241,12 +241,12 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     borderRadius: RADIUS.sm,
   },
   bloodTypeText: {
-    color: COLORS.amberLight,
+    color: COLORS.red,
     fontSize: 10,
     fontWeight: '700',
   },
   allergyWarningBanner: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.redLight,
     borderColor: COLORS.red,
     borderWidth: 1,
     borderRadius: RADIUS.md,
