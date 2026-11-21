@@ -43,7 +43,7 @@ export default function NurseVisitsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.headerBox}>
         <Text style={styles.headerTitle}>Assigned Visits</Text>
         <Text style={styles.headerSub}>Manage your care schedule</Text>
@@ -106,15 +106,15 @@ export default function NurseVisitsScreen() {
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
   headerBox: { padding: 20, paddingBottom: 24 },
-  headerTitle: { color: COLORS.onAccent, fontSize: 24, fontWeight: '800' },
+  headerTitle: { color: COLORS.textDark, fontSize: 24, fontWeight: '800' },
   headerSub: { color: COLORS.emerald, fontSize: 14, marginTop: 6, fontWeight: '600' },
   scroll: { flex: 1, backgroundColor: COLORS.surfaceCard, borderTopLeftRadius: 30, borderTopRightRadius: 30, overflow: 'hidden' },
   scrollContent: { padding: 20, paddingBottom: 40, paddingTop: 24 },
   filterRow: { flexDirection: 'row', gap: 8, marginBottom: 20 },
-  pill: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, backgroundColor: COLORS.surfaceCard },
-  pillActive: { backgroundColor: COLORS.emerald },
+  pill: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.inputBorder },
+  pillActive: { backgroundColor: COLORS.emerald, borderColor: COLORS.emerald },
   pillText: { fontSize: 12, fontWeight: '600', color: COLORS.textBody },
-  pillTextActive: { color: COLORS.textMuted },
+  pillTextActive: { color: COLORS.onAccent, fontWeight: '700' },
   centered: { flex: 1, alignItems: 'center', paddingTop: 60 },
   mutedText: { color: COLORS.textBody, fontSize: 13, textAlign: 'center', marginTop: 4 },
   emptyTitle: { color: COLORS.textMuted, fontSize: 18, fontWeight: '700' },

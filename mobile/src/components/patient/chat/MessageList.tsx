@@ -1,7 +1,7 @@
 
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
-import { forwardRef } from 'react';
+import { forwardRef, type ComponentRef } from 'react';
 import { useVoicePlayback } from '../../../hooks/useVoicePlayback';
 import { View, ScrollView, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { RADIUS, SPACING } from '../../../theme';
@@ -43,7 +43,7 @@ const PatientAudioBubble = ({ uri, isMe, durationMs }: { uri: string; isMe: bool
   );
 };
 
-export const MessageList = forwardRef<ScrollView, MessageListProps>(({ messages }, ref) => {
+export const MessageList = forwardRef<ComponentRef<typeof ScrollView>, MessageListProps>(({ messages }, ref) => {
   const { colors: COLORS } = useAppTheme();
   const styles = useThemeValue(createStyles);
   return (
@@ -154,9 +154,9 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     padding: SPACING.md,
   },
   bubbleThem: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     borderTopLeftRadius: 4,
   },
   bubbleMe: {
@@ -171,7 +171,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     color: COLORS.textDark,
   },
   msgTextMe: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontWeight: '500',
   },
   imageWrap: {

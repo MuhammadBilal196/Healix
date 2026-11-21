@@ -95,7 +95,7 @@ export const VitalsForm: React.FC<VitalsFormProps> = ({ visitId, onSuccess, exis
         <Button
           mode="contained"
           buttonColor={COLORS.primaryText}
-          textColor={COLORS.textDark}
+          textColor={COLORS.onAccent}
           onPress={handleSubmit}
           loading={submitVitals.isPending}
           disabled={submitVitals.isPending}
@@ -110,13 +110,13 @@ export const VitalsForm: React.FC<VitalsFormProps> = ({ visitId, onSuccess, exis
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: SPACING.lg },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: SPACING.lg },
   title: { color: COLORS.textDark, fontSize: 16, fontWeight: '700' },
-  divider: { backgroundColor: COLORS.emeraldLight, marginVertical: 12 },
+  divider: { backgroundColor: COLORS.dividerLight, marginVertical: 12 },
   fieldRow: { marginBottom: 12 },
   label: { color: COLORS.textDark, fontSize: 13, fontWeight: '600', marginBottom: 4 },
   unit: { color: COLORS.textBody, fontWeight: '400' },
-  input: { backgroundColor: COLORS.bg, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.emeraldLight, padding: 10, borderRadius: RADIUS.md, fontSize: 14 },
+  input: { backgroundColor: COLORS.surface, color: COLORS.textDark, borderWidth: 1, borderColor: COLORS.inputBorder, padding: 10, borderRadius: RADIUS.md, fontSize: 14 },
   inputError: { borderColor: COLORS.red },
   errorText: { color: COLORS.red, fontSize: 11, marginTop: 2 },
 }));

@@ -66,7 +66,7 @@ export default function EmergencyContactsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.headerRow}>
@@ -173,7 +173,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '300',
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
@@ -182,18 +182,18 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     gap: SPACING.md,
   },
   contactCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   avatarBg: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   contactInfo: {
     marginLeft: SPACING.md,
@@ -272,13 +272,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginTop: 4,
   },
   infoBanner: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     marginBottom: SPACING.xs,
   },
   infoIcon: {

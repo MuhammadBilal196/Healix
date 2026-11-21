@@ -91,18 +91,18 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     gap: SPACING.sm,
   },
   alertCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   highRiskCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderColor: COLORS.red,
   },
   escalationCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderColor: COLORS.amber,
   },
   topRow: {

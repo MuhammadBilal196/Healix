@@ -1,4 +1,3 @@
-
 import { useAppTheme, useThemeValue } from '../../theme/ThemeProvider';
 import type { ThemeColors } from '../../theme';
 
@@ -23,7 +22,7 @@ export default function AdminModeration() {
   };
 
   const renderContent = () => {
-    if (isLoading) return <ActivityIndicator color={COLORS.emerald} style={{ marginTop: 20 }} />;
+    if (isLoading) return <ActivityIndicator color={COLORS.navy} style={{ marginTop: 20 }} />;
     if (!reviews?.length) return <Text style={styles.emptyText}>No reviews found</Text>;
 
     return reviews.map(rev => {
@@ -42,8 +41,8 @@ export default function AdminModeration() {
                 <Text style={styles.ratingText}>{rating}/5</Text>
               </View>
               <Chip
-                textStyle={{ fontSize: 10, color: COLORS.textDark }}
-                style={{ backgroundColor: isHidden ? COLORS.red : COLORS.emerald }}
+                textStyle={{ fontSize: 10, color: COLORS.onAccent, fontWeight: '700' }}
+                style={{ backgroundColor: isHidden ? COLORS.redFill : COLORS.emeraldFill }}
               >
                 {isHidden ? 'HIDDEN' : (rev.status || 'APPROVED')}
               </Chip>
@@ -54,9 +53,9 @@ export default function AdminModeration() {
             {!isHidden ? (
               <View style={styles.actionRow}>
                 <Button
-                  mode="contained"
-                  style={{ backgroundColor: COLORS.redLight }}
-                  labelStyle={{ color: COLORS.red }}
+                  mode="outlined"
+                  textColor={COLORS.red}
+                  style={{ borderColor: COLORS.red, borderRadius: RADIUS.md }}
                   onPress={() => handleModerate(rev.id, 'HIDDEN')}
                 >
                   Hide (Flag)
@@ -66,8 +65,9 @@ export default function AdminModeration() {
               <View style={styles.actionRow}>
                 <Button
                   mode="contained"
-                  style={{ backgroundColor: COLORS.emeraldLight, marginRight: 10 }}
-                  labelStyle={{ color: COLORS.emerald }}
+                  buttonColor={COLORS.emeraldFill}
+                  textColor={COLORS.onAccent}
+                  style={{ borderRadius: RADIUS.md }}
                   onPress={() => handleModerate(rev.id, 'APPROVED')}
                 >
                   Approve (Unflag)
@@ -82,9 +82,9 @@ export default function AdminModeration() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header style={{ backgroundColor: COLORS.bg }}>
-        <Appbar.BackAction onPress={() => router.back()} color={COLORS.textDark} />
-        <Appbar.Content title="Review Moderation" titleStyle={{ color: COLORS.textDark }} />
+      <Appbar.Header style={{ backgroundColor: COLORS.navyDark }}>
+        <Appbar.BackAction onPress={() => router.back()} color={COLORS.headerText} />
+        <Appbar.Content title="Review Moderation" titleStyle={{ color: COLORS.headerText, fontWeight: '700' }} />
       </Appbar.Header>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -94,14 +94,19 @@ export default function AdminModeration() {
   );
 }
 
-const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg },
+const createStyles = (COLORS: ThemeColors) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.surface },
   content: { padding: SPACING.md, gap: 12, paddingBottom: 40 },
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight },
+  card: {
+    backgroundColor: COLORS.surfaceCard,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
+  },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   ratingText: { color: COLORS.amber, fontSize: 14, fontWeight: '700', marginLeft: 4 },
   cardSub: { color: COLORS.textBody, fontSize: 12, marginBottom: 8 },
   comment: { color: COLORS.textDark, fontSize: 14, fontStyle: 'italic', marginBottom: 12 },
   actionRow: { flexDirection: 'row', justifyContent: 'flex-start' },
-  emptyText: { color: COLORS.textBody, textAlign: 'center', marginTop: 40, fontSize: 16 },
-}));
+  emptyText: { color: COLORS.textBody, textAlign: 'center', marginTop: 40, fontSize: 15 },
+});

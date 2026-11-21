@@ -95,11 +95,11 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   bellIcon: {
     fontSize: 18,

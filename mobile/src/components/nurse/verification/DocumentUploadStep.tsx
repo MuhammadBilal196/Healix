@@ -119,7 +119,7 @@ export const DocumentUploadStep: React.FC<UploadModalProps> = ({ visible, docKey
               disabled={uploading}
             >
               {uploading ? (
-                <ActivityIndicator color={COLORS.textDark} size="small" />
+                <ActivityIndicator color={COLORS.onAccent} size="small" />
               ) : (
                 <Text style={styles.uploadBtnText}>Upload</Text>
               )}

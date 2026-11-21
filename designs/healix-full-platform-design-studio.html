@@ -1,0 +1,2084 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Healix — Full-Platform Clinical UI/UX Design Studio (v2.0)</title>
+  <style>
+    /* ─── 1. Authoritative Tokens & Studio Shell ────────────────────────────── */
+    :root {
+      --studio-navy-dark: #06294B;
+      --studio-navy: #0B4268;
+      --studio-accent: #29A9F5;
+      --studio-emerald: #10B981;
+      --studio-bg: #EEF2F7;
+      --studio-surface: #FFFFFF;
+      --studio-border: #DCE4EE;
+      --studio-ink: #1E293B;
+      --studio-muted: #64748B;
+      --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--studio-bg); color: var(--studio-ink); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--studio-accent); outline-offset: 2px; }
+
+    /* Preview Themes (Light Clinical Default vs Dark Futuristic Neon) */
+    .theme-light {
+      --navy: #0B4268;
+      --navy-dark: #06294B;
+      --accent-blue: #29A9F5;
+      --emerald: #10B981;
+      --emerald-soft: #ECFDF5;
+      --red: #EF4444;
+      --red-soft: #FEF2F2;
+      --amber: #F59E0B;
+      --amber-soft: #FFFBEB;
+      --purple: #8B5CF6;
+      --purple-soft: #F3E8FF;
+      --blue-soft: #EBF5FF;
+      --pink: #F43F5E;
+      --pink-soft: #FFF1F2;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --surface-muted: #F1F5F9;
+      --border: #E2E8F0;
+      --text-dark: #1E293B;
+      --text-body: #475569;
+      --text-muted: #64748B;
+      --text-inverse: #FFFFFF;
+      --qa-blue-bg: #EBF5FF; --qa-blue-fg: #2563EB;
+      --qa-green-bg: #ECFDF5; --qa-green-fg: #10B981;
+      --qa-purple-bg: #F3E8FF; --qa-purple-fg: #8B5CF6;
+      --qa-pink-bg: #FFF1F2; --qa-pink-fg: #F43F5E;
+      --sidebar-bg: #06294B;
+      --sidebar-text: #CBD5E1;
+      --sidebar-active-bg: rgba(41, 169, 245, 0.16);
+      --sidebar-active-fg: #FFFFFF;
+      --card-shadow: 0 4px 14px rgba(11, 66, 104, 0.06);
+      --hero-grad: linear-gradient(155deg, #06294B 0%, #0B4268 68%, #155E8A 100%);
+    }
+
+    .theme-dark {
+      --navy: #2158DA;
+      --navy-dark: #09254D;
+      --accent-blue: #61CFFF;
+      --emerald: #56DEAB;
+      --emerald-soft: #073229;
+      --red: #FF8191;
+      --red-soft: #3B1427;
+      --amber: #FFD170;
+      --amber-soft: #352C17;
+      --purple: #C2A1FF;
+      --purple-soft: #20123E;
+      --blue-soft: #082A48;
+      --pink: #FF8EC9;
+      --pink-soft: #35142D;
+      --bg: #020B18;
+      --card: #071B30;
+      --surface-muted: #082138;
+      --border: #153651;
+      --text-dark: #EDF8FF;
+      --text-body: #B5D3E7;
+      --text-muted: #8DACC3;
+      --text-inverse: #FFFFFF;
+      --qa-blue-bg: #082A48; --qa-blue-fg: #61CFFF;
+      --qa-green-bg: #073229; --qa-green-fg: #56DEAB;
+      --qa-purple-bg: #20123E; --qa-purple-fg: #C2A1FF;
+      --qa-pink-bg: #35142D; --qa-pink-fg: #FF8EC9;
+      --sidebar-bg: #041224;
+      --sidebar-text: #8DACC3;
+      --sidebar-active-bg: rgba(97, 207, 255, 0.15);
+      --sidebar-active-fg: #EDF8FF;
+      --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --hero-grad: linear-gradient(155deg, #020B18 0%, #09254D 60%, #153E85 100%);
+    }
+
+    /* ─── Studio Header ──────────────────────────────────────────────────────── */
+    .studio-header {
+      background: linear-gradient(135deg, #06294B 0%, #0B4268 70%, #0E5685 100%);
+      color: #FFFFFF;
+      padding: 24px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .studio-top {
+      max-width: 1560px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    }
+    .brand-lockup { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22);
+      display: grid; place-items: center; color: #29A9F5;
+    }
+    .brand-mark svg { width: 24px; height: 24px; }
+    .brand-title { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; }
+    .brand-sub { font-size: 12px; color: #BAE6FD; font-weight: 500; }
+
+    .studio-controls-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .theme-switch {
+      display: inline-flex; background: rgba(6, 41, 75, 0.65); padding: 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); gap: 4px;
+    }
+    .theme-switch button {
+      border: 0; background: transparent; color: #CBD5E1; padding: 7px 12px; border-radius: 7px; font-size: 12px; font-weight: 600; transition: 0.15s;
+    }
+    .theme-switch button.active { background: #FFFFFF; color: #06294B; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+    .studio-intro {
+      max-width: 1560px; margin: 18px auto 0;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    }
+    .studio-intro h1 { margin: 0 0 6px; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    .studio-intro p { margin: 0; color: #CBD5E1; max-width: 780px; font-size: 13.5px; }
+    .pill-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill-stat {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #E0F2FE;
+    }
+
+    /* ─── Sticky Studio Toolbar ──────────────────────────────────────────────── */
+    .studio-toolbar {
+      position: sticky; top: 0; z-index: 40;
+      background: #FFFFFF; border-bottom: 1px solid var(--studio-border);
+      box-shadow: 0 4px 16px rgba(6, 41, 75, 0.05);
+    }
+    .toolbar-inner {
+      max-width: 1560px; margin: 0 auto; padding: 12px 32px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .module-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+    .module-tab {
+      border: 1px solid var(--studio-border); background: #F8FAFC; color: #475569;
+      padding: 7px 13px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; transition: 0.15s;
+    }
+    .module-tab:hover { border-color: #0B4268; color: #0B4268; }
+    .module-tab.active { background: #0B4268; color: #FFFFFF; border-color: #0B4268; }
+
+    .filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .search-input {
+      padding: 7px 12px; border: 1px solid #CBD5E1; border-radius: 8px; min-width: 230px; font-size: 13px; background: #F8FAFC; color: #1E293B;
+    }
+    .select-input {
+      padding: 7px 10px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 13px; background: #FFFFFF; color: #1E293B; font-weight: 500;
+    }
+    .view-modes { display: inline-flex; background: #F1F5F9; padding: 3px; border-radius: 9px; border: 1px solid #E2E8F0; gap: 3px; }
+    .view-modes button {
+      border: 0; background: transparent; color: #475569; padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600;
+    }
+    .view-modes button.active { background: #FFFFFF; color: #0B4268; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .screen-counter { margin-left: auto; font-size: 12.5px; font-weight: 600; color: #64748B; }
+
+    /* ─── Main Studio Canvas ─────────────────────────────────────────────────── */
+    .studio-main { max-width: 1560px; margin: 0 auto; padding: 26px 32px 64px; }
+
+    .boards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 28px 24px;
+      align-items: start;
+    }
+    .board-item { display: flex; flex-direction: column; min-width: 0; }
+    .board-item.is-web { grid-column: span 2; }
+    @media (max-width: 1120px) { .board-item.is-web { grid-column: span 1; } }
+    @media (max-width: 640px) {
+      .studio-header { padding: 18px 16px; }
+      .toolbar-inner { padding: 10px 16px; }
+      .studio-main { padding: 16px 12px 48px; }
+      .boards-grid { grid-template-columns: 1fr; }
+    }
+
+    .board-meta {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      margin-bottom: 10px; padding: 0 4px;
+    }
+    .board-meta-left { min-width: 0; }
+    .board-kicker {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #0B4268;
+    }
+    .platform-tag {
+      font-size: 10px; padding: 2px 7px; border-radius: 999px; font-weight: 700;
+    }
+    .platform-tag.mobile { background: #EBF5FF; color: #0B4268; }
+    .platform-tag.web { background: #ECFDF5; color: #047857; }
+    .board-title { font-size: 15px; font-weight: 700; color: #0F172A; margin: 2px 0 0; }
+    .board-route { font-family: var(--font-mono); font-size: 11px; color: #64748B; }
+    .focus-trigger {
+      border: 1px solid #CBD5E1; background: #FFFFFF; color: #0B4268;
+      padding: 5px 10px; border-radius: 7px; font-size: 11.5px; font-weight: 600; flex-shrink: 0;
+    }
+    .focus-trigger:hover { background: #0B4268; color: #FFFFFF; border-color: #0B4268; }
+
+    /* Focus Wrapper */
+    .focus-layout { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .focus-bar {
+      width: 100%; max-width: 980px; background: #FFFFFF; border: 1px solid #DCE4EE; border-radius: 14px;
+      padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    }
+    .focus-bar button {
+      border: 1px solid #CBD5E1; background: #F8FAFC; color: #0B4268; padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 700;
+    }
+    .focus-bar button:hover { background: #0B4268; color: #FFFFFF; border-color: #0B4268; }
+    .focus-stage { width: 100%; display: flex; justify-content: center; }
+    .focus-stage .board-item.is-mobile { width: 100%; max-width: 390px; }
+    .focus-stage .board-item.is-web { width: 100%; max-width: 1080px; }
+
+    /* ─── 2. Mobile Device Frame & Component Styles ─────────────────────────── */
+    .phone-frame {
+      width: 100%; max-width: 375px; height: 730px; margin: 0 auto;
+      background: var(--bg); color: var(--text-dark);
+      border: 8px solid #0F172A; border-radius: 36px;
+      box-shadow: 0 20px 45px rgba(6, 41, 75, 0.16);
+      display: flex; flex-direction: column; overflow: hidden; position: relative;
+      font-size: 13px;
+    }
+    .status-bar {
+      height: 30px; padding: 6px 20px 0;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 11px; font-weight: 700; flex-shrink: 0; position: relative;
+      background: var(--navy-dark); color: #FFFFFF;
+    }
+    .status-bar.light-top { background: var(--bg); color: var(--text-dark); }
+    .status-notch {
+      position: absolute; left: 50%; top: 5px; transform: translateX(-50%);
+      width: 72px; height: 11px; background: #0F172A; border-radius: 0 0 10px 10px;
+    }
+
+    .m-hero {
+      background: var(--hero-grad); color: #FFFFFF; padding: 14px 18px 24px; flex-shrink: 0; position: relative;
+    }
+    .m-hero.has-overlap { padding-bottom: 42px; }
+    .m-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .m-hero-eyebrow { font-size: 11px; color: #BAE6FD; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .m-hero-title { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; margin: 2px 0; line-height: 1.2; color: #FFFFFF; }
+    .m-hero-sub { font-size: 12px; color: #E0F2FE; margin: 0; }
+    .m-appbar {
+      background: var(--navy-dark); color: #FFFFFF; padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-shrink: 0;
+    }
+    .m-appbar-title { font-size: 16px; font-weight: 700; color: #FFFFFF; }
+    .m-appbar-sub { font-size: 11px; color: #BAE6FD; }
+
+    .m-scroll { flex: 1; overflow-y: auto; padding: 14px 14px 24px; scrollbar-width: thin; }
+    .m-scroll.overlap-up { margin-top: -28px; position: relative; z-index: 2; padding-top: 0; }
+
+    .m-tabbar {
+      height: 58px; background: var(--card); border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-around; padding: 4px 6px; flex-shrink: 0;
+    }
+    .m-tab-btn {
+      border: 0; background: transparent; color: var(--text-muted);
+      display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; font-weight: 600; padding: 4px 8px;
+    }
+    .m-tab-btn.active { color: var(--navy); font-weight: 700; }
+    .theme-dark .m-tab-btn.active { color: var(--accent-blue); }
+
+    /* Shared UI Primitives inside Previews */
+    .ui-icon { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .h-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 14px; margin-bottom: 12px; box-shadow: var(--card-shadow);
+    }
+    .h-card.navy-hero {
+      background: var(--navy); border-color: transparent; color: #FFFFFF; border-radius: 20px;
+      box-shadow: 0 12px 24px rgba(6, 41, 75, 0.24);
+    }
+    .h-card.red-tint { background: var(--red-soft); border-color: rgba(239, 68, 68, 0.3); }
+    .h-card.amber-tint { background: var(--amber-soft); border-color: rgba(245, 158, 11, 0.3); }
+    .h-card.emerald-tint { background: var(--emerald-soft); border-color: rgba(16, 185, 129, 0.3); }
+
+    .h-sec { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 8px; }
+    .h-sec h4 { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+    .h-sec button { border: 0; background: transparent; color: var(--accent-blue); font-size: 12px; font-weight: 600; padding: 0; }
+
+    .h-badge {
+      display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.2px; white-space: nowrap;
+    }
+    .h-badge.emerald { background: var(--emerald-soft); color: var(--emerald); }
+    .h-badge.amber { background: var(--amber-soft); color: var(--amber); }
+    .h-badge.red { background: var(--red-soft); color: var(--red); }
+    .h-badge.blue { background: var(--blue-soft); color: var(--accent-blue); }
+    .h-badge.navy { background: var(--navy); color: #FFFFFF; }
+    .h-badge.muted { background: var(--surface-muted); color: var(--text-body); }
+    .h-badge.solid-red { background: var(--red); color: #FFFFFF; }
+    .h-badge.solid-emerald { background: var(--emerald); color: #FFFFFF; }
+
+    .h-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      min-height: 40px; padding: 8px 14px; border-radius: 11px; border: 0;
+      font-size: 12.5px; font-weight: 700; transition: 0.15s; text-align: center;
+    }
+    .h-btn.full { width: 100%; }
+    .h-btn.sm { min-height: 32px; padding: 5px 10px; font-size: 11.5px; border-radius: 8px; }
+    .h-btn.primary { background: var(--navy); color: #FFFFFF; }
+    .h-btn.dark-cta { background: var(--navy-dark); color: #FFFFFF; }
+    .h-btn.emerald { background: var(--emerald); color: #FFFFFF; }
+    .h-btn.danger { background: var(--red); color: #FFFFFF; }
+    .h-btn.outline { background: transparent; color: var(--navy); border: 1.5px solid var(--border); }
+    .theme-dark .h-btn.outline { color: var(--accent-blue); }
+    .h-btn.soft { background: var(--surface-muted); color: var(--text-dark); }
+    .h-btn.danger-soft { background: var(--red-soft); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+    .h-btn-row { display: flex; gap: 8px; margin-top: 8px; }
+    .h-btn-row .h-btn { flex: 1; }
+
+    .h-avatar {
+      width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+      font-weight: 800; font-size: 13px; flex-shrink: 0;
+      background: var(--blue-soft); color: var(--navy); border: 2px solid rgba(41,169,245,0.3);
+    }
+    .theme-dark .h-avatar { color: var(--accent-blue); }
+    .h-avatar.emerald-ring { border-color: rgba(16,185,129,0.55); background: var(--emerald-soft); color: var(--emerald); }
+    .h-avatar.inverse { background: rgba(255,255,255,0.18); color: #FFFFFF; border-color: rgba(255,255,255,0.35); }
+
+    .h-seg {
+      display: flex; background: var(--surface-muted); border: 1px solid var(--border);
+      padding: 3px; border-radius: 11px; gap: 3px; margin-bottom: 12px;
+    }
+    .h-seg button {
+      flex: 1; border: 0; background: transparent; color: var(--text-muted);
+      padding: 6px 8px; border-radius: 8px; font-size: 11.5px; font-weight: 600;
+    }
+    .h-seg button.active { background: var(--card); color: var(--text-dark); font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+    .h-input-group { margin-bottom: 10px; }
+    .h-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-body); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .h-input {
+      width: 100%; background: var(--surface-muted); border: 1px solid var(--border); border-radius: 10px;
+      padding: 9px 11px; color: var(--text-dark); font-size: 12.5px;
+    }
+    .h-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .h-list-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .h-list-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .muted-sm { font-size: 11.5px; color: var(--text-muted); }
+    .body-sm { font-size: 12px; color: var(--text-body); }
+    .tabular { font-variant-numeric: tabular-nums; }
+
+    /* Quick Actions 2x2 */
+    .qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 12px; }
+    .qa-card {
+      border: 1px solid var(--border); border-radius: 15px; padding: 11px; text-align: left;
+      display: flex; flex-direction: column; gap: 6px; transition: 0.15s;
+    }
+    .qa-card b { font-size: 12.5px; color: var(--text-dark); display: block; }
+    .qa-card span { font-size: 10.5px; color: var(--text-body); line-height: 1.3; }
+    .qa-icon { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; }
+
+    /* Metrics strip */
+    .metric-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+    .metric-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+    .metric-box {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px;
+    }
+    .metric-box .m-val { font-size: 17px; font-weight: 800; color: var(--text-dark); margin: 3px 0 1px; font-variant-numeric: tabular-nums; }
+    .metric-box .m-lbl { font-size: 10.5px; font-weight: 600; color: var(--text-muted); }
+
+    /* Timeline & Stepper */
+    .stepper-bar { display: flex; gap: 4px; margin-bottom: 12px; }
+    .stepper-bar i { flex: 1; height: 4px; border-radius: 4px; background: var(--border); display: block; }
+    .stepper-bar i.done { background: var(--emerald); }
+    .stepper-bar i.active { background: var(--accent-blue); }
+
+    /* QR Box */
+    .qr-card {
+      width: 146px; height: 146px; margin: 10px auto; padding: 12px; background: #FFFFFF;
+      border: 2px solid var(--border); border-radius: 16px; display: grid; place-items: center;
+    }
+
+    /* ─── 3. Web Desktop Browser Frame & Layout ──────────────────────────────── */
+    .browser-frame {
+      width: 100%; height: 730px; background: var(--bg); color: var(--text-dark);
+      border: 1px solid #CBD5E1; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 20px 45px rgba(6, 41, 75, 0.12);
+      display: flex; flex-direction: column;
+    }
+    .browser-chrome {
+      height: 36px; background: #0F172A; color: #94A3B8; padding: 0 14px;
+      display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    }
+    .traffic-dots { display: flex; gap: 6px; }
+    .traffic-dots span { width: 10px; height: 10px; border-radius: 50%; display: block; }
+    .url-bar {
+      flex: 1; max-width: 440px; background: rgba(255,255,255,0.08); border-radius: 6px;
+      padding: 3px 10px; font-family: var(--font-mono); font-size: 11px; color: #E2E8F0;
+    }
+    .web-shell { flex: 1; display: flex; min-height: 0; overflow: hidden; }
+    .web-sidebar {
+      width: 215px; background: var(--sidebar-bg); color: var(--sidebar-text);
+      padding: 16px 10px; display: flex; flex-direction: column; flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .web-brand { display: flex; align-items: center; gap: 9px; padding: 0 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
+    .web-brand-badge { width: 30px; height: 30px; border-radius: 8px; background: #29A9F5; color: #06294B; display: grid; place-items: center; font-weight: 800; }
+    .web-brand b { color: #FFFFFF; font-size: 15px; display: block; line-height: 1.1; }
+    .web-brand small { color: #7DD3FC; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.7px; }
+    .web-nav-sec { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.8px; color: #64748B; padding: 8px 10px 4px; font-weight: 700; }
+    .web-nav-btn {
+      width: 100%; border: 0; background: transparent; color: var(--sidebar-text); text-align: left;
+      padding: 7px 10px; border-radius: 8px; font-size: 12px; font-weight: 500;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px;
+    }
+    .web-nav-btn.active { background: var(--sidebar-active-bg); color: var(--sidebar-active-fg); font-weight: 700; }
+    .web-main { flex: 1; overflow-y: auto; padding: 20px 22px; background: var(--bg); }
+    .web-page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .web-page-head h3 { margin: 0; font-size: 20px; font-weight: 800; color: var(--text-dark); }
+    .web-page-head p { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); }
+
+    .web-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .web-kpi {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
+      border-top: 3px solid var(--navy); box-shadow: var(--card-shadow);
+    }
+    .web-kpi.emerald { border-top-color: var(--emerald); }
+    .web-kpi.amber { border-top-color: var(--amber); }
+    .web-kpi.red { border-top-color: var(--red); }
+    .web-kpi.blue { border-top-color: var(--accent-blue); }
+    .web-kpi b { display: block; font-size: 21px; font-weight: 800; color: var(--text-dark); font-variant-numeric: tabular-nums; }
+    .web-kpi span { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+    .web-table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--card-shadow); margin-bottom: 14px; }
+    .web-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .web-table th {
+      background: var(--surface-muted); color: var(--text-muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.4px;
+      text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border);
+    }
+    .web-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-body); vertical-align: middle; }
+    .web-table tr:last-child td { border-bottom: 0; }
+
+    .web-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .login-split { display: grid; grid-template-columns: 1fr 1.15fr; height: 100%; }
+    .login-brand-pane {
+      background: var(--hero-grad); color: #FFFFFF; padding: 34px 28px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .login-form-pane {
+      background: var(--bg); display: grid; place-items: center; padding: 24px;
+    }
+    .login-box {
+      width: 100%; max-width: 360px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 18px; padding: 24px; box-shadow: var(--card-shadow);
+    }
+
+    /* ─── 4. Design Tokens & Component System View ───────────────────────────── */
+    .tokens-panel { display: flex; flex-direction: column; gap: 24px; }
+    .token-section { background: #FFFFFF; border: 1px solid var(--studio-border); border-radius: 16px; padding: 22px; }
+    .token-section h2 { margin: 0 0 4px; font-size: 18px; color: #06294B; }
+    .token-section p.lead { margin: 0 0 16px; color: #64748B; font-size: 13px; }
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+    .swatch-card { border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; background: #FFFFFF; }
+    .swatch-color { height: 64px; position: relative; }
+    .swatch-info { padding: 10px 12px; }
+    .swatch-info b { display: block; font-size: 13px; color: #1E293B; }
+    .swatch-info code { font-family: var(--font-mono); font-size: 11px; color: #0B4268; background: #F1F5F9; padding: 1px 6px; border-radius: 4px; }
+    .swatch-info small { display: block; font-size: 11px; color: #64748B; margin-top: 4px; }
+
+    /* Toast */
+    .studio-toast {
+      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+      background: #06294B; color: #FFFFFF; padding: 10px 18px; border-radius: 10px;
+      font-size: 12.5px; font-weight: 600; box-shadow: 0 10px 28px rgba(6,41,75,0.3);
+      z-index: 100; display: none;
+    }
+
+    .board-highlight { animation: highlightPulse 1.4s ease; }
+    @keyframes highlightPulse {
+      0%, 100% { box-shadow: none; }
+      40% { box-shadow: 0 0 0 4px #29A9F5; border-radius: 20px; }
+    }
+  </style>
+</head>
+<body class="theme-light" id="studio-root">
+
+  <header class="studio-header">
+    <div class="studio-top">
+      <div class="brand-lockup">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+            <path d="M7 12h3l2 -4l2 8l2 -4h3" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">HEALIX DESIGN STUDIO v2.0</div>
+          <div class="brand-sub">Unified Clinical Navy & Modern Health Design System</div>
+        </div>
+      </div>
+      <div class="studio-controls-top">
+        <div class="theme-switch" role="group" aria-label="Preview Theme Switcher">
+          <button type="button" class="active" data-theme="light">Clinical Light (#0B4268)</button>
+          <button type="button" data-theme="dark">Dark Futuristic (#020B18)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="studio-intro">
+      <div>
+        <h1>Entire Platform UI/UX Blueprint — Mobile &amp; Web</h1>
+        <p>Complete interactive visual specification covering all 6 Healix modules across Expo React Native Mobile and React Vite Web Portal, strictly mapped to <code>HEALIX_DESIGN_SYSTEM.md</code> tokens, typography, and role workflows.</p>
+      </div>
+      <div class="pill-stats">
+        <span class="pill-stat">6 Platform Modules</span>
+        <span class="pill-stat">25 Screen Blueprints</span>
+        <span class="pill-stat">Mobile + Web</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="studio-toolbar" aria-label="Design Studio Filters">
+    <div class="toolbar-inner">
+      <div class="module-tabs" id="module-tabs"></div>
+      <div class="filter-row">
+        <input id="search-input" class="search-input" type="search" placeholder="Search screen, route, or feature..." aria-label="Search screens" />
+        <select id="platform-filter" class="select-input" aria-label="Filter by platform">
+          <option value="all">All Platforms (Mobile + Web)</option>
+          <option value="mobile">Mobile App (Expo / React Native)</option>
+          <option value="web">Web Portal (React / Vite)</option>
+        </select>
+        <div class="view-modes" role="group" aria-label="Studio View Mode">
+          <button type="button" class="active" data-view="grid">Grid Gallery</button>
+          <button type="button" data-view="focus">Focus Mode</button>
+          <button type="button" data-view="tokens">Tokens &amp; Components</button>
+        </div>
+        <span class="screen-counter" id="screen-counter"></span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="studio-main" id="studio-main"></main>
+  <div class="studio-toast" id="studio-toast" role="status"></div>
+
+  <script>
+    // ─── SVG Icon Helpers ─────────────────────────────────────────────────────
+    const ICONS = {
+      heart: '<path d="M19.5 12.57 12 20l-7.5-7.43a5 5 0 1 1 7.5-6.57 5 5 0 1 1 7.5 6.57"/>',
+      pulse: '<path d="M3 12h4l3-7 4 14 3-7h4"/>',
+      home: '<path d="m3 10 9-7 9 7v11H3z"/><path d="M9 21v-6h6v6"/>',
+      calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+      file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/>',
+      chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+      user: '<circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/>',
+      shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',
+      alert: '<path d="m10.29 3.86-8.48 14.14A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.72-3l-8.48-14.14a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>',
+      bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      chevron: '<path d="m9 18 6-6-6-6"/>',
+      back: '<path d="m15 18-6-6 6-6"/>',
+      pill: '<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><path d="m8.5 8.5 7 7"/>',
+      ambulance: '<path d="M10 10H6M8 8v4M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.68-.94l-1.92-.64a1 1 0 0 1-.57-.47L17.3 8.8a1 1 0 0 0-.9-.56H14"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+      clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+      check: '<path d="M20 6 9 17l-5-5"/>',
+      sliders: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+      mapPin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+      lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'
+    };
+    const ico = (name, size = 16) => `<svg class="ui-icon" style="width:${size}px;height:${size}px" viewBox="0 0 24 24">${ICONS[name] || ICONS.file}</svg>`;
+
+    const qrSvg = () => {
+      let rects = '';
+      for (let y = 0; y < 21; y++) {
+        for (let x = 0; x < 21; x++) {
+          const isFinder = (x < 7 && y < 7) || (x > 13 && y < 7) || (x < 7 && y > 13);
+          const lx = x > 13 ? x - 14 : x;
+          const ly = y > 13 ? y - 14 : y;
+          const on = isFinder
+            ? (lx === 0 || lx === 6 || ly === 0 || ly === 6 || (lx >= 2 && lx <= 4 && ly >= 2 && ly <= 4))
+            : ((x * 13 + y * 7 + x * y) % 5 < 2);
+          if (on) rects += `<rect x="${x}" y="${y}" width="1" height="1" fill="#06294B"/>`;
+        }
+      }
+      return `<div class="qr-card"><svg viewBox="0 0 21 21" width="118" height="118" role="img" aria-label="Visit QR Code">${rects}</svg></div>`;
+    };
+
+    const patientTabs = (active = 'Home') => `
+      <div class="m-tabbar">
+        ${[
+          ['Home', 'home', 'patient-home'],
+          ['Requests', 'calendar', 'patient-care-requests'],
+          ['Records', 'file', 'patient-records'],
+          ['Messages', 'chat', 'patient-visit-qr'],
+          ['Profile', 'user', 'auth-otp-mfa']
+        ].map(([label, iconName, target]) => `
+          <button type="button" class="m-tab-btn ${active === label ? 'active' : ''}" data-goto="${target}">
+            ${ico(iconName, 17)}<span>${label}</span>
+          </button>
+        `).join('')}
+      </div>`;
+
+    const nurseTabs = (active = 'Home') => `
+      <div class="m-tabbar">
+        ${[
+          ['Home', 'home', 'nurse-home'],
+          ['Market', 'pulse', 'nurse-marketplace'],
+          ['Visits', 'calendar', 'nurse-visit-workspace'],
+          ['Risk AI', 'shield', 'nurse-risk-assess'],
+          ['Profile', 'user', 'nurse-home']
+        ].map(([label, iconName, target]) => `
+          <button type="button" class="m-tab-btn ${active === label ? 'active' : ''}" data-goto="${target}">
+            ${ico(iconName, 17)}<span>${label}</span>
+          </button>
+        `).join('')}
+      </div>`;
+
+    const webShell = (url, roleLabel, userName, navSections, activeNav, bodyHtml) => `
+      <div class="browser-frame">
+        <div class="browser-chrome">
+          <div class="traffic-dots"><span style="background:#EF4444"></span><span style="background:#F59E0B"></span><span style="background:#10B981"></span></div>
+          <div class="url-bar">https://portal.healix.pk${url}</div>
+        </div>
+        <div class="web-shell">
+          <aside class="web-sidebar">
+            <div class="web-brand">
+              <div class="web-brand-badge">H</div>
+              <div><b>Healix</b><small>${roleLabel}</small></div>
+            </div>
+            <div style="flex:1;overflow-y:auto">
+              ${navSections.map(sec => `
+                <div class="web-nav-sec">${sec.title}</div>
+                ${sec.items.map(it => `
+                  <button type="button" class="web-nav-btn ${activeNav === it.label ? 'active' : ''}" ${it.goto ? `data-goto="${it.goto}"` : ''}>
+                    <span style="display:flex;align-items:center;gap:7px">${ico(it.icon, 14)} ${it.label}</span>
+                    ${it.badge ? `<span class="h-badge solid-red" style="font-size:9px;padding:1px 6px">${it.badge}</span>` : ''}
+                  </button>
+                `).join('')}
+              `).join('')}
+            </div>
+            <div style="padding:10px 8px 0;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:8px">
+              <div class="h-avatar inverse" style="width:32px;height:32px;font-size:11px">${userName.slice(0,2).toUpperCase()}</div>
+              <div style="min-width:0">
+                <div style="color:#fff;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${userName}</div>
+                <div style="color:#7DD3FC;font-size:10px">${roleLabel}</div>
+              </div>
+            </div>
+          </aside>
+          <section class="web-main">${bodyHtml}</section>
+        </div>
+      </div>`;
+
+    const MODULES = [
+      { id: 'all', label: 'All Modules (25)' },
+      { id: 'auth', label: '1. Auth & Security (4)' },
+      { id: 'patient', label: '2. Patient App (7)' },
+      { id: 'nurse', label: '3. Nurse Workspace (4)' },
+      { id: 'doctor', label: '4. Doctor Triage (4)' },
+      { id: 'paramedic', label: '5. Paramedic & Emergency (2)' },
+      { id: 'admin', label: '6. Admin Command Center (4)' }
+    ];
+
+    const ADMIN_NAV = [
+      { title: 'Overview', items: [
+        { label: 'Command Center', icon: 'home', goto: 'web-admin-dashboard' },
+        { label: 'Emergency & Fleet', icon: 'ambulance', goto: 'web-emergency-ops', badge: '2' }
+      ]},
+      { title: 'Credential Governance', items: [
+        { label: 'Nurse Verification', icon: 'shield', goto: 'web-admin-verifications', badge: '3' },
+        { label: 'Doctor Verification', icon: 'user', goto: 'web-admin-verifications', badge: '1' }
+      ]},
+      { title: 'Users & Compliance', items: [
+        { label: 'User Directory', icon: 'user', goto: 'web-admin-users-config' },
+        { label: 'Platform Config', icon: 'sliders', goto: 'web-admin-users-config' },
+        { label: 'HIPAA Audit Trail', icon: 'file', goto: 'web-admin-users-config' }
+      ]}
+    ];
+
+    const DOCTOR_NAV = [
+      { title: 'Clinical Triage', items: [
+        { label: 'Triage Dashboard', icon: 'pulse', goto: 'web-doctor-dashboard', badge: '2' },
+        { label: 'Case Review', icon: 'file', goto: 'web-doctor-casereview' },
+        { label: 'Home Visits', icon: 'calendar', goto: 'web-doctor-dashboard' }
+      ]},
+      { title: 'Operations', items: [
+        { label: 'Emergency Dispatch', icon: 'ambulance', goto: 'web-emergency-ops' },
+        { label: 'Account Security', icon: 'lock', goto: 'web-login' }
+      ]}
+    ];
+
+    // ─── 25 Complete Screen Blueprints Across All 6 Modules ───────────────────
+    const SCREENS = [
+      // ── MODULE 1: AUTH & SECURITY ───────────────────────────────────────────
+      {
+        id: 'auth-login', module: 'auth', platform: 'mobile',
+        title: 'Mobile Sign In & MFA Entry',
+        route: 'mobile/src/app/auth/login.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G · 100%</span></div>
+            <div class="m-hero has-overlap" style="padding-top:18px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.16);display:grid;place-items:center">${ico('pulse',15)}</span>
+                <span style="font-weight:800;letter-spacing:0.5px;font-size:13px">HEALIX HEALTHCARE</span>
+              </div>
+              <div class="m-hero-title">Welcome back</div>
+              <p class="m-hero-sub">Clinical home care &amp; rapid triage access</p>
+            </div>
+            <div class="m-scroll overlap-up">
+              <div class="h-card" style="border-radius:22px;padding:18px">
+                <div class="h-input-group">
+                  <label class="h-label">Email or Phone Number</label>
+                  <input class="h-input" value="patient1@gmail.com" readonly />
+                </div>
+                <div class="h-input-group">
+                  <label class="h-label">Password</label>
+                  <input class="h-input" type="password" value="••••••••" readonly />
+                </div>
+                <div class="h-row" style="margin-bottom:14px">
+                  <span class="muted-sm">Biometric unlock ready</span>
+                  <button type="button" style="border:0;background:none;color:var(--accent-blue);font-size:11.5px;font-weight:700" data-goto="auth-otp-mfa">Forgot password?</button>
+                </div>
+                <button type="button" class="h-btn primary full" data-goto="patient-home">Sign In to Healix</button>
+                <button type="button" class="h-btn outline full" style="margin-top:8px" data-toast="Google OAuth token flow triggered">Continue with Google</button>
+              </div>
+              <div class="h-card">
+                <div class="h-row">
+                  <div>
+                    <b style="font-size:12.5px;color:var(--text-dark)">New to Healix?</b>
+                    <div class="muted-sm">Register as Patient or PNC Nurse</div>
+                  </div>
+                  <button type="button" class="h-btn soft sm" data-goto="auth-role-register">Create Account</button>
+                </div>
+                <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px" class="h-row">
+                  <span class="muted-sm">Have an admin or clinician invite?</span>
+                  <button type="button" style="border:0;background:none;color:var(--navy);font-weight:700;font-size:12px" data-goto="auth-role-register">Accept Token ›</button>
+                </div>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'auth-role-register', module: 'auth', platform: 'mobile',
+        title: 'Role Select, Registration & Invite Token',
+        route: 'mobile/src/app/auth/role-select.tsx · register.tsx · invited.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="auth-login">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">Join Healix Clinical Network</div><div class="m-appbar-sub">Select registration pathway</div></div>
+            </div>
+            <div class="m-scroll">
+              <div class="h-seg" data-tabgroup>
+                <button type="button" class="active" data-tabtarget="reg-role">Role Signup</button>
+                <button type="button" data-tabtarget="reg-invite">Invite Token</button>
+              </div>
+              <div data-tabpane="reg-role">
+                <div class="h-card" style="border-left:4px solid var(--navy)">
+                  <div class="h-row">
+                    <div><b style="color:var(--text-dark)">Patient / Family Caregiver</b><div class="muted-sm">Book verified home nursing &amp; view EHR</div></div>
+                    <span class="h-badge blue">Instant OTP</span>
+                  </div>
+                </div>
+                <div class="h-card" style="border-left:4px solid var(--emerald)">
+                  <div class="h-row">
+                    <div><b style="color:var(--text-dark)">Registered Nurse (PNC)</b><div class="muted-sm">Bid on visits &amp; record clinical vitals</div></div>
+                    <span class="h-badge amber">PNC Audit</span>
+                  </div>
+                </div>
+                <div class="h-card">
+                  <div class="h-input-group"><label class="h-label">Full Name</label><input class="h-input" value="Ayesha Khan, RN" readonly /></div>
+                  <div class="h-input-group"><label class="h-label">CNIC (xxxxx-xxxxxxx-x)</label><input class="h-input tabular" value="35202-4455667-2" readonly /></div>
+                  <div class="h-input-group"><label class="h-label">PNC Registration No.</label><input class="h-input" value="PNC-LHR-99241" readonly /></div>
+                  <button type="button" class="h-btn primary full" data-goto="auth-otp-mfa">Continue to Email Verification</button>
+                </div>
+              </div>
+              <div data-tabpane="reg-invite" style="display:none">
+                <div class="h-card">
+                  <div style="font-weight:700;color:var(--text-dark);margin-bottom:4px">Doctor, Paramedic &amp; Admin Activation</div>
+                  <p class="muted-sm" style="margin-top:0">Paste the one-time token issued by Healix Governance to activate your account.</p>
+                  <div class="h-input-group"><label class="h-label">Invitation Token</label><input class="h-input tabular" value="HLX-INV-8841-9A2F" readonly /></div>
+                  <div class="h-input-group"><label class="h-label">PMDC / EMT Certification ID</label><input class="h-input" value="PMDC-44102-P" readonly /></div>
+                  <button type="button" class="h-btn primary full" data-goto="auth-otp-mfa">Activate Account</button>
+                </div>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'auth-otp-mfa', module: 'auth', platform: 'mobile',
+        title: 'OTP / MFA Challenge & Account Security',
+        route: 'mobile/src/app/auth/verify-otp.tsx · mfa-verify.tsx · security.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="auth-login">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">Verification &amp; MFA Security</div><div class="m-appbar-sub">6-digit code &amp; active sessions</div></div>
+              <span class="h-badge solid-emerald">HIPAA TLS</span>
+            </div>
+            <div class="m-scroll">
+              <div class="h-card" style="text-align:center">
+                <div class="h-avatar" style="margin:0 auto 8px;width:46px;height:46px">${ico('shield',20)}</div>
+                <div style="font-weight:800;font-size:15px;color:var(--text-dark)">Enter 6-Digit Verification Code</div>
+                <div class="muted-sm" style="margin:4px 0 12px">Sent to admin@healix.pk · Expires in 09:42</div>
+                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px">
+                  ${['4','8','2','9','1','6'].map(d => `<div style="padding:10px 0;background:var(--surface-muted);border:1.5px solid var(--navy);border-radius:10px;font-weight:800;font-size:16px;color:var(--text-dark)">${d}</div>`).join('')}
+                </div>
+                <button type="button" class="h-btn primary full" data-goto="patient-home">Verify &amp; Proceed</button>
+              </div>
+              <div class="h-card">
+                <div class="h-row" style="margin-bottom:8px">
+                  <b style="color:var(--text-dark);font-size:13px">Multi-Factor Authentication (MFA)</b>
+                  <span class="h-badge emerald">Enabled</span>
+                </div>
+                <div class="h-list-row">
+                  <div style="flex:1"><b style="font-size:12px;color:var(--text-dark)">Current Mobile Session</b><div class="muted-sm">Android · Lahore · Active now</div></div>
+                  <span class="h-badge blue">Primary</span>
+                </div>
+                <div class="h-list-row">
+                  <div style="flex:1"><b style="font-size:12px;color:var(--text-dark)">Chrome Desktop Portal</b><div class="muted-sm">Web · Signed in 2h ago</div></div>
+                  <button type="button" class="h-btn danger-soft sm" data-toast="Remote session revoked">Revoke</button>
+                </div>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'web-login', module: 'auth', platform: 'web',
+        title: 'Web Portal Split-Screen Sign In (Admin & Doctor)',
+        route: 'web/src/pages/Login.tsx',
+        render: () => `
+          <div class="browser-frame">
+            <div class="browser-chrome">
+              <div class="traffic-dots"><span style="background:#EF4444"></span><span style="background:#F59E0B"></span><span style="background:#10B981"></span></div>
+              <div class="url-bar">https://portal.healix.pk/login</div>
+            </div>
+            <div class="login-split">
+              <div class="login-brand-pane">
+                <div>
+                  <div style="display:flex;align-items:center;gap:10px;margin-bottom:26px">
+                    <div class="web-brand-badge" style="width:38px;height:38px;font-size:18px">H</div>
+                    <div><b style="font-size:18px;display:block">Healix Operations</b><small style="color:#7DD3FC">Clinical Command Portal</small></div>
+                  </div>
+                  <h2 style="font-size:26px;font-weight:800;line-height:1.2;margin:0 0 12px">Clinical precision for home healthcare &amp; emergency triage.</h2>
+                  <p style="color:#CBD5E1;font-size:13px;line-height:1.6">Unified governance portal for Medical Consultants (PMDC) and System Administrators overseeing SLA broadcasts, ambulance fleet dispatch, and audit compliance.</p>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:#E0F2FE">
+                  <div style="display:flex;align-items:center;gap:8px">${ico('shield',15)} HIPAA-Aligned Immutable Audit Trail</div>
+                  <div style="display:flex;align-items:center;gap:8px">${ico('clock',15)} Real-Time 5m / 15m Clinical SLA Escalation</div>
+                  <div style="display:flex;align-items:center;gap:8px">${ico('check',15)} Verified PMDC &amp; PNC Credential Registry</div>
+                </div>
+              </div>
+              <div class="login-form-pane">
+                <div class="login-box">
+                  <div style="margin-bottom:14px">
+                    <div style="font-size:19px;font-weight:800;color:var(--text-dark)">Sign in to Portal</div>
+                    <div class="muted-sm">Authorized Admin &amp; Doctor accounts only</div>
+                  </div>
+                  <div class="h-seg" data-tabgroup>
+                    <button type="button" class="active" data-tabtarget="wl-admin">Administrator</button>
+                    <button type="button" data-tabtarget="wl-doc">Doctor Portal</button>
+                  </div>
+                  <div data-tabpane="wl-admin">
+                    <div class="h-input-group"><label class="h-label">Administrator Email</label><input class="h-input" value="admin@healix.pk" readonly /></div>
+                    <div class="h-input-group"><label class="h-label">Password</label><input class="h-input" type="password" value="HealixAdmin2026!" readonly /></div>
+                    <button type="button" class="h-btn primary full" data-goto="web-admin-dashboard">Sign In as Administrator</button>
+                  </div>
+                  <div data-tabpane="wl-doc" style="display:none">
+                    <div class="h-input-group"><label class="h-label">Doctor Email</label><input class="h-input" value="doctor1@gmail.com" readonly /></div>
+                    <div class="h-input-group"><label class="h-label">Password</label><input class="h-input" type="password" value="abc123$%" readonly /></div>
+                    <button type="button" class="h-btn primary full" data-goto="web-doctor-dashboard">Sign In to Doctor Portal</button>
+                  </div>
+                  <button type="button" class="h-btn outline full" style="margin-top:8px" data-toast="Google SSO Sign-In ready">Sign in with Google Workspace</button>
+                </div>
+              </div>
+            </div>
+          </div>`
+      },
+
+      // ── MODULE 2: PATIENT APP ───────────────────────────────────────────────
+      {
+        id: 'patient-home', module: 'patient', platform: 'mobile',
+        title: 'Patient Home Dashboard',
+        route: 'mobile/src/app/(patient)/(tabs)/home.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-hero has-overlap">
+              <div class="m-hero-top">
+                <div>
+                  <div class="m-hero-eyebrow">Good morning,</div>
+                  <div class="m-hero-title">Tariq Mahmood</div>
+                  <p class="m-hero-sub">Your health matters. We're here for you.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <button type="button" class="h-badge solid-red" style="border:0;padding:6px 10px" data-goto="patient-emergency">${ico('alert',12)} SOS</button>
+                  <div class="h-avatar inverse">TM</div>
+                </div>
+              </div>
+            </div>
+            <div class="m-scroll overlap-up">
+              <div class="h-card navy-hero">
+                <div class="h-row" style="margin-bottom:8px">
+                  <span style="font-size:11px;font-weight:700;color:#7DD3FC;text-transform:uppercase;letter-spacing:0.4px">Your Next Care Visit</span>
+                  <span class="h-badge solid-emerald">Confirmed</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                  <div class="h-avatar inverse">AK</div>
+                  <div style="flex:1">
+                    <div style="font-weight:700;font-size:14px">Nurse Ayesha Khan</div>
+                    <div style="font-size:11.5px;color:#BAE6FD">Vitals Check · Tomorrow, 10:00 AM</div>
+                  </div>
+                </div>
+                <button type="button" class="h-btn dark-cta full" style="min-height:36px" data-goto="patient-visit-qr">View Details &amp; Check-In QR ›</button>
+              </div>
+
+              <div class="h-sec"><h4>Quick Actions</h4></div>
+              <div class="qa-grid">
+                <button type="button" class="qa-card" style="background:var(--qa-blue-bg)" data-goto="patient-new-request">
+                  <span class="qa-icon" style="background:var(--card);color:var(--qa-blue-fg)">${ico('plus',16)}</span>
+                  <b>Request Care</b><span>Book a verified nurse visit</span>
+                </button>
+                <button type="button" class="qa-card" style="background:var(--qa-green-bg)" data-goto="patient-records">
+                  <span class="qa-icon" style="background:var(--card);color:var(--qa-green-fg)">${ico('file',16)}</span>
+                  <b>View Records</b><span>Vitals, labs &amp; risk history</span>
+                </button>
+                <button type="button" class="qa-card" style="background:var(--qa-purple-bg)" data-toast="Opening Care Team Chat">
+                  <span class="qa-icon" style="background:var(--card);color:var(--qa-purple-fg)">${ico('chat',16)}</span>
+                  <b>Message Team</b><span>Chat with nurse &amp; doctor</span>
+                </button>
+                <button type="button" class="qa-card" style="background:var(--qa-pink-bg)" data-goto="patient-records">
+                  <span class="qa-icon" style="background:var(--card);color:var(--qa-pink-fg)">${ico('heart',16)}</span>
+                  <b>Health Info</b><span>Conditions &amp; allergies</span>
+                </button>
+              </div>
+
+              <div class="h-sec"><h4>Today's Reminders</h4><button type="button" data-goto="patient-records">Prescriptions ›</button></div>
+              <div class="h-card">
+                <div class="h-list-row">
+                  <span class="qa-icon" style="background:var(--amber-soft);color:var(--amber)">${ico('pill',15)}</span>
+                  <div style="flex:1"><b style="font-size:12.5px;color:var(--text-dark)">Amlodipine 5mg</b><div class="muted-sm">08:00 AM · 1 tablet daily</div></div>
+                  <span class="h-badge emerald">Taken</span>
+                </div>
+                <div class="h-list-row">
+                  <span class="qa-icon" style="background:var(--blue-soft);color:var(--accent-blue)">${ico('pill',15)}</span>
+                  <div style="flex:1"><b style="font-size:12.5px;color:var(--text-dark)">Metformin 500mg</b><div class="muted-sm">08:00 PM · After dinner</div></div>
+                  <span class="h-badge amber">Due</span>
+                </div>
+              </div>
+            </div>
+            ${patientTabs('Home')}
+          </div>`
+      },
+      {
+        id: 'patient-care-requests', module: 'patient', platform: 'mobile',
+        title: 'Care Team Row & Journey Requests',
+        route: 'mobile/src/app/(patient)/(tabs)/requests.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar light-top"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div style="padding:10px 16px 6px">
+              <div class="muted-sm">Requests, visits &amp; agreements</div>
+              <div style="font-size:21px;font-weight:800;color:var(--text-dark)">Your care team</div>
+            </div>
+            <div class="m-scroll">
+              <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px">
+                <div style="text-align:center;min-width:62px">
+                  <div class="h-avatar emerald-ring" style="margin:0 auto 4px;width:46px;height:46px">AK</div>
+                  <div style="font-size:11px;font-weight:700;color:var(--text-dark)">Ayesha</div>
+                  <div style="font-size:10px;color:var(--text-muted)">4 visits</div>
+                </div>
+                <div style="text-align:center;min-width:62px">
+                  <div class="h-avatar emerald-ring" style="margin:0 auto 4px;width:46px;height:46px">SA</div>
+                  <div style="font-size:11px;font-weight:700;color:var(--text-dark)">Sara</div>
+                  <div style="font-size:10px;color:var(--text-muted)">2 visits</div>
+                </div>
+                <button type="button" style="min-width:86px;border:1.5px dashed var(--accent-blue);background:var(--blue-soft);color:var(--navy);border-radius:14px;padding:6px;font-size:11px;font-weight:700" data-goto="patient-new-request">+ Add nurse</button>
+              </div>
+
+              <div class="h-seg" data-tabgroup>
+                <button type="button" class="active" data-tabtarget="pcr-up">Upcoming · 2</button>
+                <button type="button" data-tabtarget="pcr-past">Past · 3</button>
+              </div>
+
+              <div data-tabpane="pcr-up">
+                <div class="h-card">
+                  <div class="h-row" style="margin-bottom:8px">
+                    <div style="display:flex;align-items:center;gap:9px">
+                      <div class="h-avatar emerald-ring">AK</div>
+                      <div><b style="color:var(--text-dark);font-size:13px">Ayesha Khan</b><div class="muted-sm">Post-op Wound &amp; Vitals Care</div></div>
+                    </div>
+                    <span class="h-badge emerald">Scheduled</span>
+                  </div>
+                  <div style="font-size:11.5px;font-weight:700;color:var(--amber);margin-bottom:8px">Visit tomorrow · 10:00 AM</div>
+                  <button type="button" class="h-btn primary full sm" data-goto="patient-visit-qr">Show check-in code</button>
+                </div>
+
+                <div class="h-card">
+                  <div class="h-row" style="margin-bottom:8px">
+                    <span class="h-badge amber">3 Care Offers Available</span>
+                    <span class="muted-sm">REQ-1042</span>
+                  </div>
+                  <div style="font-weight:700;color:var(--text-dark);margin-bottom:3px">Weekly Hypertension Monitoring</div>
+                  <div class="muted-sm" style="margin-bottom:10px">4 weekly visits · Model Town, Lahore</div>
+                  <button type="button" class="h-btn dark-cta full sm" data-goto="patient-offers-contract">Compare 3 nurse offers ›</button>
+                </div>
+              </div>
+
+              <div data-tabpane="pcr-past" style="display:none">
+                <div class="h-card">
+                  <div class="h-row">
+                    <div><b style="color:var(--text-dark)">Routine Vitals Check</b><div class="muted-sm">Nurse Ayesha Khan · Completed 6 Nov</div></div>
+                    <span class="h-badge emerald">Paid</span>
+                  </div>
+                  <button type="button" class="h-btn outline full sm" style="margin-top:10px" data-goto="patient-new-request">Book Ayesha again</button>
+                </div>
+              </div>
+            </div>
+            ${patientTabs('Requests')}
+          </div>`
+      },
+      {
+        id: 'patient-new-request', module: 'patient', platform: 'mobile',
+        title: '3-Step Care Request Wizard',
+        route: 'mobile/src/app/(patient)/requests/new.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="patient-care-requests">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">New Home Care Request</div><div class="m-appbar-sub">3-step guided scheduling</div></div>
+            </div>
+            <div class="m-scroll">
+              <div class="stepper-bar"><i class="done"></i><i class="active"></i><i></i></div>
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:8px">1. Care Service Template</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+                  <span class="h-badge navy">Vitals &amp; Checkup</span>
+                  <span class="h-badge muted">Wound Dressing</span>
+                  <span class="h-badge muted">IV Therapy</span>
+                </div>
+                <div class="h-input-group">
+                  <label class="h-label">Clinical Notes &amp; Requirements</label>
+                  <input class="h-input" value="BP monitoring &amp; insulin check, 45 mins" readonly />
+                </div>
+              </div>
+
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:8px">2. Schedule &amp; Recurrence</div>
+                <div class="h-seg">
+                  <button type="button" class="active">One-Time</button>
+                  <button type="button">Weekly Series (4×)</button>
+                </div>
+                <div class="h-row" style="padding:8px 10px;background:var(--surface-muted);border-radius:10px">
+                  <span style="font-size:12px;font-weight:600;color:var(--text-dark)">${ico('calendar',14)} Tomorrow · Morning (09:00–12:00)</span>
+                  <span class="h-badge blue">45 min</span>
+                </div>
+              </div>
+
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:6px">3. Visit Address (Lahore)</div>
+                <div style="padding:10px;border-radius:10px;background:var(--blue-soft);color:var(--navy);font-size:12px;font-weight:600;margin-bottom:10px">
+                  ${ico('mapPin',14)} House 42, Block C, Model Town, Lahore
+                </div>
+                <button type="button" class="h-btn primary full" data-goto="patient-offers-contract">Publish Request to Marketplace</button>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'patient-offers-contract', module: 'patient', platform: 'mobile',
+        title: 'Compare Nurse Offers & Care Contract',
+        route: 'mobile/src/app/(patient)/marketplace/[id].tsx · contracts/[id].tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="patient-care-requests">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">Offers &amp; Care Agreement</div><div class="m-appbar-sub">REQ-1042 · Weekly Support</div></div>
+            </div>
+            <div class="m-scroll">
+              <div class="h-card">
+                <div class="h-row" style="margin-bottom:8px">
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <div class="h-avatar emerald-ring">AK</div>
+                    <div>
+                      <b style="color:var(--text-dark);font-size:13.5px">Nurse Ayesha Khan</b>
+                      <div class="muted-sm">★ 4.9 (42 reviews) · PNC Verified</div>
+                    </div>
+                  </div>
+                  <span class="h-badge emerald">Verified</span>
+                </div>
+                <div style="display:flex;align-items:baseline;justify-content:space-between;padding:10px;background:var(--surface-muted);border-radius:10px;margin-bottom:8px">
+                  <div><b style="font-size:20px;color:var(--text-dark)" class="tabular">PKR 2,500</b> <span class="muted-sm">/ visit</span></div>
+                  <span class="muted-sm">Includes 10% platform fee</span>
+                </div>
+                <div class="h-btn-row">
+                  <button type="button" class="h-btn primary sm" data-goto="patient-visit-qr">Approve &amp; Lock Visit</button>
+                  <button type="button" class="h-btn outline sm" data-toast="Saved to favorite nurses">Save Nurse</button>
+                </div>
+              </div>
+
+              <div class="h-card" style="border-top:3px solid var(--navy)">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:8px">Active Contract Status (CON-1008)</div>
+                <div class="h-list-row"><span class="body-sm">Nurse Approval</span><span class="h-badge emerald">Signed</span></div>
+                <div class="h-list-row"><span class="body-sm">Patient Approval</span><span class="h-badge amber">Awaiting You</span></div>
+                <div class="h-list-row"><span class="body-sm">Agreed Total (45 min)</span><b class="tabular" style="color:var(--text-dark)">PKR 2,500</b></div>
+                <div class="h-btn-row" style="margin-top:10px">
+                  <button type="button" class="h-btn emerald sm" data-toast="Contract approved &amp; Visit created!">Approve Contract</button>
+                  <button type="button" class="h-btn danger-soft sm" data-toast="Rejection dialog opened">Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'patient-visit-qr', module: 'patient', platform: 'mobile',
+        title: 'Visit QR Check-In & Completed Summary',
+        route: 'mobile/src/app/(patient)/visits/[id].tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="patient-home">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">Home Visit · VIS-881</div><div class="m-appbar-sub">Nurse Ayesha Khan</div></div>
+              <span class="h-badge solid-emerald">Active</span>
+            </div>
+            <div class="m-scroll">
+              <div class="h-seg" data-tabgroup>
+                <button type="button" class="active" data-tabtarget="pv-qr">Check-In QR</button>
+                <button type="button" data-tabtarget="pv-done">Completed Summary</button>
+              </div>
+              <div data-tabpane="pv-qr">
+                <div class="h-card" style="text-align:center">
+                  <div style="font-weight:700;color:var(--text-dark)">Show QR Code to Nurse on Arrival</div>
+                  <div class="muted-sm">GPS check-in &amp; cryptographic token validation</div>
+                  ${qrSvg()}
+                  <div class="h-badge blue" style="margin-bottom:10px">Code: HLX-9482</div>
+                  <button type="button" class="h-btn emerald full" data-toast="Nurse arrival confirmed!">Confirm Nurse Has Arrived</button>
+                </div>
+              </div>
+              <div data-tabpane="pv-done" style="display:none">
+                <div class="metric-3">
+                  <div class="metric-box"><div class="m-lbl">BP</div><div class="m-val">122/80</div><div class="muted-sm">mmHg</div></div>
+                  <div class="metric-box"><div class="m-lbl">Pulse</div><div class="m-val">76</div><div class="muted-sm">bpm</div></div>
+                  <div class="metric-box"><div class="m-lbl">SpO2</div><div class="m-val">98%</div><div class="muted-sm">Normal</div></div>
+                </div>
+                <div class="h-card emerald-tint">
+                  <div class="h-row"><b>Payment Receipt</b><span class="h-badge solid-emerald">PAID (Cash)</span></div>
+                  <div class="body-sm" style="margin-top:4px">PKR 2,500 · Nurse confirmed cash received</div>
+                </div>
+                <div class="h-card">
+                  <b style="color:var(--text-dark)">Rate Your Visit</b>
+                  <div style="font-size:22px;color:var(--amber);letter-spacing:4px;margin:6px 0">★★★★★</div>
+                  <button type="button" class="h-btn primary full sm" data-toast="Review submitted!">Submit Review</button>
+                </div>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'patient-records', module: 'patient', platform: 'mobile',
+        title: 'Health Records Bento & Vitals History',
+        route: 'mobile/src/app/(patient)/(tabs)/records.tsx · records/vitals.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar light-top"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div style="padding:10px 16px 6px">
+              <div class="muted-sm">Electronic Health Profile</div>
+              <div style="font-size:21px;font-weight:800;color:var(--text-dark)">Health Records</div>
+            </div>
+            <div class="m-scroll">
+              <div class="h-card red-tint">
+                <div class="h-row"><b style="color:var(--red)">Severe Allergy Alert: Penicillin</b><span class="h-badge solid-red">Critical</span></div>
+                <div class="body-sm" style="margin-top:3px">Chronic Condition: Hypertension (Controlled)</div>
+              </div>
+              <div class="h-card">
+                <div class="h-row" style="margin-bottom:6px">
+                  <div><div class="muted-sm">LATEST BLOOD PRESSURE</div><b style="font-size:20px;color:var(--text-dark)" class="tabular">120/80 mmHg</b></div>
+                  <span class="h-badge emerald">Low Risk (0.18)</span>
+                </div>
+                <svg viewBox="0 0 260 56" width="100%" height="56">
+                  <path d="M0 44 L40 36 L85 40 L130 24 L175 28 L220 16 L260 20 L260 56 L0 56 Z" fill="var(--emerald-soft)"/>
+                  <path d="M0 44 L40 36 L85 40 L130 24 L175 28 L220 16 L260 20" fill="none" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="qa-grid">
+                <div class="h-card" style="margin:0"><b style="color:var(--text-dark)">Prescriptions</b><div class="muted-sm">2 active medications</div></div>
+                <div class="h-card" style="margin:0"><b style="color:var(--text-dark)">Care Plans</b><div class="muted-sm">75% milestones done</div></div>
+                <div class="h-card" style="margin:0"><b style="color:var(--text-dark)">Doctor Outcomes</b><div class="muted-sm">1 clinical review</div></div>
+                <div class="h-card" style="margin:0"><b style="color:var(--text-dark)">Payments</b><div class="muted-sm">PKR 7,500 total</div></div>
+              </div>
+            </div>
+            ${patientTabs('Records')}
+          </div>`
+      },
+      {
+        id: 'patient-emergency', module: 'patient', platform: 'mobile',
+        title: 'Patient Emergency SOS & Live Dispatch',
+        route: 'mobile/src/app/(patient)/emergency.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar" style="background:#991B1B"><div class="status-notch"></div><span>9:41</span><span>SOS</span></div>
+            <div class="m-hero" style="background:linear-gradient(155deg,#7F1D1D 0%,#B91C1C 100%)">
+              <div class="m-hero-eyebrow" style="color:#FECACA">Emergency Dispatch Active</div>
+              <div class="m-hero-title">Ambulance En Route</div>
+              <p class="m-hero-sub" style="color:#FEE2E2">Doctor &amp; Paramedic team alerted with live GPS</p>
+            </div>
+            <div class="m-scroll">
+              <div class="h-card red-tint">
+                <div class="h-row" style="margin-bottom:6px">
+                  <b style="color:var(--red);font-size:14px">Unit HX-02 · ADVANCED ICU</b>
+                  <span class="h-badge solid-red">ETA 6 MIN</span>
+                </div>
+                <div class="body-sm">Paramedic: Usman Tariq · Plate: LEA-1102</div>
+                <div class="stepper-bar" style="margin-top:10px;margin-bottom:4px">
+                  <i class="done"></i><i class="active"></i><i></i><i></i><i></i>
+                </div>
+                <div class="muted-sm">DISPATCHED → <b>EN_ROUTE</b> → ARRIVED → HOSPITAL</div>
+              </div>
+              <div class="h-card">
+                <div class="h-row">
+                  <div><b style="color:var(--text-dark)">Destination Hospital</b><div class="body-sm">Gulberg General Hospital</div></div>
+                  <span class="h-badge emerald">AVAILABLE</span>
+                </div>
+              </div>
+              <button type="button" class="h-btn primary full" data-toast="Calling Paramedic +923042222222">Call Dispatched Paramedic</button>
+              <button type="button" class="h-btn outline full" style="margin-top:8px" data-goto="patient-home">Back to Patient Home</button>
+            </div>
+          </div>`
+      },
+
+      // ── MODULE 3: NURSE CLINICAL WORKSPACE ──────────────────────────────────
+      {
+        id: 'nurse-home', module: 'nurse', platform: 'mobile',
+        title: 'Nurse Command Home & Earnings',
+        route: 'mobile/src/app/(nurse)/(tabs)/home.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-hero has-overlap">
+              <div class="m-hero-top">
+                <div>
+                  <div class="m-hero-eyebrow">Registered Nurse Portal</div>
+                  <div class="m-hero-title">Ayesha Khan, RN</div>
+                  <span class="h-badge solid-emerald" style="margin-top:4px">PNC Verified</span>
+                </div>
+                <div class="h-avatar inverse">AK</div>
+              </div>
+            </div>
+            <div class="m-scroll overlap-up">
+              <div class="metric-3">
+                <div class="metric-box"><div class="m-lbl">Today Visits</div><div class="m-val">3</div><div class="muted-sm">1 active</div></div>
+                <div class="metric-box"><div class="m-lbl">Month Net</div><div class="m-val">42k</div><div class="muted-sm">PKR</div></div>
+                <div class="metric-box"><div class="m-lbl">Rating</div><div class="m-val">4.9</div><div class="muted-sm">42 reviews</div></div>
+              </div>
+              <div class="h-card navy-hero">
+                <div class="h-row" style="margin-bottom:6px">
+                  <span style="font-size:11px;font-weight:700;color:#7DD3FC">UP NEXT · 10:00 AM</span>
+                  <span class="h-badge solid-emerald">1.8 km away</span>
+                </div>
+                <div style="font-weight:800;font-size:15px">Tariq Mahmood</div>
+                <div style="font-size:11.5px;color:#BAE6FD;margin-bottom:10px">House 42, Block C, Model Town, Lahore</div>
+                <button type="button" class="h-btn emerald full sm" data-goto="nurse-visit-workspace">Open Clinical Visit Workspace ›</button>
+              </div>
+              <div class="h-card">
+                <div class="h-row">
+                  <div><b style="color:var(--text-dark)">Open Care Requests</b><div class="muted-sm">6 patients seeking offers nearby</div></div>
+                  <button type="button" class="h-btn primary sm" data-goto="nurse-marketplace">Browse Market</button>
+                </div>
+              </div>
+            </div>
+            ${nurseTabs('Home')}
+          </div>`
+      },
+      {
+        id: 'nurse-marketplace', module: 'nurse', platform: 'mobile',
+        title: 'Nurse Marketplace Feed & Net Payout Bid',
+        route: 'mobile/src/app/(nurse)/(tabs)/marketplace.tsx · marketplace/[id].tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <div style="flex:1"><div class="m-appbar-title">Care Marketplace</div><div class="m-appbar-sub">6 open requests matching PNC scope</div></div>
+              <span class="h-badge blue">Lahore</span>
+            </div>
+            <div class="m-scroll">
+              <div class="h-card">
+                <div class="h-row" style="margin-bottom:6px">
+                  <span class="h-badge amber">Weekly (4 Visits)</span>
+                  <span class="muted-sm">Model Town · 2.1 km</span>
+                </div>
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:4px">Hypertension &amp; Wound Dressing</div>
+                <div class="body-sm" style="margin-bottom:10px">Patient: Ayesha Bibi · Preferred Female RN · 45 mins</div>
+                <div style="padding:10px;background:var(--surface-muted);border-radius:10px;margin-bottom:10px">
+                  <div class="h-row"><span class="muted-sm">Your Visit Quote</span><b class="tabular" style="color:var(--text-dark)">PKR 2,800</b></div>
+                  <div class="h-row"><span class="muted-sm">Platform Fee (10%)</span><span class="muted-sm tabular">- PKR 280</span></div>
+                  <div class="h-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px">
+                    <b style="font-size:12px;color:var(--emerald)">Your Net Payout / Visit</b>
+                    <b class="tabular" style="color:var(--emerald)">PKR 2,520</b>
+                  </div>
+                </div>
+                <button type="button" class="h-btn primary full sm" data-toast="Offer submitted to patient!">Submit Nurse Offer</button>
+              </div>
+            </div>
+            ${nurseTabs('Market')}
+          </div>`
+      },
+      {
+        id: 'nurse-visit-workspace', module: 'nurse', platform: 'mobile',
+        title: 'Nurse Active Visit Workspace & Cash Confirm',
+        route: 'mobile/src/app/(nurse)/visits/[id].tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="nurse-home">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">Visit Workspace · Tariq M.</div><div class="m-appbar-sub">Checked in via QR + GPS (24m)</div></div>
+              <span class="h-badge solid-emerald">Encrypted Sync</span>
+            </div>
+            <div class="m-scroll">
+              <div class="stepper-bar"><i class="done"></i><i class="done"></i><i class="active"></i><i></i></div>
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:8px">Record Vital Signs</div>
+                <div class="metric-2">
+                  <div class="h-input-group" style="margin:0"><label class="h-label">Systolic / Diastolic</label><input class="h-input tabular" value="164 / 98" readonly /></div>
+                  <div class="h-input-group" style="margin:0"><label class="h-label">Heart Rate (bpm)</label><input class="h-input tabular" value="108" readonly /></div>
+                  <div class="h-input-group" style="margin:0"><label class="h-label">Temp (°C)</label><input class="h-input tabular" value="37.8" readonly /></div>
+                  <div class="h-input-group" style="margin:0"><label class="h-label">SpO2 (%)</label><input class="h-input tabular" value="93" readonly /></div>
+                </div>
+              </div>
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:6px">Symptoms Observed</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+                  <span class="h-badge red">Chest Tightness</span>
+                  <span class="h-badge amber">Dizziness</span>
+                  <span class="h-badge muted">Diaphoresis</span>
+                </div>
+                <button type="button" class="h-btn primary full" data-goto="nurse-risk-assess">Save Vitals &amp; Run AI Risk Triage ›</button>
+              </div>
+              <div class="h-card emerald-tint">
+                <div class="h-row">
+                  <div><b style="color:var(--text-dark)">Visit Payment (PKR 2,500)</b><div class="muted-sm">Confirm when cash is collected</div></div>
+                  <button type="button" class="h-btn emerald sm" data-toast="Cash receipt confirmed &amp; checked out">Confirm Cash</button>
+                </div>
+              </div>
+            </div>
+            ${nurseTabs('Visits')}
+          </div>`
+      },
+      {
+        id: 'nurse-risk-assess', module: 'nurse', platform: 'mobile',
+        title: 'AI + Nurse Clinical Risk Fusion & Escalation',
+        route: 'mobile/src/app/(nurse)/visits/risk-assess.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="nurse-visit-workspace">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">AI Risk Triage Engine</div><div class="m-appbar-sub">Fused ML score + Nurse confidence</div></div>
+            </div>
+            <div class="m-scroll">
+              <div class="h-card red-tint" style="text-align:center">
+                <div class="muted-sm" style="font-weight:700;color:var(--red)">FUSED CLINICAL RISK TIER</div>
+                <div style="font-size:30px;font-weight:800;color:var(--red);margin:4px 0" class="tabular">HIGH · 0.84</div>
+                <span class="h-badge solid-red">Auto-Escalated to Doctors (5m SLA)</span>
+              </div>
+              <div class="h-card">
+                <b style="color:var(--text-dark)">Key Risk Contributors</b>
+                <div class="h-list-row"><span class="body-sm">Hypertensive BP (164/98)</span><span class="h-badge red">+0.32</span></div>
+                <div class="h-list-row"><span class="body-sm">Elevated HR (108 bpm)</span><span class="h-badge amber">+0.21</span></div>
+                <div class="h-list-row"><span class="body-sm">SpO2 Drop (93%)</span><span class="h-badge amber">+0.18</span></div>
+                <div style="margin-top:10px">
+                  <div class="h-row"><span class="h-label">Nurse Clinical Confidence (1–5)</span><b style="color:var(--navy)">4 / 5</b></div>
+                </div>
+              </div>
+              <button type="button" class="h-btn danger full" data-goto="doctor-mobile-home">View Doctor Escalation Broadcast ›</button>
+            </div>
+            ${nurseTabs('Risk AI')}
+          </div>`
+      },
+
+      // ── MODULE 4: DOCTOR TRIAGE & CLINICAL REVIEW ───────────────────────────
+      {
+        id: 'doctor-mobile-home', module: 'doctor', platform: 'mobile',
+        title: 'Doctor Mobile Triage & SLA Broadcasts',
+        route: 'mobile/src/app/(doctor)/(tabs)/home.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-hero has-overlap">
+              <div class="m-hero-top">
+                <div>
+                  <div class="m-hero-eyebrow">Consultant Portal · PMDC Verified</div>
+                  <div class="m-hero-title">Dr. Sara Malik</div>
+                </div>
+                <span class="h-badge solid-emerald">Emergency: ON</span>
+              </div>
+            </div>
+            <div class="m-scroll overlap-up">
+              <div class="h-card red-tint">
+                <div class="h-row" style="margin-bottom:6px">
+                  <span class="h-badge solid-red">5m SLA BROADCAST</span>
+                  <b class="tabular" style="color:var(--red);font-size:12px">03:42 left</b>
+                </div>
+                <div style="font-weight:800;color:var(--text-dark)">High-Risk Case · Tariq Mahmood</div>
+                <div class="body-sm" style="margin:3px 0 8px">BP 164/98 · HR 108 · Chest Tightness (Score 0.84)</div>
+                <button type="button" class="h-btn danger full sm" data-goto="doctor-mobile-review">Accept &amp; Review Case Now</button>
+              </div>
+              <div class="h-sec"><h4>My Assigned Cases (2)</h4></div>
+              <div class="h-card">
+                <div class="h-row">
+                  <div><b style="color:var(--text-dark)">Ayesha Bibi (IN_REVIEW)</b><div class="muted-sm">Moderate Risk · Post-op Fever</div></div>
+                  <button type="button" class="h-btn primary sm" data-goto="doctor-mobile-review">Open</button>
+                </div>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'doctor-mobile-review', module: 'doctor', platform: 'mobile',
+        title: 'Doctor Mobile Case Review, Rx & Care Plan',
+        route: 'mobile/src/app/(doctor)/reviews/[id].tsx · diagnosis/[id].tsx · careplan/[id].tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-appbar">
+              <button type="button" style="border:0;background:none;color:#fff" data-goto="doctor-mobile-home">${ico('back',18)}</button>
+              <div style="flex:1"><div class="m-appbar-title">Clinical Review · Tariq M.</div><div class="m-appbar-sub">High Risk · Penalty/Allergy: Penicillin</div></div>
+            </div>
+            <div class="m-scroll">
+              <div class="metric-3">
+                <div class="metric-box"><div class="m-lbl">BP</div><div class="m-val" style="color:var(--red)">164/98</div></div>
+                <div class="metric-box"><div class="m-lbl">Pulse</div><div class="m-val">108</div></div>
+                <div class="metric-box"><div class="m-lbl">SpO2</div><div class="m-val" style="color:var(--amber)">93%</div></div>
+              </div>
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:6px">Diagnosis &amp; Prescription</div>
+                <div class="h-input-group"><label class="h-label">ICD / Diagnosis</label><input class="h-input" value="I10 · Uncontrolled Hypertension" readonly /></div>
+                <div class="h-input-group"><label class="h-label">Rx Medication</label><input class="h-input" value="Captopril 25mg STAT · 14 days" readonly /></div>
+                <div class="h-btn-row">
+                  <button type="button" class="h-btn primary sm" data-toast="Diagnosis &amp; Rx issued!">Issue Rx &amp; Resolve</button>
+                  <button type="button" class="h-btn danger sm" data-goto="paramedic-console">Dispatch SOS</button>
+                </div>
+              </div>
+              <div class="h-card">
+                <div class="h-row"><b style="color:var(--text-dark)">Recovery Care Plan</b><span class="h-badge blue">2 Milestones</span></div>
+                <div class="muted-sm" style="margin-top:4px">Daily morning BP log · Cardiology follow-up in 48h</div>
+              </div>
+            </div>
+          </div>`
+      },
+      {
+        id: 'web-doctor-dashboard', module: 'doctor', platform: 'web',
+        title: 'Web Doctor Portal Triage Dashboard',
+        route: 'web/src/pages/doctor/Dashboard.tsx',
+        render: () => webShell('/doctor', 'Doctor Portal', 'Dr. Sara Malik', DOCTOR_NAV, 'Triage Dashboard', `
+          <div class="web-page-head">
+            <div><h3>Clinical Triage Dashboard</h3><p>Manage incoming SLA broadcasts, active reviews, and assigned emergencies</p></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="h-badge emerald">Emergency Availability: ON</span>
+              <button type="button" class="h-btn primary sm" data-goto="web-doctor-casereview">Review Top Case ›</button>
+            </div>
+          </div>
+          <div class="h-card red-tint" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div><b style="color:var(--red)">ACTIVE EMERGENCY ASSIGNED · Tariq Mahmood</b><div class="body-sm">Unit HX-02 Dispatched · High-Risk Cardiac Escalation</div></div>
+            <button type="button" class="h-btn danger sm" data-goto="web-emergency-ops">Open Dispatch Feed</button>
+          </div>
+          <div class="web-kpi-grid">
+            <div class="web-kpi red"><b>2</b><span>Broadcast SLA Queue</span></div>
+            <div class="web-kpi"><b>4</b><span>Assigned In Review</span></div>
+            <div class="web-kpi emerald"><b>19</b><span>Resolved This Week</span></div>
+          </div>
+          <div class="web-table-wrap">
+            <table class="web-table">
+              <thead><tr><th>Patient</th><th>Risk Tier</th><th>Vitals Snapshot</th><th>SLA Window</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><b style="color:var(--text-dark)">Tariq Mahmood</b><br><span class="muted-sm">Model Town · Nurse Ayesha</span></td>
+                  <td><span class="h-badge solid-red">HIGH (0.84)</span></td>
+                  <td class="tabular">164/98 · HR 108 · SpO2 93%</td>
+                  <td><b style="color:var(--red)" class="tabular">03:42 left (5m SLA)</b></td>
+                  <td><button type="button" class="h-btn primary sm" data-goto="web-doctor-casereview">Accept &amp; Review</button></td>
+                </tr>
+                <tr>
+                  <td><b style="color:var(--text-dark)">Ayesha Bibi</b><br><span class="muted-sm">Gulberg III · Nurse Sara</span></td>
+                  <td><span class="h-badge amber">MODERATE</span></td>
+                  <td class="tabular">132/86 · HR 92 · Temp 38.4°C</td>
+                  <td class="tabular">11:18 left (15m SLA)</td>
+                  <td><button type="button" class="h-btn outline sm" data-goto="web-doctor-casereview">Review</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`)
+      },
+      {
+        id: 'web-doctor-casereview', module: 'doctor', platform: 'web',
+        title: 'Web Split-Pane Case Review & Care Plan Builder',
+        route: 'web/src/pages/doctor/CaseReview.tsx · ClinicalDecision.tsx · CarePlanManager.tsx',
+        render: () => webShell('/doctor/cases/104', 'Doctor Portal', 'Dr. Sara Malik', DOCTOR_NAV, 'Case Review', `
+          <div class="web-page-head">
+            <div><h3>Case Review · Tariq Mahmood</h3><p>Nurse Ayesha Khan assessment · Allergy: Penicillin (SEVERE)</p></div>
+            <button type="button" class="h-btn danger sm" data-goto="web-emergency-ops">Trigger Emergency Ambulance</button>
+          </div>
+          <div class="web-split">
+            <div>
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:8px">Nurse-Recorded Vitals (3×2)</div>
+                <div class="metric-3" style="margin-bottom:8px">
+                  <div class="metric-box"><div class="m-lbl">BP</div><div class="m-val" style="color:var(--red)">164/98</div></div>
+                  <div class="metric-box"><div class="m-lbl">Pulse</div><div class="m-val">108</div></div>
+                  <div class="metric-box"><div class="m-lbl">SpO2</div><div class="m-val" style="color:var(--amber)">93%</div></div>
+                  <div class="metric-box"><div class="m-lbl">Temp</div><div class="m-val">37.8°C</div></div>
+                  <div class="metric-box"><div class="m-lbl">Glucose</div><div class="m-val">148</div></div>
+                  <div class="metric-box"><div class="m-lbl">AI Risk</div><div class="m-val" style="color:var(--red)">0.84</div></div>
+                </div>
+                <div class="body-sm"><b>Symptoms:</b> Chest tightness, dizziness, mild diaphoresis.</div>
+              </div>
+            </div>
+            <div>
+              <div class="h-card">
+                <div class="h-seg" data-tabgroup>
+                  <button type="button" class="active" data-tabtarget="wcr-dec">Decision &amp; Rx</button>
+                  <button type="button" data-tabtarget="wcr-plan">Care Plan</button>
+                </div>
+                <div data-tabpane="wcr-dec">
+                  <div class="h-input-group"><label class="h-label">Diagnosis Code</label><input class="h-input" value="I10 — Hypertensive Urgency" readonly /></div>
+                  <div class="h-input-group"><label class="h-label">Prescription Order</label><input class="h-input" value="Amlodipine 10mg OD · 30 days" readonly /></div>
+                  <button type="button" class="h-btn primary full sm" data-toast="Clinical decision &amp; prescription saved!">Sign &amp; Issue Clinical Order</button>
+                </div>
+                <div data-tabpane="wcr-plan" style="display:none">
+                  <div class="h-input-group"><label class="h-label">Care Plan Title</label><input class="h-input" value="Hypertension Stabilization Plan" readonly /></div>
+                  <div class="h-list-row"><span class="body-sm">1. Twice-daily home nurse BP audit</span><span class="h-badge blue">Day 1–3</span></div>
+                  <div class="h-list-row"><span class="body-sm">2. Repeat ECG &amp; lipid panel</span><span class="h-badge muted">Day 7</span></div>
+                </div>
+              </div>
+            </div>
+          </div>`)
+      },
+
+      // ── MODULE 5: PARAMEDIC & EMERGENCY DISPATCH ────────────────────────────
+      {
+        id: 'paramedic-console', module: 'paramedic', platform: 'mobile',
+        title: 'Mobile Paramedic Field Dispatch Console',
+        route: 'mobile/src/app/(paramedic)/index.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G · GPS</span></div>
+            <div class="m-hero" style="background:linear-gradient(155deg,#06294B 0%,#0B4268 70%,#991B1B 130%)">
+              <div class="m-row h-row">
+                <div><div class="m-hero-eyebrow">Paramedic Field Console</div><div class="m-hero-title">Unit HX-02 · ICU</div></div>
+                <span class="h-badge solid-red">EN_ROUTE</span>
+              </div>
+              <p class="m-hero-sub" style="margin-top:4px">Plate LEA-1102 · Paramedic Usman Tariq</p>
+            </div>
+            <div class="m-scroll">
+              <div class="h-card red-tint">
+                <div class="h-row" style="margin-bottom:4px"><b style="color:var(--text-dark)">Patient: Tariq Mahmood</b><span class="h-badge red">HIGH RISK</span></div>
+                <div class="body-sm">${ico('mapPin',13)} Pickup: House 42, Block C, Model Town</div>
+                <div class="body-sm" style="margin-top:3px">Hospital: <b>Gulberg General Hospital</b> (AVAILABLE)</div>
+              </div>
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:8px">5-Stage Dispatch Progression</div>
+                <div class="stepper-bar"><i class="done"></i><i class="active"></i><i></i><i></i><i></i></div>
+                ${['DISPATCHED', 'EN_ROUTE (Current)', 'ARRIVED AT SCENE', 'IN_TRANSIT TO HOSPITAL', 'COMPLETED'].map((st, idx) => `
+                  <div class="h-list-row">
+                    <span class="h-badge ${idx === 0 ? 'emerald' : idx === 1 ? 'solid-red' : 'muted'}">${idx + 1}</span>
+                    <span style="flex:1;font-size:12px;font-weight:${idx===1?'800':'500'};color:var(--text-dark)">${st}</span>
+                  </div>
+                `).join('')}
+              </div>
+              <button type="button" class="h-btn primary full" style="min-height:50px;font-size:14px" data-toast="Dispatch updated to ARRIVED AT SCENE">Mark Arrived at Patient Scene ›</button>
+            </div>
+          </div>`
+      },
+      {
+        id: 'web-emergency-ops', module: 'paramedic', platform: 'web',
+        title: 'Web Emergency, Ambulance Fleet & Hospital Network',
+        route: 'web/src/pages/EmergencyOperations.tsx · mobile/src/app/admin/emergency.tsx',
+        render: () => webShell('/emergency-operations', 'Command Center', 'System Admin', ADMIN_NAV, 'Emergency & Fleet', `
+          <div class="web-page-head">
+            <div><h3>Emergency, Ambulance Fleet &amp; Hospital Matrix</h3><p>Live active SOS dispatches, vehicle workload, and Lahore hospital capacity</p></div>
+            <button type="button" class="h-btn primary sm" data-toast="Dispatch queue auto-balanced">+ Dispatch Closest Ambulance</button>
+          </div>
+          <div class="web-kpi-grid">
+            <div class="web-kpi red"><b>2</b><span>Active SOS Events</span></div>
+            <div class="web-kpi emerald"><b>2 / 3</b><span>Ambulances Available</span></div>
+            <div class="web-kpi blue"><b>3 / 4</b><span>Hospitals Available</span></div>
+          </div>
+          <div class="web-split">
+            <div class="web-table-wrap" style="margin:0">
+              <div style="padding:10px 12px;border-bottom:1px solid var(--border);font-weight:700;color:var(--text-dark)">Healix Fleet Status</div>
+              <table class="web-table">
+                <thead><tr><th>Unit</th><th>Type</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><b>HX-01</b> (LEA-1101)</td><td>BASIC</td><td><span class="h-badge emerald">AVAILABLE</span></td></tr>
+                  <tr><td><b>HX-02</b> (LEA-1102)</td><td>ADVANCED</td><td><span class="h-badge solid-red">DISPATCHED</span></td></tr>
+                  <tr><td><b>HX-03</b> (LEA-1103)</td><td>ICU</td><td><span class="h-badge emerald">AVAILABLE</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="web-table-wrap" style="margin:0">
+              <div style="padding:10px 12px;border-bottom:1px solid var(--border);font-weight:700;color:var(--text-dark)">Hospital Bed Capacity</div>
+              <table class="web-table">
+                <thead><tr><th>Hospital</th><th>Tier</th><th>Capacity</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Gulberg General Hospital</b></td><td>MEDIUM</td><td><span class="h-badge emerald">AVAILABLE</span></td></tr>
+                  <tr><td><b>Model Town Medical Centre</b></td><td>HIGH</td><td><span class="h-badge amber">LIMITED</span></td></tr>
+                  <tr><td><b>Mozang Charity Hospital</b></td><td>LOW · Charity</td><td><span class="h-badge emerald">AVAILABLE</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>`)
+      },
+
+      // ── MODULE 6: ADMIN COMMAND CENTER ──────────────────────────────────────
+      {
+        id: 'web-admin-dashboard', module: 'admin', platform: 'web',
+        title: 'Web Admin Executive Command Center',
+        route: 'web/src/pages/admin/Dashboard.tsx',
+        render: () => webShell('/admin', 'Admin Governance', 'Healix Admin', ADMIN_NAV, 'Command Center', `
+          <div class="web-page-head">
+            <div><h3>Executive Command Center</h3><p>Platform-wide health telemetry, SLA escalations, and verification backlog</p></div>
+            <button type="button" class="h-btn primary sm" data-goto="web-admin-verifications">Review 4 Pending Verifications</button>
+          </div>
+          <div class="web-kpi-grid">
+            <div class="web-kpi"><b>128</b><span>Active Users</span></div>
+            <div class="web-kpi emerald"><b>46</b><span>Completed Visits</span></div>
+            <div class="web-kpi amber"><b>4</b><span>Pending Verifications</span></div>
+            <div class="web-kpi red"><b>2</b><span>Escalated High-Risk Cases</span></div>
+          </div>
+          <div class="web-table-wrap">
+            <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+              <b style="color:var(--red)">Critical SLA Escalated Clinical Cases</b>
+              <span class="h-badge red">Requires Override / Doctor Assignment</span>
+            </div>
+            <table class="web-table">
+              <thead><tr><th>Case ID</th><th>Patient</th><th>Status</th><th>Risk</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="tabular">#CASE-904</td>
+                  <td><b style="color:var(--text-dark)">Tariq Mahmood</b></td>
+                  <td><span class="h-badge red">ADMIN_ESCALATED</span></td>
+                  <td><span class="h-badge solid-red">CRITICAL</span></td>
+                  <td><button type="button" class="h-btn primary sm" data-toast="Doctor override modal opened">Override &amp; Assign Doctor</button></td>
+                </tr>
+                <tr>
+                  <td class="tabular">#CASE-898</td>
+                  <td><b style="color:var(--text-dark)">Bilal Hassan</b></td>
+                  <td><span class="h-badge amber">PROFESSIONAL_BROADCAST</span></td>
+                  <td><span class="h-badge red">HIGH</span></td>
+                  <td><button type="button" class="h-btn outline sm" data-toast="Doctor override modal opened">Assign Doctor</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`)
+      },
+      {
+        id: 'web-admin-verifications', module: 'admin', platform: 'web',
+        title: 'Web Credential Governance (PNC & PMDC)',
+        route: 'web/src/pages/admin/NurseVerification.tsx · DoctorVerification.tsx',
+        render: () => webShell('/admin/verifications', 'Admin Governance', 'Healix Admin', ADMIN_NAV, 'Nurse Verification', `
+          <div class="web-page-head">
+            <div><h3>Clinician Credential Verification</h3><p>Audit PNC nursing licenses, PMDC medical registrations, and CNIC documents</p></div>
+          </div>
+          <div class="h-seg" style="max-width:340px" data-tabgroup>
+            <button type="button" class="active" data-tabtarget="wav-nurse">Nurses (PNC · 3)</button>
+            <button type="button" data-tabtarget="wav-doc">Doctors (PMDC · 1)</button>
+          </div>
+          <div data-tabpane="wav-nurse" class="web-table-wrap">
+            <table class="web-table">
+              <thead><tr><th>Applicant</th><th>PNC License</th><th>CNIC</th><th>Status</th><th>Decision</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><b style="color:var(--text-dark)">Zainab Raza, RN</b><br><span class="muted-sm">zainab@healix.pk</span></td>
+                  <td class="tabular">PNC-LHR-78210</td>
+                  <td class="tabular">35202-9811223-4</td>
+                  <td><span class="h-badge amber">PENDING</span></td>
+                  <td><div style="display:flex;gap:6px"><button type="button" class="h-btn emerald sm" data-toast="Nurse Approved">Approve</button><button type="button" class="h-btn danger-soft sm" data-toast="Rejection dialog">Reject</button></div></td>
+                </tr>
+                <tr>
+                  <td><b style="color:var(--text-dark)">Ayesha Khan, RN</b><br><span class="muted-sm">nurse1@gmail.com</span></td>
+                  <td class="tabular">PNC-LHR-11022</td>
+                  <td class="tabular">35202-1234567-8</td>
+                  <td><span class="h-badge emerald">VERIFIED</span></td>
+                  <td><button type="button" class="h-btn outline sm" data-toast="Document viewer opened">View File</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div data-tabpane="wav-doc" class="web-table-wrap" style="display:none">
+            <table class="web-table">
+              <thead><tr><th>Consultant</th><th>PMDC Number</th><th>CNIC</th><th>Status</th><th>Decision</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><b style="color:var(--text-dark)">Dr. Hamza Tariq</b><br><span class="muted-sm">hamza.md@healix.pk</span></td>
+                  <td class="tabular">PMDC-99412-P</td>
+                  <td class="tabular">35201-7766554-1</td>
+                  <td><span class="h-badge amber">PENDING</span></td>
+                  <td><div style="display:flex;gap:6px"><button type="button" class="h-btn emerald sm" data-toast="Doctor Approved">Approve PMDC</button><button type="button" class="h-btn danger-soft sm">Reject</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`)
+      },
+      {
+        id: 'web-admin-users-config', module: 'admin', platform: 'web',
+        title: 'Web User Directory, Config & Audit Logs',
+        route: 'web/src/pages/admin/Users.tsx · Config.tsx · AuditLogs.tsx',
+        render: () => webShell('/admin/config', 'Admin Governance', 'Healix Admin', ADMIN_NAV, 'Platform Config', `
+          <div class="web-page-head">
+            <div><h3>Users, Platform Parameters &amp; Audit Trail</h3><p>Manage all 5 user roles, SLA rules, commission rate, and HIPAA audit logs</p></div>
+          </div>
+          <div class="h-seg" style="max-width:440px" data-tabgroup>
+            <button type="button" class="active" data-tabtarget="wau-cfg">Platform Config</button>
+            <button type="button" data-tabtarget="wau-usr">User Directory</button>
+            <button type="button" data-tabtarget="wau-log">HIPAA Audit Logs</button>
+          </div>
+          <div data-tabpane="wau-cfg" class="web-split">
+            <div class="h-card">
+              <div class="h-row" style="margin-bottom:6px"><b style="color:var(--text-dark)">platform_fee_pct</b><span class="h-badge blue">Live</span></div>
+              <div class="muted-sm" style="margin-bottom:8px">Marketplace service commission percentage</div>
+              <div style="display:flex;gap:8px"><input class="h-input tabular" value="10" readonly /><button type="button" class="h-btn primary sm" data-toast="Saved platform_fee_pct = 10">Save</button></div>
+            </div>
+            <div class="h-card">
+              <div class="h-row" style="margin-bottom:6px"><b style="color:var(--text-dark)">escalation_sla_max_minutes</b><span class="h-badge blue">5–20 min</span></div>
+              <div class="muted-sm" style="margin-bottom:8px">SLA broadcast escalation ceiling</div>
+              <div style="display:flex;gap:8px"><input class="h-input tabular" value="15" readonly /><button type="button" class="h-btn primary sm" data-toast="Saved SLA limit = 15m">Save</button></div>
+            </div>
+          </div>
+          <div data-tabpane="wau-usr" class="web-table-wrap" style="display:none">
+            <div style="padding:10px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap">
+              ${['All Roles','PATIENT','NURSE','DOCTOR','PARAMEDIC','ADMIN'].map((r,i)=>`<span class="h-badge ${i===0?'navy':'muted'}">${r}</span>`).join('')}
+            </div>
+            <table class="web-table">
+              <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td><b>admin@healix.pk</b></td><td><span class="h-badge navy">ADMIN</span></td><td><span class="h-badge emerald">ACTIVE</span></td><td><span class="muted-sm">Protected</span></td></tr>
+                <tr><td><b>paramedic1@gmail.com</b></td><td><span class="h-badge blue">PARAMEDIC</span></td><td><span class="h-badge emerald">ACTIVE</span></td><td><button type="button" class="h-btn danger-soft sm">Suspend</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div data-tabpane="wau-log" class="web-table-wrap" style="display:none">
+            <table class="web-table">
+              <thead><tr><th>Action</th><th>Admin</th><th>Target / Reason</th><th>Timestamp</th></tr></thead>
+              <tbody>
+                <tr><td><span class="h-badge blue">CONFIG_UPDATED</span></td><td>Healix Admin</td><td>escalation_sla_max_minutes updated to 15</td><td class="tabular">Today, 16:10</td></tr>
+                <tr><td><span class="h-badge emerald">NURSE_APPROVED</span></td><td>Healix Admin</td><td>PNC-LHR-11022 verified</td><td class="tabular">Today, 14:22</td></tr>
+              </tbody>
+            </table>
+          </div>`)
+      },
+      {
+        id: 'mobile-admin-command', module: 'admin', platform: 'mobile',
+        title: 'Mobile Admin Command Center (High-Contrast)',
+        route: 'mobile/src/app/admin/index.tsx · users.tsx · care.tsx · clinical.tsx',
+        render: () => `
+          <div class="phone-frame">
+            <div class="status-bar"><div class="status-notch"></div><span>9:41</span><span>5G</span></div>
+            <div class="m-hero has-overlap">
+              <div class="m-hero-top">
+                <div><div class="m-hero-eyebrow">System Governance</div><div class="m-hero-title">Admin Command</div></div>
+                <span class="h-badge solid-emerald">Healthy</span>
+              </div>
+            </div>
+            <div class="m-scroll overlap-up">
+              <div class="metric-2">
+                <div class="metric-box"><div class="m-lbl">Active Users</div><div class="m-val">128</div><div class="muted-sm">5 roles</div></div>
+                <div class="metric-box"><div class="m-lbl">Pending KYC</div><div class="m-val" style="color:var(--amber)">4</div><div class="muted-sm">3 Nurse · 1 Dr</div></div>
+                <div class="metric-box"><div class="m-lbl">High Risk</div><div class="m-val" style="color:var(--red)">2</div><div class="muted-sm">SLA alerts</div></div>
+                <div class="metric-box"><div class="m-lbl">Active Contracts</div><div class="m-val" style="color:var(--emerald)">14</div><div class="muted-sm">46 visits</div></div>
+              </div>
+              <div class="h-card">
+                <div style="font-weight:700;color:var(--text-dark);margin-bottom:8px">Governance Modules</div>
+                <div class="h-list-row"><span class="body-sm"><b>User Directory</b> · Incl. Paramedics</span><button type="button" class="h-btn soft sm" data-goto="web-admin-users-config">Open</button></div>
+                <div class="h-list-row"><span class="body-sm"><b>Credential Verification</b> · Cross-Platform</span><button type="button" class="h-btn soft sm" data-goto="web-admin-verifications">Audit</button></div>
+                <div class="h-list-row"><span class="body-sm"><b>Care Ops &amp; Clinical Triage</b> · Live Pricing</span><button type="button" class="h-btn soft sm" data-goto="web-admin-dashboard">Inspect</button></div>
+                <div class="h-list-row"><span class="body-sm"><b>Platform Config &amp; Audit Trail</b></span><button type="button" class="h-btn primary sm" data-toast="Navigated to /admin/config &amp; /admin/audit">Manage</button></div>
+              </div>
+            </div>
+          </div>`
+      }
+    ];
+
+    // ─── State & Renderers ────────────────────────────────────────────────────
+    const state = {
+      theme: 'light',
+      module: 'all',
+      platform: 'all',
+      search: '',
+      view: 'grid',
+      focusId: SCREENS[0].id
+    };
+
+    const getFiltered = () => SCREENS.filter(s => {
+      if (state.module !== 'all' && s.module !== state.module) return false;
+      if (state.platform !== 'all' && s.platform !== state.platform) return false;
+      if (state.search.trim()) {
+        const q = state.search.trim().toLowerCase();
+        if (!`${s.title} ${s.route} ${s.module} ${s.platform}`.toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+
+    function showToast(msg) {
+      const el = document.getElementById('studio-toast');
+      el.textContent = msg;
+      el.style.display = 'block';
+      clearTimeout(el._t);
+      el._t = setTimeout(() => { el.style.display = 'none'; }, 2400);
+    }
+
+    function renderModuleTabs() {
+      const container = document.getElementById('module-tabs');
+      container.innerHTML = MODULES.map(m => `
+        <button type="button" class="module-tab ${state.module === m.id ? 'active' : ''}" data-module="${m.id}">${m.label}</button>
+      `).join('');
+    }
+
+    function renderBoardCard(s, showFocusBtn = true) {
+      const isWeb = s.platform === 'web';
+      return `
+        <article class="board-item ${isWeb ? 'is-web' : 'is-mobile'}" id="board-${s.id}">
+          <div class="board-meta">
+            <div class="board-meta-left">
+              <div class="board-kicker">
+                <span class="platform-tag ${s.platform}">${isWeb ? 'WEB PORTAL' : 'MOBILE APP'}</span>
+                <span>Module: ${s.module.toUpperCase()}</span>
+              </div>
+              <h3 class="board-title">${s.title}</h3>
+              <div class="board-route">${s.route}</div>
+            </div>
+            ${showFocusBtn ? `<button type="button" class="focus-trigger" data-focus="${s.id}">Focus Screen</button>` : ''}
+          </div>
+          ${s.render()}
+        </article>`;
+    }
+
+    function renderTokensView() {
+      const swatches = [
+        ['Primary Navy (`navy`)', '#0B4268', 'Primary clinical brand, buttons, active tabs'],
+        ['Deep Navy (`navyDark`)', '#06294B', 'Dark headers, Web sidebar, hero gradients'],
+        ['Accent Blue (`accentBlue`)', '#29A9F5', 'Interactive highlights, links, focus rings'],
+        ['Care Emerald (`careEmerald`)', '#10B981', 'Verified PNC/PMDC badges, completed visits'],
+        ['Critical Red (`red`)', '#EF4444', 'SOS alerts, severe allergies, high risk SLA'],
+        ['Alert Amber (`amber`)', '#F59E0B', 'Pending verification, moderate risk, schedule due'],
+        ['Canvas Surface (`surface`)', '#F8FAFC', 'App & Portal light-mode page background'],
+        ['Card Surface (`surfaceCard`)', '#FFFFFF', 'Elevated cards, modals, data tables'],
+        ['Muted Surface (`surfaceMuted`)', '#F1F5F9', 'Input fill, segmented tracks, table headers'],
+        ['Heading Dark (`textDark`)', '#1E293B', 'Primary headings, KPI numerals, titles'],
+        ['Body Slate (`textBody`)', '#475569', 'Paragraph copy, secondary metadata'],
+        ['Border Light (`inputBorder`)', '#E2E8F0', 'Card borders, table dividers, form outlines']
+      ];
+      const pastels = [
+        ['Request Care', '#EBF5FF', '#2563EB'],
+        ['View Records', '#ECFDF5', '#10B981'],
+        ['Message Team', '#F3E8FF', '#8B5CF6'],
+        ['Health Info', '#FFF1F2', '#F43F5E']
+      ];
+      return `
+        <div class="tokens-panel">
+          <div class="token-section">
+            <h2>1. Authoritative Clinical Color Tokens (HEALIX_DESIGN_SYSTEM.md)</h2>
+            <p class="lead">Shared across <code>mobile/src/theme.ts</code> and <code>web/src/styles/index.css</code>.</p>
+            <div class="swatch-grid">
+              ${swatches.map(([name, hex, desc]) => `
+                <div class="swatch-card">
+                  <div class="swatch-color" style="background:${hex};border-bottom:1px solid #E2E8F0"></div>
+                  <div class="swatch-info"><b>${name}</b><code>${hex}</code><small>${desc}</small></div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="token-section">
+            <h2>2. Quick Action Pastel Cards &amp; Semantic Badges</h2>
+            <p class="lead">High-contrast quick action tiles paired with crisp component states.</p>
+            <div class="swatch-grid" style="margin-bottom:18px">
+              ${pastels.map(([label, bg, fg]) => `
+                <div class="swatch-card" style="padding:14px;background:${bg};border-color:${fg}33">
+                  <b style="color:${fg};font-size:14px">${label}</b>
+                  <small style="display:block;color:#1E293B;margin-top:6px">BG: <code>${bg}</code> · Icon: <code>${fg}</code></small>
+                </div>
+              `).join('')}
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <button type="button" class="h-btn primary sm">Primary Action</button>
+              <button type="button" class="h-btn dark-cta sm">Deep Navy CTA</button>
+              <button type="button" class="h-btn emerald sm">Approve / Verified</button>
+              <button type="button" class="h-btn danger sm">Emergency SOS</button>
+              <button type="button" class="h-btn outline sm">Outlined Secondary</button>
+              <span class="h-badge emerald">VERIFIED</span>
+              <span class="h-badge amber">PENDING</span>
+              <span class="h-badge red">HIGH RISK</span>
+              <span class="h-badge blue">SCHEDULED</span>
+            </div>
+          </div>
+
+          <div class="token-section">
+            <h2>3. Complete Platform Coverage Map (${SCREENS.length} Key Screen Views)</h2>
+            <p class="lead">Every screen preserved in Existing Expo Router &amp; React Router paths.</p>
+            <div class="web-table-wrap" style="margin:0">
+              <table class="web-table">
+                <thead><tr><th>Module</th><th>Platform</th><th>Screen Title</th><th>Source Route</th><th>Action</th></tr></thead>
+                <tbody>
+                  ${SCREENS.map(s => `
+                    <tr>
+                      <td><b>${s.module.toUpperCase()}</b></td>
+                      <td><span class="platform-tag ${s.platform}">${s.platform.toUpperCase()}</span></td>
+                      <td><b style="color:#0F172A">${s.title}</b></td>
+                      <td><code>${s.route}</code></td>
+                      <td><button type="button" class="focus-trigger" data-focus="${s.id}">Preview</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderMain() {
+      const main = document.getElementById('studio-main');
+      const filtered = getFiltered();
+      document.getElementById('screen-counter').textContent =
+        state.view === 'tokens' ? 'Design System Reference' : `${filtered.length} screen${filtered.length === 1 ? '' : 's'} shown`;
+
+      if (state.view === 'tokens') {
+        main.innerHTML = renderTokensView();
+        return;
+      }
+
+      if (!filtered.length) {
+        main.innerHTML = `<div class="h-card" style="text-align:center;padding:40px"><b>No screens match your current filter.</b><div class="muted-sm" style="margin-top:6px">Try switching back to All Modules or clearing your search query.</div></div>`;
+        return;
+      }
+
+      if (state.view === 'focus') {
+        let idx = filtered.findIndex(s => s.id === state.focusId);
+        if (idx < 0) { idx = 0; state.focusId = filtered[0].id; }
+        const cur = filtered[idx];
+        main.innerHTML = `
+          <div class="focus-layout">
+            <div class="focus-bar">
+              <button type="button" id="focus-prev">← Previous Screen</button>
+              <div style="text-align:center">
+                <b style="color:#0B4268">${cur.title}</b>
+                <div class="muted-sm">Screen ${idx + 1} of ${filtered.length} · ${cur.route}</div>
+              </div>
+              <button type="button" id="focus-next">Next Screen →</button>
+            </div>
+            <div class="focus-stage">${renderBoardCard(cur, false)}</div>
+          </div>`;
+        return;
+      }
+
+      main.innerHTML = `<div class="boards-grid">${filtered.map(s => renderBoardCard(s, true)).join('')}</div>`;
+    }
+
+    // ─── Event Delegation ─────────────────────────────────────────────────────
+    document.addEventListener('click', (e) => {
+      const themeBtn = e.target.closest('[data-theme]');
+      if (themeBtn) {
+        state.theme = themeBtn.dataset.theme;
+        document.getElementById('studio-root').className = state.theme === 'dark' ? 'theme-dark' : 'theme-light';
+        document.querySelectorAll('[data-theme]').forEach(b => b.classList.toggle('active', b === themeBtn));
+        showToast(`Switched preview theme to ${state.theme === 'dark' ? 'Dark Futuristic (Neon)' : 'Healix Clinical (Light)'}`);
+        return;
+      }
+
+      const modBtn = e.target.closest('[data-module]');
+      if (modBtn) {
+        state.module = modBtn.dataset.module;
+        if (state.view === 'tokens') state.view = 'grid';
+        renderModuleTabs();
+        document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === state.view));
+        renderMain();
+        return;
+      }
+
+      const viewBtn = e.target.closest('[data-view]');
+      if (viewBtn) {
+        state.view = viewBtn.dataset.view;
+        document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b === viewBtn));
+        renderMain();
+        return;
+      }
+
+      const focusBtn = e.target.closest('[data-focus]');
+      if (focusBtn) {
+        state.focusId = focusBtn.dataset.focus;
+        state.view = 'focus';
+        document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === 'focus'));
+        renderMain();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (e.target.id === 'focus-prev' || e.target.id === 'focus-next') {
+        const filtered = getFiltered();
+        if (!filtered.length) return;
+        const idx = filtered.findIndex(s => s.id === state.focusId);
+        const nextIdx = e.target.id === 'focus-next'
+          ? (idx + 1) % filtered.length
+          : (idx - 1 + filtered.length) % filtered.length;
+        state.focusId = filtered[nextIdx].id;
+        renderMain();
+        return;
+      }
+
+      const tabBtn = e.target.closest('[data-tabtarget]');
+      if (tabBtn) {
+        const group = tabBtn.closest('[data-tabgroup]');
+        const scope = group.parentElement;
+        const targetId = tabBtn.dataset.tabtarget;
+        group.querySelectorAll('[data-tabtarget]').forEach(b => b.classList.toggle('active', b === tabBtn));
+        scope.querySelectorAll(':scope > [data-tabpane]').forEach(pane => {
+          pane.style.display = pane.dataset.tabpane === targetId ? '' : 'none';
+        });
+        return;
+      }
+
+      const gotoBtn = e.target.closest('[data-goto]');
+      if (gotoBtn) {
+        const targetId = gotoBtn.dataset.goto;
+        const target = SCREENS.find(s => s.id === targetId);
+        if (!target) return;
+        if (state.view === 'focus') {
+          state.module = 'all';
+          state.platform = 'all';
+          state.focusId = targetId;
+          renderModuleTabs();
+          document.getElementById('platform-filter').value = 'all';
+          renderMain();
+        } else {
+          state.module = 'all';
+          state.platform = 'all';
+          state.search = '';
+          document.getElementById('search-input').value = '';
+          document.getElementById('platform-filter').value = 'all';
+          renderModuleTabs();
+          renderMain();
+          const el = document.getElementById(`board-${targetId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('board-highlight');
+            setTimeout(() => el.classList.remove('board-highlight'), 1500);
+          }
+        }
+        showToast(`Navigated to: ${target.title}`);
+        return;
+      }
+
+      const toastBtn = e.target.closest('[data-toast]');
+      if (toastBtn) {
+        showToast(toastBtn.dataset.toast);
+      }
+    });
+
+    document.getElementById('platform-filter').addEventListener('change', (e) => {
+      state.platform = e.target.value;
+      renderMain();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      state.search = e.target.value;
+      renderMain();
+    });
+
+    renderModuleTabs();
+    renderMain();
+  </script>
+</body>
+</html>

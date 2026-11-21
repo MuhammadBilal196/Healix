@@ -2,7 +2,7 @@
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
 import { appAlert } from '../../../components/common/AppDialogs';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, type ComponentRef } from 'react';
 import {
   View,
   ScrollView,
@@ -32,7 +32,7 @@ export default function NurseChatScreen() {
 
   const router = useRouter();
   const params = useLocalSearchParams();
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ComponentRef<typeof ScrollView>>(null);
   
   const { user } = useAuthStore();
   const myId = user?.id;
@@ -118,7 +118,7 @@ export default function NurseChatScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         {/* Header */}
         <View style={styles.header}>
@@ -188,7 +188,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   backIcon: { color: COLORS.emerald, fontSize: 32, lineHeight: 32, marginTop: -4 },
   avatarBg: { backgroundColor: COLORS.surfaceCard, marginRight: 12 },
   headerInfo: { flex: 1 },
-  headerName: { color: COLORS.onAccent, fontSize: 16, fontWeight: '700' },
+  headerName: { color: COLORS.textDark, fontSize: 16, fontWeight: '700' },
   headerStatus: { color: COLORS.textBody, fontSize: 12, marginTop: 2 },
   headerActions: { flexDirection: 'row', gap: 8 },
   headerActionBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: COLORS.bg, alignItems: 'center', justifyContent: 'center' },

@@ -52,9 +52,9 @@ export const AddEmergencyContactModal: React.FC<AddEmergencyContactModalProps> =
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   overlay: { flex: 1, backgroundColor: COLORS.modalBackdrop, justifyContent: 'center', padding: SPACING.lg },
-  modal: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, padding: SPACING.xl, borderWidth: 1, borderColor: COLORS.emeraldLight },
+  modal: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, padding: SPACING.xl, borderWidth: 1, borderColor: COLORS.inputBorder },
   title: { color: COLORS.textDark, fontSize: TYPOGRAPHY.sizes.md, fontWeight: '700', marginBottom: SPACING.md },
-  input: { backgroundColor: COLORS.bg, borderRadius: RADIUS.md, padding: SPACING.md, color: COLORS.textDark, fontSize: 12, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: SPACING.md },
+  input: { backgroundColor: COLORS.surface, borderRadius: RADIUS.md, padding: SPACING.md, color: COLORS.textDark, fontSize: 12, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: SPACING.md },
   btnRow: { flexDirection: 'row', gap: SPACING.md, marginTop: SPACING.sm },
   cancelBtn: { flex: 1, backgroundColor: COLORS.glassSurface, paddingVertical: SPACING.md, borderRadius: RADIUS.md, alignItems: 'center' },
   cancelText: { color: COLORS.textBody, fontSize: 11, fontWeight: '600' },

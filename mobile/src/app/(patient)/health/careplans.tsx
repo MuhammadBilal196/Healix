@@ -36,7 +36,7 @@ export default function CarePlansScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         
         {/* Header */}
@@ -53,7 +53,7 @@ export default function CarePlansScreen() {
             subtitle="Assigned recovery programs"
             subtitleStyle={styles.cardSub}
             left={(props) => (
-              <Avatar.Icon {...props} icon="clipboard-check-outline" color={COLORS.textDark} style={{ backgroundColor: COLORS.emerald }} />
+              <Avatar.Icon {...props} icon="clipboard-check-outline" color={COLORS.onAccent} style={{ backgroundColor: COLORS.emerald }} />
             )}
           />
           <Card.Content>
@@ -123,7 +123,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: 4,
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
@@ -133,10 +133,10 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   cardTitle: {
     color: COLORS.textDark,
@@ -155,7 +155,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   },
   planItem: {
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.emeraldLight,
+    borderBottomColor: COLORS.inputBorder,
     paddingVertical: 16,
   },
   planTitle: {
@@ -191,7 +191,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   milestoneRow: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
   checkbox: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, borderColor: COLORS.teal, alignItems: "center", justifyContent: "center", marginRight: 12 },
   checkboxActive: { backgroundColor: COLORS.teal },
-  checkText: { color: COLORS.textDark, fontSize: 14, fontWeight: "bold" },
+  checkText: { color: COLORS.onAccent, fontSize: 14, fontWeight: "bold" },
   milestoneText: { color: COLORS.textSecondary, fontSize: 14, flex: 1 },
   milestoneCompleted: { textDecorationLine: "line-through", color: COLORS.textMuted },
   progressBar: {

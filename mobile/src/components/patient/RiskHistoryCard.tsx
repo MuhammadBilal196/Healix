@@ -156,7 +156,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   headerTitle: { color: COLORS.textDark, fontSize: TYPOGRAPHY.sizes.md, fontWeight: '700' },
   headerSub: { color: COLORS.textBody, fontSize: 11 },
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     marginBottom: SPACING.sm,

@@ -1,19 +1,15 @@
-
 import { useAppTheme, useThemeValue } from '../../theme/ThemeProvider';
 import type { ThemeColors } from '../../theme';
 import { useState } from 'react';
-import { StyleSheet, View, ScrollView, Platform } from 'react-native';
+import { StyleSheet, View, ScrollView, Platform, StatusBar } from 'react-native';
 import { TextInput, Button, Text, HelperText } from 'react-native-paper';
 import { useLocalSearchParams } from 'expo-router';
 import { navigate } from '../../utils/navigation';
 import { useRegister } from '../../hooks/useAuth';
+import { ThemeToggleButton } from '../../components/common/AppearanceSettings';
 import { ApiError } from '../../types/api';
+import { SPACING, RADIUS } from '../../theme';
 
-/**
- * Registration Screen.
- * Dynamically presents fields based on selected role, performs strict 
- * frontend validations, and displays detailed error messages.
- */
 export default function RegisterScreen() {
   const { colors: COLORS } = useAppTheme();
   const styles = useThemeValue(createStyles);
@@ -27,59 +23,28 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [cnic, setCnic] = useState('');
   const [pncNumber, setPncNumber] = useState('');
-  
+
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const registerMutation = useRegister();
   const isLoading = registerMutation.isPending;
   const error = registerMutation.error as ApiError | null;
 
-
-  // ─── CNIC Auto-Formatter ────────────────────────────────────────────────
-  /**
-   * Format rule: XXXXX-XXXXXXX-X  (5 digits, dash, 7 digits, dash, 1 digit)
-   * Hyphens are inserted automatically and removed automatically on backspace.
-   */
   const formatCnic = (raw: string) => {
-    // Strip everything that is not a digit
     const digits = raw.replace(/\D/g, '').slice(0, 13);
-    let result = '';
-    if (digits.length <= 5) {
-      result = digits;
-    } else if (digits.length <= 12) {
-      result = digits.slice(0, 5) + '-' + digits.slice(5);
-    } else {
-      result = digits.slice(0, 5) + '-' + digits.slice(5, 12) + '-' + digits.slice(12);
-    }
-    return result;
+    if (digits.length <= 5) return digits;
+    if (digits.length <= 12) return digits.slice(0, 5) + '-' + digits.slice(5);
+    return digits.slice(0, 5) + '-' + digits.slice(5, 12) + '-' + digits.slice(12);
   };
 
   const handleCnicChange = (val: string) => {
-    const formatted = formatCnic(val);
-    setCnic(formatted);
+    setCnic(formatCnic(val));
     if (error) registerMutation.reset();
   };
-  // ────────────────────────────────────────────────────────────────────────
 
-  // Local validation checks
-  const isEmailValid = (val: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
-  };
-
-  const isPhoneValid = (val: string) => {
-    // Pakistan phone: 11 digits starting with 03, e.g. 03001234567
-    return /^03\d{9}$/.test(val.trim());
-  };
-
-  const isCnicValid = (val: string) => {
-    // Pakistani CNIC format: xxxxx-xxxxxxx-x
-    return /^\d{5}-\d{7}-\d{1}$/.test(val.trim());
-  };
-
-  const isPasswordValid = (val: string) => {
-    // 8+ characters, at least 1 number, 1 special character
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*()[\]{}|_+=;:"'<>,.?/~`\-]).{8,}$/;
-    return passwordRegex.test(val);
-  };
+  const isEmailValid = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+  const isPhoneValid = (val: string) => /^03\d{9}$/.test(val.trim());
+  const isCnicValid = (val: string) => /^\d{5}-\d{7}-\d{1}$/.test(val.trim());
+  const isPasswordValid = (val: string) => /^(?=.*[0-9])(?=.*[!@#$%^&*()[\]{}|_+=;:"'<>,.?/~`\-]).{8,}$/.test(val);
 
   const isFormValid = () => {
     if (!['PATIENT', 'NURSE'].includes(role)) return false;
@@ -87,52 +52,41 @@ export default function RegisterScreen() {
     if (!isEmailValid(email)) return false;
     if (!isPhoneValid(phone)) return false;
     if (!isPasswordValid(password)) return false;
-    
-    if (role !== 'ADMIN') {
-      if (!isCnicValid(cnic)) return false;
-    }
-    if (role === 'NURSE') {
-      if (!pncNumber.trim()) return false;
-    }
-    
+    if (!isCnicValid(cnic)) return false;
+    if (role === 'NURSE' && !pncNumber.trim()) return false;
     return true;
   };
 
   const handleRegister = async () => {
     if (!isFormValid()) return;
-    
     const payload: any = {
       fullName: fullName.trim(),
       email: email.trim(),
       phone: phone.trim(),
       password,
       role,
+      cnic: cnic.trim(),
     };
+    if (role === 'NURSE') payload.pncNumber = pncNumber.trim();
 
-    if (role !== 'ADMIN') {
-      payload.cnic = cnic.trim();
-    }
-    if (role === 'NURSE') {
-      payload.pncNumber = pncNumber.trim();
-    }
     registerMutation.mutate(payload, {
       onSuccess: () => {
         navigate('/auth/verify-otp', { emailOrPhone: email.trim() });
-      }
+      },
     });
   };
 
-  const getRoleLabel = () => {
-    switch (role) {
-      case 'NURSE': return 'Nurse Practitioner';
-      default: return 'Patient';
-    }
-  };
-
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Register Profile</Text>
-      <Text style={styles.subtitle}>Creating account as a {getRoleLabel()}</Text>
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <StatusBar barStyle="light-content" />
+      <View style={styles.hero}>
+        <View style={styles.heroTopRow}>
+          <Text style={styles.eyebrow}>{role === 'NURSE' ? 'NURSE ONBOARDING' : 'PATIENT ONBOARDING'}</Text>
+          <ThemeToggleButton compact inverse />
+        </View>
+        <Text style={styles.header}>Create Account</Text>
+        <Text style={styles.subtitle}>Registering as a {role === 'NURSE' ? 'Registered Nurse (PNC)' : 'Patient'}</Text>
+      </View>
 
       <View style={styles.card}>
         <TextInput
@@ -141,14 +95,14 @@ export default function RegisterScreen() {
           onChangeText={(val) => { setFullName(val); if (error) registerMutation.reset(); }}
           mode="outlined"
           error={fullName.length > 0 && fullName.trim().length < 3}
+          left={<TextInput.Icon icon="account-outline" />}
           style={styles.input}
           outlineColor={COLORS.inputBorder}
-          activeOutlineColor={COLORS.teal}
+          activeOutlineColor={COLORS.navy}
+          textColor={COLORS.textDark}
         />
         {fullName.length > 0 && fullName.trim().length < 3 && (
-          <HelperText type="error" visible={true} style={styles.fieldError}>
-            Full name must be at least 3 characters long
-          </HelperText>
+          <HelperText type="error" visible style={styles.fieldError}>Full name must be at least 3 characters</HelperText>
         )}
 
         <TextInput
@@ -159,32 +113,32 @@ export default function RegisterScreen() {
           keyboardType="email-address"
           autoCapitalize="none"
           error={email.length > 0 && !isEmailValid(email)}
+          left={<TextInput.Icon icon="email-outline" />}
           style={styles.input}
           outlineColor={COLORS.inputBorder}
-          activeOutlineColor={COLORS.teal}
+          activeOutlineColor={COLORS.navy}
+          textColor={COLORS.textDark}
         />
         {email.length > 0 && !isEmailValid(email) && (
-          <HelperText type="error" visible={true} style={styles.fieldError}>
-            Enter a valid email address
-          </HelperText>
+          <HelperText type="error" visible style={styles.fieldError}>Enter a valid email address</HelperText>
         )}
 
         <TextInput
           label="Phone Number"
           value={phone}
-          placeholder="e.g. 03001234567"
+          placeholder="03001234567"
           onChangeText={(val) => { setPhone(val); if (error) registerMutation.reset(); }}
           mode="outlined"
           keyboardType="phone-pad"
           error={phone.length > 0 && !isPhoneValid(phone)}
+          left={<TextInput.Icon icon="phone-outline" />}
           style={styles.input}
           outlineColor={COLORS.inputBorder}
-          activeOutlineColor={COLORS.teal}
+          activeOutlineColor={COLORS.navy}
+          textColor={COLORS.textDark}
         />
         {phone.length > 0 && !isPhoneValid(phone) && (
-          <HelperText type="error" visible={true} style={styles.fieldError}>
-            Phone must be a valid Pakistan mobile starting with 03 (11 digits)
-          </HelperText>
+          <HelperText type="error" visible style={styles.fieldError}>Must start with 03 (11 digits)</HelperText>
         )}
 
         <TextInput
@@ -194,43 +148,34 @@ export default function RegisterScreen() {
           mode="outlined"
           secureTextEntry={secureTextEntry}
           error={password.length > 0 && !isPasswordValid(password)}
-          right={
-            <TextInput.Icon
-              icon={secureTextEntry ? 'eye' : 'eye-off'}
-              onPress={() => setSecureTextEntry(!secureTextEntry)}
-            />
-          }
+          left={<TextInput.Icon icon="lock-outline" />}
+          right={<TextInput.Icon icon={secureTextEntry ? 'eye-outline' : 'eye-off-outline'} onPress={() => setSecureTextEntry(!secureTextEntry)} />}
           style={styles.input}
           outlineColor={COLORS.inputBorder}
-          activeOutlineColor={COLORS.teal}
+          activeOutlineColor={COLORS.navy}
+          textColor={COLORS.textDark}
         />
         {password.length > 0 && !isPasswordValid(password) && (
-          <HelperText type="error" visible={true} style={styles.fieldError}>
-            Requires 8+ characters with at least one number & one symbol
-          </HelperText>
+          <HelperText type="error" visible style={styles.fieldError}>Requires 8+ chars with 1 number &amp; 1 symbol</HelperText>
         )}
 
-        {role !== 'ADMIN' && (
-          <>
-            <TextInput
-              label="CNIC Number"
-              value={cnic}
-              placeholder="e.g. 37405-1234567-1"
-              onChangeText={handleCnicChange}
-              mode="outlined"
-              keyboardType="numeric"
-              maxLength={15}
-              error={cnic.length > 0 && !isCnicValid(cnic)}
-              style={styles.input}
-              outlineColor={COLORS.inputBorder}
-              activeOutlineColor={COLORS.teal}
-            />
-            {cnic.length > 0 && !isCnicValid(cnic) && (
-              <HelperText type="error" visible={true} style={styles.fieldError}>
-                CNIC format: XXXXX-XXXXXXX-X (hyphens added automatically)
-              </HelperText>
-            )}
-          </>
+        <TextInput
+          label="CNIC Number"
+          value={cnic}
+          placeholder="37405-1234567-1"
+          onChangeText={handleCnicChange}
+          mode="outlined"
+          keyboardType="numeric"
+          maxLength={15}
+          error={cnic.length > 0 && !isCnicValid(cnic)}
+          left={<TextInput.Icon icon="card-account-details-outline" />}
+          style={styles.input}
+          outlineColor={COLORS.inputBorder}
+          activeOutlineColor={COLORS.navy}
+          textColor={COLORS.textDark}
+        />
+        {cnic.length > 0 && !isCnicValid(cnic) && (
+          <HelperText type="error" visible style={styles.fieldError}>Format: XXXXX-XXXXXXX-X</HelperText>
         )}
 
         {role === 'NURSE' && (
@@ -241,23 +186,19 @@ export default function RegisterScreen() {
               onChangeText={(val) => { setPncNumber(val); if (error) registerMutation.reset(); }}
               mode="outlined"
               error={pncNumber.length > 0 && !pncNumber.trim()}
+              left={<TextInput.Icon icon="shield-account-outline" />}
               style={styles.input}
               outlineColor={COLORS.inputBorder}
-              activeOutlineColor={COLORS.teal}
+              activeOutlineColor={COLORS.navy}
+              textColor={COLORS.textDark}
             />
             {pncNumber.length > 0 && !pncNumber.trim() && (
-              <HelperText type="error" visible={true} style={styles.fieldError}>
-                PNC registration number is required
-              </HelperText>
+              <HelperText type="error" visible style={styles.fieldError}>PNC registration number is required</HelperText>
             )}
           </>
         )}
 
-          {error && (
-          <HelperText type="error" visible={true} style={styles.errorText}>
-            {error.message}
-          </HelperText>
-        )}
+        {error && <HelperText type="error" visible style={styles.errorText}>{error.message}</HelperText>}
 
         <Button
           mode="contained"
@@ -266,93 +207,66 @@ export default function RegisterScreen() {
           disabled={isLoading || !isFormValid()}
           style={styles.button}
           contentStyle={styles.buttonContent}
-          buttonColor={COLORS.tealFill} textColor={COLORS.onAccent}>
+          buttonColor={COLORS.navy}
+          textColor={COLORS.onAccent}
+        >
           Register Account
         </Button>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account? </Text>
-          <Text
-            style={styles.link}
-            onPress={() => {
-              registerMutation.reset();
-              navigate('/auth/login');
-            }}>
-            Sign In
-          </Text>
+          <Text style={styles.link} onPress={() => { registerMutation.reset(); navigate('/auth/login'); }}>Sign In</Text>
         </View>
       </View>
     </ScrollView>
   );
 }
 
-const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
+const createStyles = (COLORS: ThemeColors) => StyleSheet.create({
+  scroll: { flex: 1, backgroundColor: COLORS.surface },
   container: {
     flexGrow: 1,
-    justifyContent: 'center',
-    padding: 24,
-    backgroundColor: COLORS.surfaceCard,
+    paddingBottom: 32,
+    backgroundColor: COLORS.surface,
     alignSelf: 'center',
     width: '100%',
-    maxWidth: Platform.OS === 'web' ? 480 : '100%',
+    maxWidth: Platform.OS === 'web' ? 520 : '100%',
   },
-  header: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: COLORS.textMuted,
-    textAlign: 'center',
+  hero: {
+    backgroundColor: COLORS.navyDark,
+    paddingTop: 36,
+    paddingBottom: 44,
+    paddingHorizontal: 22,
+    alignItems: 'center',
+    borderBottomLeftRadius: RADIUS.xl,
+    borderBottomRightRadius: RADIUS.xl,
   },
-  subtitle: {
-    fontSize: 16,
-    color: COLORS.textBody,
-    textAlign: 'center',
-    marginBottom: 32,
-    marginTop: 6,
+  heroTopRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
   },
+  eyebrow: { color: COLORS.accentBlue, fontSize: 10.5, fontWeight: '800', letterSpacing: 1 },
+  header: { fontSize: 26, fontWeight: '800', color: COLORS.headerText, marginTop: 4 },
+  subtitle: { fontSize: 13.5, color: COLORS.inverseMuted, marginTop: 4 },
   card: {
     backgroundColor: COLORS.surfaceCard,
-    borderRadius: 16,
-    padding: 24,
-    shadowColor: COLORS.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 12,
+    borderRadius: RADIUS.xl,
+    marginHorizontal: SPACING.lg,
+    marginTop: -24,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
     elevation: 4,
   },
-  input: {
-    marginBottom: 4,
-    marginTop: 8,
-    backgroundColor: COLORS.surfaceCard,
-  },
-  fieldError: {
-    marginBottom: 4,
-    fontSize: 12,
-  },
-  button: {
-    marginTop: 16,
-    borderRadius: 8,
-  },
-  buttonContent: {
-    paddingVertical: 6,
-  },
-  errorText: {
-    marginTop: 8,
-    marginBottom: 8,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 24,
-  },
-  footerText: {
-    color: COLORS.textBody,
-    fontSize: 14,
-  },
-  link: {
-    color: COLORS.teal,
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-}));
+  input: { marginBottom: 4, marginTop: 8, backgroundColor: COLORS.surfaceCard },
+  fieldError: { marginBottom: 2, fontSize: 12 },
+  button: { marginTop: 16, borderRadius: RADIUS.md },
+  buttonContent: { paddingVertical: 6 },
+  errorText: { marginTop: 8, marginBottom: 8, fontSize: 13.5, textAlign: 'center' },
+  footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 20 },
+  footerText: { color: COLORS.textBody, fontSize: 14 },
+  link: { color: COLORS.primaryText, fontWeight: '800', fontSize: 14 },
+});

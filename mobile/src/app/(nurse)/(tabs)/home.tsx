@@ -1,7 +1,8 @@
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
 import { useState } from 'react';
-import { StyleSheet, View, ScrollView, SafeAreaView, RefreshControl, StatusBar } from 'react-native';
+import { StyleSheet, View, ScrollView, RefreshControl, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from 'react-native-paper';
 import { navigate } from '../../../utils/navigation';
@@ -17,6 +18,7 @@ import { LoadingState } from '../../../components/common/LoadingState';
 import { ErrorState } from '../../../components/common/ErrorState';
 import { NurseQuickActions } from '../../../components/nurse/NurseQuickActions';
 import { PendingContractsBanner } from '../../../components/contracts/PendingContractsBanner';
+import { ThemeToggleButton } from '../../../components/common/AppearanceSettings';
 
 export default function NurseHomeScreen() {
   const { dark: isDarkTheme } = useAppTheme();
@@ -70,15 +72,20 @@ export default function NurseHomeScreen() {
   if (error) return <ErrorState error={error} onRetry={onRefresh} />;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar barStyle="light-content" />
       
-      {/* Header Greeting (Teal Background) */}
+      {/* Header Greeting (Clinical Navy Background) */}
       <View style={styles.headerBox}>
-        <Text style={styles.greetingTitle}>Welcome back, {user?.fullName || 'Nurse'}</Text>
-        <Text style={styles.greetingSub}>
-          Nurse account · {profile?.available ? '🟢 Available for Visits' : '🔴 Currently Unavailable'}
-        </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.greetingTitle}>Welcome back, {user?.fullName || 'Nurse'}</Text>
+            <Text style={styles.greetingSub}>
+              Nurse account · {profile?.available ? '🟢 Available for Visits' : '🔴 Currently Unavailable'}
+            </Text>
+          </View>
+          <ThemeToggleButton compact inverse />
+        </View>
       </View>
 
       <ScrollView
@@ -164,7 +171,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.navyDark },
   headerBox: { padding: 20, paddingBottom: 30, backgroundColor: COLORS.navyDark },
   greetingTitle: { color: COLORS.onAccent, fontSize: 24, fontWeight: '800' },
-  greetingSub: { color: COLORS.primaryText, fontSize: 14, marginTop: 6, fontWeight: '600' },
+  greetingSub: { color: COLORS.inverseMuted, fontSize: 14, marginTop: 6, fontWeight: '600' },
   scroll: { flex: 1, backgroundColor: COLORS.surface, borderTopLeftRadius: 30, borderTopRightRadius: 30, overflow: 'hidden' },
   scrollContent: { padding: 20, paddingBottom: 40, paddingTop: 30 },
   section: { marginBottom: 28 },

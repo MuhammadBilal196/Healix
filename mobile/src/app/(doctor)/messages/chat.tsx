@@ -1,6 +1,6 @@
 import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, type ComponentRef } from 'react';
 import {
   View,
   ScrollView,
@@ -30,7 +30,7 @@ export default function DoctorChatScreen() {
 
   const router = useRouter();
   const params = useLocalSearchParams();
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ComponentRef<typeof ScrollView>>(null);
 
   const { user } = useAuthStore();
   const myId = user?.id;
@@ -116,7 +116,7 @@ export default function DoctorChatScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.surface} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         {/* Header */}
         <View style={styles.header}>

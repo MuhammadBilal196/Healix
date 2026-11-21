@@ -41,7 +41,7 @@ export const VisitActionPanel: React.FC<VisitActionPanelProps> = ({
           <Button
             mode="contained"
             buttonColor={COLORS.emeraldFill}
-            textColor={COLORS.textMuted}
+            textColor={COLORS.onAccent}
             onPress={onVerify}
             style={styles.actionBtn}
             labelStyle={styles.btnLabel}
@@ -70,7 +70,7 @@ export const VisitActionPanel: React.FC<VisitActionPanelProps> = ({
             <Button
               mode="contained"
               buttonColor={hasVitals ? COLORS.emerald : COLORS.primaryText}
-              textColor={COLORS.textDark}
+              textColor={COLORS.onAccent}
               onPress={onRecordVitals}
               labelStyle={styles.btnLabel}
             >
@@ -79,7 +79,7 @@ export const VisitActionPanel: React.FC<VisitActionPanelProps> = ({
             <Button
               mode="contained"
               buttonColor={hasSymptoms ? COLORS.emerald : COLORS.primaryText}
-              textColor={COLORS.textDark}
+              textColor={COLORS.onAccent}
               onPress={onRecordSymptoms}
               labelStyle={styles.btnLabel}
             >
@@ -88,7 +88,7 @@ export const VisitActionPanel: React.FC<VisitActionPanelProps> = ({
             <Button
               mode="contained"
               buttonColor={hasRemarks ? COLORS.emerald : COLORS.purple}
-              textColor={COLORS.textDark}
+              textColor={COLORS.onAccent}
               onPress={onRecordRemarks}
               labelStyle={styles.btnLabel}
             >
@@ -97,7 +97,7 @@ export const VisitActionPanel: React.FC<VisitActionPanelProps> = ({
             <Button
               mode="contained"
               buttonColor={COLORS.emeraldFill}
-              textColor={COLORS.textMuted}
+              textColor={COLORS.onAccent}
               onPress={onComplete}
               loading={isCompleting}
               disabled={isCompleting}
@@ -136,9 +136,9 @@ export const VisitActionPanel: React.FC<VisitActionPanelProps> = ({
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.emeraldLight, marginBottom: SPACING.lg },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.inputBorder, marginBottom: SPACING.lg },
   sectionHeader: { color: COLORS.textDark, fontSize: 15, fontWeight: '700' },
-  divider: { backgroundColor: COLORS.emeraldLight, marginVertical: 12 },
+  divider: { backgroundColor: COLORS.dividerLight, marginVertical: 12 },
   description: { color: COLORS.textBody, fontSize: 12, marginBottom: 12, lineHeight: 18 },
   actionBtn: { borderRadius: RADIUS.md },
   btnLabel: { fontWeight: '700' },

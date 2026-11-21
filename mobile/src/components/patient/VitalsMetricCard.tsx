@@ -61,11 +61,11 @@ export const VitalsMetricCard: React.FC<VitalsMetricCardProps> = ({
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   metricCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   cardTopRow: {
     flexDirection: 'row',

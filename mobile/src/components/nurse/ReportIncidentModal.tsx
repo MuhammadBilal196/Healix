@@ -80,7 +80,7 @@ export const ReportIncidentModal: React.FC<ReportIncidentModalProps> = ({
               disabled={!description.trim() || isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color={COLORS.textDark} />
+                <ActivityIndicator size="small" color={COLORS.onAccent} />
               ) : (
                 <Text style={styles.submitBtnText}>Submit Report</Text>
               )}
@@ -100,7 +100,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     padding: SPACING.lg,
   },
   modalContent: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.xl,
     borderWidth: 1,
@@ -130,12 +130,12 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.md,
   },
   typePill: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: RADIUS.sm,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   typePillActive: {
     backgroundColor: COLORS.redLight,
@@ -150,13 +150,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '700',
   },
   input: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     color: COLORS.textDark,
     fontSize: 12,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     marginBottom: SPACING.lg,
   },
   multilineInput: {

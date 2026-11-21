@@ -17,7 +17,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({ message = 'Loading..
   const styles = useThemeValue(createStyles);
   return (
   <SafeAreaView style={styles.safeArea}>
-    <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+    <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
     <View style={styles.container}>
       <ActivityIndicator size="large" color={COLORS.emerald} />
       <Text style={styles.message}>{message}</Text>

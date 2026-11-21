@@ -45,6 +45,15 @@ export default function GoogleSignInButton({ onCredential, onError, disabled }: 
     return () => { cancelled = true; existing?.removeEventListener('load', render); };
   }, [clientId]);
 
-  if (!clientId) return <div><button className="btn-login" type="button" disabled>Continue with Google</button><p style={{ textAlign: 'center' }}>Google sign-in is not configured yet.</p></div>;
+  if (!clientId) return (
+    <div style={{ marginTop: '12px' }}>
+      <button className="btn btn-ghost" style={{ width: '100%' }} type="button" disabled>
+        Continue with Google
+      </button>
+      <p style={{ textAlign: 'center', fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '6px' }}>
+        Google sign-in is not configured yet.
+      </p>
+    </div>
+  );
   return <div ref={element} style={{ display: 'flex', justifyContent: 'center', marginTop: 16, opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto' }} />;
 }

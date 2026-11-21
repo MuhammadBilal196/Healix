@@ -77,33 +77,46 @@ export default function Users() {
         <p className="page-subtitle">Search, inspect profiles, activate, deactivate, or soft-delete platform users</p>
       </div>
 
-      <form className="card" onSubmit={async e => { e.preventDefault(); setInviteBusy(true); setInviteError(''); setInviteToken(''); try { const result = await api('POST','/admin/users/invite',{email:inviteEmail,role:inviteRole}); setInviteToken(result.token); } catch(e:any) { setInviteError(e.message); } finally { setInviteBusy(false); } }}>
-        <h3>Invite a Healix user</h3><label>Email<input required type="email" className="form-input" value={inviteEmail} onChange={e => setInviteEmail(e.target.value)}/></label><label>Role<select className="form-input" value={inviteRole} onChange={e => setInviteRole(e.target.value)}>{['ADMIN','DOCTOR','PARAMEDIC','NURSE','PATIENT'].map(r => <option key={r}>{r}</option>)}</select></label><button className="btn btn-primary" disabled={inviteBusy}>Create invitation</button>{inviteError && <p role="alert">{inviteError}</p>}{inviteToken && <p>Share privately. Accept in the Healix app via Sign In → Accept an invitation. Token (expires in seven days): <code>{inviteToken}</code></p>}
-      </form>
-      <form className="card" onSubmit={async e => {
-        e.preventDefault(); setCreateBusy(true); setCreateError(''); setCreateMessage('');
-        try {
-          const path = createRole === 'DOCTOR' ? '/admin/users/doctor' : '/admin/users/paramedic';
-          const credential = createRole === 'DOCTOR' ? { pmdcNumber: createForm.credential } : { certificationNumber: createForm.credential };
-          await api('POST', path, { ...createForm, ...credential });
-          setCreateMessage(`${createRole === 'DOCTOR' ? 'Doctor' : 'Paramedic'} account created. The user can sign in now.`);
-          setCreateForm({ fullName: '', email: '', phone: '', password: '', cnic: '', credential: '' });
-          await fetchUsers({ search, role, status, page, limit: 10 });
-        } catch (error: any) { setCreateError(error.message || 'Account creation failed'); }
-        finally { setCreateBusy(false); }
-      }}>
-        <h3>Create doctor or paramedic account</h3>
-        <p>The account is active as soon as you create it. Share the sign-in details privately.</p>
-        <label>Role<select className="form-input" value={createRole} onChange={e => setCreateRole(e.target.value as 'DOCTOR' | 'PARAMEDIC')}><option value="DOCTOR">Doctor</option><option value="PARAMEDIC">Paramedic</option></select></label>
-        <label>Full name<input required className="form-input" value={createForm.fullName} onChange={e => setCreateForm({ ...createForm, fullName: e.target.value })} /></label>
-        <label>Email<input required type="email" className="form-input" value={createForm.email} onChange={e => setCreateForm({ ...createForm, email: e.target.value })} /></label>
-        <label>Phone<input required className="form-input" value={createForm.phone} onChange={e => setCreateForm({ ...createForm, phone: e.target.value })} /></label>
-        <label>CNIC<input required className="form-input" value={createForm.cnic} onChange={e => setCreateForm({ ...createForm, cnic: e.target.value })} /></label>
-        <label>{createRole === 'DOCTOR' ? 'PMDC number' : 'Certification number'}<input required className="form-input" value={createForm.credential} onChange={e => setCreateForm({ ...createForm, credential: e.target.value })} /></label>
-        <label>Initial password<input required type="password" minLength={8} className="form-input" value={createForm.password} onChange={e => setCreateForm({ ...createForm, password: e.target.value })} /></label>
-        <button className="btn btn-primary" disabled={createBusy}>Create account</button>
-        {createError && <p role="alert">{createError}</p>}{createMessage && <p role="status">{createMessage}</p>}
-      </form>
+      <div className="admin-onboarding-grid">
+        <form className="card" onSubmit={async e => { e.preventDefault(); setInviteBusy(true); setInviteError(''); setInviteToken(''); try { const result = await api('POST','/admin/users/invite',{email:inviteEmail,role:inviteRole}); setInviteToken(result.token); } catch(e:any) { setInviteError(e.message); } finally { setInviteBusy(false); } }}>
+          <h3>Invite a Healix user</h3>
+          <div className="form-group">
+            <label>Email<input required type="email" className="form-input" value={inviteEmail} onChange={e => setInviteEmail(e.target.value)}/></label>
+          </div>
+          <div className="form-group">
+            <label>Role<select className="form-input" value={inviteRole} onChange={e => setInviteRole(e.target.value)}>{['ADMIN','DOCTOR','PARAMEDIC','NURSE','PATIENT'].map(r => <option key={r}>{r}</option>)}</select></label>
+          </div>
+          <button className="btn btn-primary" disabled={inviteBusy}>Create invitation</button>
+          {inviteError && <p role="alert">{inviteError}</p>}
+          {inviteToken && <p style={{ marginTop: '10px', fontSize: '12.5px' }}>Share privately. Accept in the Healix app via Sign In → Accept an invitation. Token (expires in seven days): <code>{inviteToken}</code></p>}
+        </form>
+        <form className="card" onSubmit={async e => {
+          e.preventDefault(); setCreateBusy(true); setCreateError(''); setCreateMessage('');
+          try {
+            const path = createRole === 'DOCTOR' ? '/admin/users/doctor' : '/admin/users/paramedic';
+            const credential = createRole === 'DOCTOR' ? { pmdcNumber: createForm.credential } : { certificationNumber: createForm.credential };
+            await api('POST', path, { ...createForm, ...credential });
+            setCreateMessage(`${createRole === 'DOCTOR' ? 'Doctor' : 'Paramedic'} account created. The user can sign in now.`);
+            setCreateForm({ fullName: '', email: '', phone: '', password: '', cnic: '', credential: '' });
+            await fetchUsers({ search, role, status, page, limit: 10 });
+          } catch (error: any) { setCreateError(error.message || 'Account creation failed'); }
+          finally { setCreateBusy(false); }
+        }}>
+          <h3>Create doctor or paramedic account</h3>
+          <p>The account is active as soon as you create it. Share the sign-in details privately.</p>
+          <div className="form-grid-2">
+            <label>Role<select className="form-input" value={createRole} onChange={e => setCreateRole(e.target.value as 'DOCTOR' | 'PARAMEDIC')}><option value="DOCTOR">Doctor</option><option value="PARAMEDIC">Paramedic</option></select></label>
+            <label>Full name<input required className="form-input" value={createForm.fullName} onChange={e => setCreateForm({ ...createForm, fullName: e.target.value })} /></label>
+            <label>Email<input required type="email" className="form-input" value={createForm.email} onChange={e => setCreateForm({ ...createForm, email: e.target.value })} /></label>
+            <label>Phone<input required className="form-input" value={createForm.phone} onChange={e => setCreateForm({ ...createForm, phone: e.target.value })} /></label>
+            <label>CNIC<input required className="form-input" value={createForm.cnic} onChange={e => setCreateForm({ ...createForm, cnic: e.target.value })} /></label>
+            <label>{createRole === 'DOCTOR' ? 'PMDC number' : 'Certification number'}<input required className="form-input" value={createForm.credential} onChange={e => setCreateForm({ ...createForm, credential: e.target.value })} /></label>
+            <label style={{ gridColumn: '1 / -1' }}>Initial password<input required type="password" minLength={8} className="form-input" value={createForm.password} onChange={e => setCreateForm({ ...createForm, password: e.target.value })} /></label>
+          </div>
+          <button className="btn btn-primary" style={{ marginTop: '12px' }} disabled={createBusy}>Create account</button>
+          {createError && <p role="alert">{createError}</p>}{createMessage && <p role="status">{createMessage}</p>}
+        </form>
+      </div>
       <div className="toolbar">
         <div className="search-box">
           <Search />

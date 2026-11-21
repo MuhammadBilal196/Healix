@@ -97,7 +97,7 @@ export default function NotificationsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.container}>
         
         {/* Header */}
@@ -188,7 +188,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
@@ -206,9 +206,9 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: 6,
     borderRadius: RADIUS.round,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   filterPillActive: {
     backgroundColor: COLORS.emerald,
@@ -220,7 +220,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '600',
   },
   filterTextActive: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontWeight: '700',
   },
   listContainer: {
@@ -228,17 +228,17 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     gap: SPACING.md,
   },
   notificationCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   notificationCardUnread: {
-    borderColor: COLORS.emeraldLight,
-    backgroundColor: COLORS.bg,
+    borderColor: COLORS.accentBlue,
+    backgroundColor: COLORS.surfaceCard,
   },
   iconBg: {
     width: 42,

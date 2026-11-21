@@ -53,7 +53,7 @@ export const QrScanner: React.FC<QrScannerProps> = ({ visitId, onSuccess, onCanc
       <View style={styles.container}>
         <Text style={styles.title}>Camera Permission Required</Text>
         <Text style={styles.subtitle}>Grant camera access to scan patient QR codes.</Text>
-        <Button mode="contained" buttonColor={COLORS.emeraldFill} textColor={COLORS.textMuted} onPress={requestPermission}>
+        <Button mode="contained" buttonColor={COLORS.emeraldFill} textColor={COLORS.onAccent} onPress={requestPermission}>
           Grant Permission
         </Button>
         <Button mode="text" textColor={COLORS.textBody} onPress={onCancel} style={{ marginTop: 12 }}>
@@ -79,7 +79,7 @@ export const QrScanner: React.FC<QrScannerProps> = ({ visitId, onSuccess, onCanc
       {verifyQr.isPending && <ActivityIndicator size="large" color={COLORS.emerald} style={{ marginTop: 20 }} />}
 
       {scanned && !verifyQr.isPending && (
-        <Button mode="contained" buttonColor={COLORS.emeraldFill} textColor={COLORS.textMuted} onPress={() => setScanned(false)} style={{ marginTop: 16 }}>
+        <Button mode="contained" buttonColor={COLORS.emeraldFill} textColor={COLORS.onAccent} onPress={() => setScanned(false)} style={{ marginTop: 16 }}>
           Scan Again
         </Button>
       )}

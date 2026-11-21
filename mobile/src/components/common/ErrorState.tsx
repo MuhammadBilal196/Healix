@@ -20,7 +20,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({ error, onRetry }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.container}>
         <Text style={styles.icon}>⚠️</Text>
         <Text style={styles.message}>{message}</Text>

@@ -47,14 +47,14 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({ allergen, severity }) 
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   infoGroup: {
     flex: 1,

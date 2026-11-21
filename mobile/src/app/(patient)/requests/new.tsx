@@ -159,7 +159,7 @@ export default function NewCareRequestScreen() {
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.transparent} translucent />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <LinearGradient
         colors={[COLORS.gradientStart, COLORS.gradientMid, COLORS.gradientEnd, COLORS.gradientEnd, COLORS.gradientEnd]}
         start={{ x: 0, y: 0 }}

@@ -205,7 +205,7 @@ export default function RequestDetailsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.surface} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       
       {/* Header */}
       <View style={styles.headerRow}>
@@ -462,7 +462,7 @@ export default function RequestDetailsScreen() {
               activeOpacity={0.85}
               onPress={() => navigate(`/(patient)/visits/${visit.id}`)}
             >
-              <MaterialCommunityIcons name="qrcode-scan" size={18} color={COLORS.textDark} style={{ marginRight: 8 }} />
+              <MaterialCommunityIcons name="qrcode-scan" size={18} color={COLORS.onAccent} style={{ marginRight: 8 }} />
               <Text style={styles.visitCheckInButtonText}>Show Visit QR Code & Details</Text>
             </TouchableOpacity>
           </View>
@@ -491,7 +491,7 @@ export default function RequestDetailsScreen() {
               <Button
                 mode="contained"
                 buttonColor={COLORS.navy}
-                textColor={COLORS.textDark}
+                textColor={COLORS.onAccent}
                 style={styles.actionBtn}
                 onPress={() => setShowRescheduleModal(true)}
               >

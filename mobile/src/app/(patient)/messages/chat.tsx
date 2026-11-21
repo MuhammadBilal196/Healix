@@ -3,7 +3,7 @@ import { useAppTheme, useThemeValue } from '../../../theme/ThemeProvider';
 import type { ThemeColors } from '../../../theme';
 import { appAlert } from '../../../components/common/AppDialogs';
 import { voiceFileInfo } from '../../../hooks/useVoiceRecorder';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type ComponentRef } from 'react';
 import {
   View,
   ScrollView,
@@ -50,7 +50,7 @@ export default function WhatsAppStyleChatScreen() {
   const [inputText, setInputText] = useState('');
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [mediaPreview, setMediaPreview] = useState<MediaPreview | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ComponentRef<typeof ScrollView>>(null);
 
   const { data: historyData, isLoading } = useChatHistory(threadId);
   const { mutateAsync: sendMessageMutation } = useSendMessage();
@@ -163,7 +163,7 @@ export default function WhatsAppStyleChatScreen() {
   
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -255,9 +255,9 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.emeraldLight,
+    borderBottomColor: COLORS.inputBorder,
   },
   backBtn: {
     paddingRight: SPACING.xs,
@@ -268,7 +268,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '300',
   },
   avatarBg: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceMuted,
     marginRight: SPACING.sm,
     borderWidth: 1,
     borderColor: COLORS.emerald,
@@ -277,7 +277,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     flex: 1,
   },
   headerName: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: 15,
     fontWeight: '700',
   },
@@ -293,21 +293,21 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   headerActionIcon: {
     fontSize: 16,
   },
   encryptionNotice: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceMuted,
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.emeraldLight,
+    borderBottomColor: COLORS.inputBorder,
   },
   encryptionText: {
     color: COLORS.textBody,

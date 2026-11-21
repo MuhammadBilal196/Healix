@@ -66,14 +66,14 @@ export const HealthSummaryCard: React.FC<HealthSummaryCardProps> = ({
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   summaryCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   metricColumn: {
     flex: 1,
