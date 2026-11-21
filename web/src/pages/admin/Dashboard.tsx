@@ -131,43 +131,44 @@ export default function Dashboard() {
 
       <div className="card" style={{ marginTop: '24px' }}>
           <h3 className="card-title">🚨 Emergency Escalations Action Required</h3>
-          {loadingCases ? <p>Loading cases...</p> : escalatedCases.length === 0 ? <p style={{margin: '16px'}}>No emergency cases require admin intervention.</p> : (
-            <table className="data-table" style={{width: '100%', marginTop: '16px'}}>
-              <thead>
-                <tr>
-                  <th>Case ID</th>
-                  <th>Patient</th>
-                  <th>Risk Tier</th>
-                  <th>Status</th>
-                  <th>SLA Deadline</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {escalatedCases.map(c => (
-                  <tr key={c.id}>
-                    <td>{c.id.substring(0,8)}...</td>
-                    <td>{c.visit?.request?.patient?.user?.fullName || 'Unknown'}</td>
-                    <td><span className={'badge ' + (c.riskTier === 'CRITICAL' ? 'error' : 'warning')}>{c.riskTier}</span></td>
-                    <td>
-                      {c.status}
-                      {c.status === 'PROFESSIONAL_BROADCAST' && <span style={{color: 'red', marginLeft: 8, fontSize: '0.8rem'}}>⚠️ Professional SLA exceeded</span>}
-                    </td>
-                    <td>{new Date(c.slaDeadline).toLocaleTimeString()}</td>
-                    <td>
-                      <button 
-                        className="btn btn-primary btn-sm" 
-                        onClick={() => handleAssignDoctor(c.id)}
-                        disabled={assigningCase === c.id}
-                        style={{padding: '4px 8px', background: '#EF4444', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer'}}
-                      >
-                        {assigningCase === c.id ? 'Assigning...' : 'ASSIGN DOCTOR'}
-                      </button>
-                    </td>
+          {loadingCases ? <p>Loading cases...</p> : escalatedCases.length === 0 ? <p style={{ margin: '12px 0' }}>No emergency cases require admin intervention.</p> : (
+            <div className="table-container" style={{ marginTop: '12px' }}>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Case ID</th>
+                    <th>Patient</th>
+                    <th>Risk Tier</th>
+                    <th>Status</th>
+                    <th>SLA Deadline</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {escalatedCases.map(c => (
+                    <tr key={c.id}>
+                      <td>{c.id.substring(0, 8)}...</td>
+                      <td>{c.visit?.request?.patient?.user?.fullName || 'Unknown'}</td>
+                      <td><span className={'badge ' + (c.riskTier === 'CRITICAL' ? 'badge-red' : 'badge-amber')}>{c.riskTier}</span></td>
+                      <td>
+                        {c.status}
+                        {c.status === 'PROFESSIONAL_BROADCAST' && <span style={{ color: 'var(--red)', marginLeft: 8, fontSize: '0.8rem', fontWeight: 600 }}>⚠️ Professional SLA exceeded</span>}
+                      </td>
+                      <td>{new Date(c.slaDeadline).toLocaleTimeString()}</td>
+                      <td>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleAssignDoctor(c.id)}
+                          disabled={assigningCase === c.id}
+                        >
+                          {assigningCase === c.id ? 'Assigning...' : 'ASSIGN DOCTOR'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
