@@ -1,6 +1,6 @@
 # Healix
 
-Healthcare project with a backend API, an Expo mobile app, a web dashboard, and browser QA tests.
+Healthcare project with a backend API, an Expo SDK 58 mobile app, a React + Vite web dashboard, and Playwright browser QA tests.
 
 ## Project map
 
@@ -10,16 +10,26 @@ Healthcare project with a backend API, an Expo mobile app, a web dashboard, and 
 | `backend/prisma/` | Database schema |
 | `backend/scripts/` | Explicitly run database tools, audits, and manual integration checks |
 | `backend/docs/` | Backend architecture, conventions, and decisions |
-| `mobile/src/` | Expo Router screens, components, API clients, hooks, and types |
+| `mobile/src/` | Expo Router screens (Expo SDK 58 / React Native 0.88), components, API clients, hooks, and types |
 | `mobile/assets/` | App images and icons |
 | `mobile/docs/` | Implementation history and completion reports |
-| `web/src/` | Web dashboard |
+| `web/src/` | Web portal dashboard for System Administrators and Doctors |
+| `designs/` | Interactive full-platform HTML clinical UI/UX design studio (`healix-full-platform-design-studio.html`) |
 | `qa-tests/` | Playwright suites, fixtures, and curated reports |
 | `docs/` | Product documents, design references, audits, and learning material |
 | `archive/` | Historical tools and test snapshots |
 | `backend/archive/` | One-off backend patches retained for reference |
 
 The shared [design system](HEALIX_DESIGN_SYSTEM.md) and agent instructions remain at their existing locations.
+
+## Clinical UI/UX & Role Architecture
+
+- **Authoritative Design System**: Clinical Navy (`#0B4268` / `#06294B`), Accent Blue (`#29A9F5`), Care Emerald (`#10B981`), and high-contrast WCAG AA Light (`#F8FAFC`) & Dark Night (`#020B18`) palettes shared across web CSS variables (`web/src/styles/index.css`) and mobile theme tokens (`mobile/src/theme.ts`).
+- **Universal Dark Mode & Security Settings**: `AppearanceSettings` and `ThemeToggleButton` are available across Auth, Patient, Nurse, Doctor, Paramedic, and Admin views along with Password Change and Two-Step Verification (`/auth/security`).
+- **Mobile Navigation & Forms**: Safe-area-aware lifted bottom tab bars prevent overlap with Android system navigation, and all mobile/web forms use standardized outlined inputs.
+- **5-Role Portals**:
+  - **Mobile App (`Expo SDK 58` / Expo Go compatible)**: Patient, Nurse, Doctor, Paramedic (`EmergencyWorkspace`), and Admin Operations Command Center.
+  - **Web Portal**: Administrator Command Center & active Operations/Support panel (including live User Profile Editor and Role Capability overrides), Doctor Clinical Portal, and self-service Invitation Acceptance on sign-in.
 
 ## Install and run
 
@@ -49,6 +59,8 @@ Configure `backend/.env` before starting the API. Its required variables are `DA
 pnpm backend:test
 pnpm backend:typecheck
 pnpm backend:build
+pnpm --filter healix-mobile exec tsc --noEmit
+pnpm --filter healix-mobile test
 pnpm mobile:lint
 pnpm web:build
 pnpm qa:list
