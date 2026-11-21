@@ -34,14 +34,14 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({ name, dosage, fr
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   info: { flex: 1 },
   name: { color: COLORS.textDark, fontSize: TYPOGRAPHY.sizes.sm, fontWeight: '700' },
