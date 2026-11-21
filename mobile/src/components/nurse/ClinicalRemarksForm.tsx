@@ -62,7 +62,7 @@ export const ClinicalRemarksForm: React.FC<ClinicalRemarksFormProps> = ({ onSubm
         disabled={remarksText.trim().length < 10 || isLoading}
       >
         {isLoading ? (
-          <ActivityIndicator size="small" color={COLORS.textMuted} />
+          <ActivityIndicator size="small" color={COLORS.onAccent} />
         ) : (
           <Text style={styles.submitBtnText}>Submit Remarks & Trigger AI Assessment ✨</Text>
         )}
@@ -73,12 +73,12 @@ export const ClinicalRemarksForm: React.FC<ClinicalRemarksFormProps> = ({ onSubm
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     marginBottom: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   title: {
     color: COLORS.textDark,
@@ -100,13 +100,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginTop: SPACING.xs,
   },
   input: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     color: COLORS.textDark,
     fontSize: 12,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     marginBottom: SPACING.md,
   },
   multilineInput: {
@@ -122,12 +122,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     paddingVertical: 8,
     alignItems: 'center',
     borderRadius: RADIUS.sm,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   confPillActive: {
     backgroundColor: COLORS.emerald,
+    borderColor: COLORS.emerald,
   },
   confText: {
     color: COLORS.textBody,
@@ -135,7 +136,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '600',
   },
   confTextActive: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontWeight: '700',
   },
   submitBtn: {
