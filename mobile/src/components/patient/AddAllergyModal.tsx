@@ -95,11 +95,11 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     padding: SPACING.lg,
   },
   modalContent: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.xl,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   title: {
     color: COLORS.textDark,
@@ -113,13 +113,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.md,
   },
   input: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     color: COLORS.textDark,
     fontSize: 12,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     marginBottom: SPACING.md,
   },
   label: {
@@ -137,12 +137,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     paddingVertical: 8,
     alignItems: 'center',
     borderRadius: RADIUS.sm,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   sevPillActive: {
     backgroundColor: COLORS.emerald,
+    borderColor: COLORS.emerald,
   },
   sevText: {
     color: COLORS.textBody,
@@ -150,7 +151,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     fontWeight: '600',
   },
   sevTextActive: {
-    color: COLORS.textMuted,
+    color: COLORS.onAccent,
     fontWeight: '700',
   },
   btnRow: {
