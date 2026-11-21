@@ -25,7 +25,7 @@ export default function HealthRecordsScreen() {
         id: 'clinical-outcomes',
         title: 'Clinical Outcomes & Diagnoses',
         subtitle: 'Doctor diagnoses and completed cases',
-        icon: 'dY+',
+        icon: '🩺',
         bgColor: COLORS.redLight, // Red-ish
         route: '/(patient)/health/clinical-outcomes',
       },
@@ -90,7 +90,7 @@ export default function HealthRecordsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         
         {/* Header */}
@@ -142,7 +142,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: SPACING.xl,
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
   },
@@ -150,13 +150,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     gap: SPACING.md,
   },
   recordCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   iconBg: {
     width: 44,
