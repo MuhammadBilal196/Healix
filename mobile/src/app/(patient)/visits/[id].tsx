@@ -32,7 +32,7 @@ export default function PatientVisitDetailScreen() {
   if (isLoading && !visit) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={COLORS.emerald} />
           <Text style={styles.loadingText}>Loading visit...</Text>
@@ -44,7 +44,7 @@ export default function PatientVisitDetailScreen() {
   if (error || !visit) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+        <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
         <View style={styles.centered}>
           <Text style={styles.errorText}>{error ? (error as Error).message : 'Visit not found'}</Text>
           <Button mode="text" textColor={COLORS.emerald} onPress={() => refetch()}>Retry</Button>
@@ -57,7 +57,7 @@ export default function PatientVisitDetailScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
 
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={goBack} style={styles.backBtn}>
@@ -73,7 +73,7 @@ export default function PatientVisitDetailScreen() {
         {!!actionError && <Text style={{ color: COLORS.red }}>{actionError}</Text>}
         {isActive && !visit.patientConfirmed && <><Text style={styles.qrSubtitle}>Confirm only after your assigned nurse arrives. This enables manual verification if QR or GPS cannot be used.</Text><Button mode="contained" loading={confirmArrival.isPending} disabled={confirmArrival.isPending} onPress={async () => { setActionError(''); try { await confirmArrival.mutateAsync(visitId); } catch(e: any) { setActionError(e.message); } }}>Confirm nurse has arrived</Button></>}
         {visit.patientConfirmed && <Text style={styles.summaryItem}>Arrival confirmed</Text>}
-        {visit.status === 'COMPLETED' && visit.nurseId && <View style={styles.completedCard}>{visit.review ? <><Text style={styles.completedTitle}>Your feedback: {visit.review.stars}/5</Text><Text style={styles.qrSubtitle}>{visit.review.reviewText}</Text></> : <><Text style={styles.completedTitle}>Rate your nurse</Text><TextInput label="Stars (1–5)" value={stars} onChangeText={setStars} keyboardType="number-pad" /><TextInput label="Review (optional)" value={reviewText} onChangeText={setReview} multiline /><Text style={styles.qrSubtitle}>Would you recommend this nurse?</Text><Switch value={recommend} onValueChange={setRecommend} /><Button mode="contained" loading={reviewing} disabled={reviewing} onPress={() => void review()}>Submit feedback</Button></>}</View>}
+        {visit.status === 'COMPLETED' && visit.nurseId && <View style={styles.completedCard}>{visit.review ? <><Text style={styles.completedTitle}>Your feedback: {visit.review.stars}/5</Text><Text style={styles.qrSubtitle}>{visit.review.reviewText}</Text></> : <><Text style={styles.completedTitle}>Rate your nurse</Text><TextInput mode="outlined" outlineColor={COLORS.inputBorder} activeOutlineColor={COLORS.navy} textColor={COLORS.textDark} style={{ backgroundColor: COLORS.surfaceCard, marginBottom: 8 }} label="Stars (1–5)" value={stars} onChangeText={setStars} keyboardType="number-pad" /><TextInput mode="outlined" outlineColor={COLORS.inputBorder} activeOutlineColor={COLORS.navy} textColor={COLORS.textDark} style={{ backgroundColor: COLORS.surfaceCard, marginBottom: 8 }} label="Review (optional)" value={reviewText} onChangeText={setReview} multiline /><Text style={styles.qrSubtitle}>Would you recommend this nurse?</Text><Switch value={recommend} onValueChange={setRecommend} /><Button mode="contained" buttonColor={COLORS.navy} textColor={COLORS.onAccent} loading={reviewing} disabled={reviewing} onPress={() => void review()}>Submit feedback</Button></>}</View>}
 
         {/* QR Code for nurse verification */}
         {isActive && (
@@ -104,7 +104,7 @@ export default function PatientVisitDetailScreen() {
             <Button
               mode="contained"
               buttonColor={COLORS.emeraldFill}
-              textColor={COLORS.textMuted}
+              textColor={COLORS.onAccent}
               style={styles.refreshBtn}
               onPress={() => refetchQr()}
               labelStyle={{ fontWeight: '700' }}
@@ -138,7 +138,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: SPACING.lg },
   backBtn: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
   backIcon: { color: COLORS.textDark, fontSize: 28 },
-  headerTitle: { color: COLORS.onAccent, fontSize: 17, fontWeight: '700' },
+  headerTitle: { color: COLORS.textDark, fontSize: 17, fontWeight: '700' },
   scroll: { flex: 1 },
   content: { padding: SPACING.lg, paddingBottom: 40 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
@@ -168,10 +168,10 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   qrErrorText: { color: COLORS.textBody, fontSize: 13 },
   refreshBtn: { width: '100%', borderRadius: RADIUS.md },
   completedCard: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
     padding: SPACING.lg,
     marginBottom: SPACING.lg,
   },
