@@ -110,7 +110,7 @@ export const PatientIdentityVerifyCard: React.FC<PatientIdentityVerifyCardProps>
                 onPress={handleQRSubmit}
                 disabled={!qrInput.trim() || loading}
               >
-                {loading ? <ActivityIndicator size="small" color={COLORS.textMuted} /> : <Text style={styles.submitBtnText}>Verify QR Code</Text>}
+                {loading ? <ActivityIndicator size="small" color={COLORS.onAccent} /> : <Text style={styles.submitBtnText}>Verify QR Code</Text>}
               </TouchableOpacity>
             </View>
           )}
@@ -119,7 +119,7 @@ export const PatientIdentityVerifyCard: React.FC<PatientIdentityVerifyCardProps>
             <View style={styles.formGroup}>
               <Text style={styles.subText}>Confirms your device GPS coordinates within 150m of patient home address.</Text>
               <TouchableOpacity style={[styles.submitBtn, loading && styles.disabledBtn]} onPress={handleGPSCheck} disabled={loading}>
-                {loading ? <ActivityIndicator size="small" color={COLORS.textMuted} /> : <Text style={styles.submitBtnText}>Check GPS Range</Text>}
+                {loading ? <ActivityIndicator size="small" color={COLORS.onAccent} /> : <Text style={styles.submitBtnText}>Check GPS Range</Text>}
               </TouchableOpacity>
             </View>
           )}
@@ -140,7 +140,7 @@ export const PatientIdentityVerifyCard: React.FC<PatientIdentityVerifyCardProps>
                 onPress={handleManualSubmit}
                 disabled={manualReason.trim().length < 10 || loading}
               >
-                {loading ? <ActivityIndicator size="small" color={COLORS.textMuted} /> : <Text style={styles.submitBtnText}>Submit Manual Override</Text>}
+                {loading ? <ActivityIndicator size="small" color={COLORS.onAccent} /> : <Text style={styles.submitBtnText}>Submit Manual Override</Text>}
               </TouchableOpacity>
             </View>
           )}
@@ -158,12 +158,12 @@ export const PatientIdentityVerifyCard: React.FC<PatientIdentityVerifyCardProps>
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   card: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     marginBottom: SPACING.lg,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   title: {
     color: COLORS.textDark,
@@ -202,15 +202,16 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     paddingVertical: 8,
     alignItems: 'center',
     borderRadius: RADIUS.sm,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   tabBtnActive: {
     backgroundColor: COLORS.emeraldFill,
+    borderColor: COLORS.emeraldFill,
   },
   tabText: {
-    color: COLORS.onAccent,
+    color: COLORS.textBody,
     fontSize: 10,
     fontWeight: '600',
   },
@@ -227,13 +228,13 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     marginBottom: 4,
   },
   input: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     color: COLORS.textDark,
     fontSize: 12,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   multilineInput: {
     textAlignVertical: 'top',
