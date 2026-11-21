@@ -67,7 +67,7 @@ export const ManualVerification: React.FC<ManualVerificationProps> = ({ visitId,
         <Button
           mode="contained"
           buttonColor={COLORS.amberFill}
-          textColor={COLORS.textMuted}
+          textColor={COLORS.onAccent}
           onPress={handleSubmit}
           loading={verifyManual.isPending}
           disabled={verifyManual.isPending}
@@ -82,11 +82,11 @@ export const ManualVerification: React.FC<ManualVerificationProps> = ({ visitId,
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.amber, marginBottom: SPACING.md },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.amber, marginBottom: SPACING.md },
   title: { color: COLORS.amber, fontSize: 16, fontWeight: '700', marginBottom: 6 },
   description: { color: COLORS.textBody, fontSize: 12, marginBottom: 12 },
   input: {
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     color: COLORS.textDark,
     borderWidth: 1,
     borderColor: COLORS.amberLight,
