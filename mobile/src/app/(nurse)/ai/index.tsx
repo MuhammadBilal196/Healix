@@ -148,7 +148,7 @@ export default function AIAssistantScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={COLORS.bg} />
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} />
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.headerRow}>
@@ -175,7 +175,7 @@ export default function AIAssistantScreen() {
             <Button
               mode="contained"
               buttonColor={COLORS.redFill}
-              textColor={COLORS.textDark}
+              textColor={COLORS.onAccent}
               onPress={handleTriggerEmergencySos}
               style={{ marginTop: 8, borderRadius: RADIUS.md }}
               labelStyle={{ fontWeight: '800' }}
@@ -267,9 +267,9 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.emeraldLight,
+    borderBottomColor: COLORS.inputBorder,
   },
   backBtn: {
     width: 40,
@@ -286,7 +286,7 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    color: COLORS.onAccent,
+    color: COLORS.textDark,
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '700',
   },
@@ -371,12 +371,12 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
   promptItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     marginBottom: SPACING.xs,
     borderWidth: 1,
-    borderColor: COLORS.emeraldLight,
+    borderColor: COLORS.inputBorder,
   },
   promptIcon: {
     fontSize: 14,
@@ -391,15 +391,17 @@ const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: SPACING.md,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surfaceCard,
     borderTopWidth: 1,
-    borderTopColor: COLORS.emeraldLight,
+    borderTopColor: COLORS.inputBorder,
   },
   textInput: {
     flex: 1,
-    backgroundColor: COLORS.bg,
+    backgroundColor: COLORS.surface,
     color: COLORS.textDark,
     borderRadius: RADIUS.round,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
     paddingHorizontal: SPACING.md,
     paddingVertical: Platform.OS === 'ios' ? 10 : 8,
     fontSize: 14,
