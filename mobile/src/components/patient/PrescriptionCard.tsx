@@ -38,7 +38,7 @@ export const PrescriptionCard: React.FC<PrescriptionCardProps> = ({ doctorName, 
 };
 
 const createStyles = (COLORS: ThemeColors) => (StyleSheet.create({
-  card: { backgroundColor: COLORS.bg, borderRadius: RADIUS.lg, padding: SPACING.md, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: COLORS.emeraldLight },
+  card: { backgroundColor: COLORS.surfaceCard, borderRadius: RADIUS.lg, padding: SPACING.md, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: COLORS.inputBorder },
   info: { flex: 1 },
   doctor: { color: COLORS.textDark, fontSize: TYPOGRAPHY.sizes.sm, fontWeight: '700' },
   date: { color: COLORS.textBody, fontSize: 11, marginTop: 2 },
